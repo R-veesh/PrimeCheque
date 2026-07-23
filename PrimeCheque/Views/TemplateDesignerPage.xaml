@@ -28,37 +28,42 @@
             </Grid>
 
             <!-- Visual Cheque Leaf Representation -->
-            <Border Height="260" Background="White" CornerRadius="4" BorderBrush="Black" BorderThickness="1.5" HorizontalAlignment="Stretch">
-                <Canvas x:Name="ChequeCanvas">
-                    <!-- Date Day -->
-                    <Border Canvas.Left="{x:Bind ViewModel.DateDayX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.DateDayY, Mode=OneWay}" BorderBrush="Blue" BorderThickness="1" Padding="4">
-                        <TextBlock Text="DD" FontSize="11" Foreground="Blue" FontWeight="Bold" />
-                    </Border>
-                    <!-- Date Month -->
-                    <Border Canvas.Left="{x:Bind ViewModel.DateMonthX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.DateMonthY, Mode=OneWay}" BorderBrush="Blue" BorderThickness="1" Padding="4">
-                        <TextBlock Text="MM" FontSize="11" Foreground="Blue" FontWeight="Bold" />
-                    </Border>
-                    <!-- Date Year -->
-                    <Border Canvas.Left="{x:Bind ViewModel.DateYearX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.DateYearY, Mode=OneWay}" BorderBrush="Blue" BorderThickness="1" Padding="4">
-                        <TextBlock Text="YYYY" FontSize="11" Foreground="Blue" FontWeight="Bold" />
-                    </Border>
-                    <!-- Payee -->
-                    <Border Canvas.Left="{x:Bind ViewModel.PayeeLine1X, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.PayeeLine1Y, Mode=OneWay}" Width="{x:Bind ViewModel.PayeeLine1W, Mode=OneWay}" BorderBrush="DarkGreen" BorderThickness="1" Padding="4">
-                        <TextBlock Text="PAYEE NAME LINE" FontSize="12" Foreground="DarkGreen" FontWeight="Bold" />
-                    </Border>
-                    <!-- Amount Words -->
-                    <Border Canvas.Left="{x:Bind ViewModel.AmountWordsX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.AmountWordsY, Mode=OneWay}" Width="{x:Bind ViewModel.AmountWordsW, Mode=OneWay}" BorderBrush="Purple" BorderThickness="1" Padding="4">
-                        <TextBlock Text="** Sri Lanka Rupees Seventy-Five Thousand Only **" FontSize="11" Foreground="Purple" />
-                    </Border>
-                    <!-- Amount Figures -->
-                    <Border Canvas.Left="{x:Bind ViewModel.AmountFiguresX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.AmountFiguresY, Mode=OneWay}" Width="{x:Bind ViewModel.AmountFiguresW, Mode=OneWay}" BorderBrush="Red" BorderThickness="1" Padding="4">
-                        <TextBlock Text="**75,000.00**" FontSize="12" Foreground="Red" FontWeight="Bold" />
-                    </Border>
-                    <!-- Crossing -->
-                    <Border Canvas.Left="{x:Bind ViewModel.CrossingX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.CrossingY, Mode=OneWay}" BorderBrush="Orange" BorderThickness="1" Padding="4">
-                        <TextBlock Text="// A/C PAYEE ONLY //" FontSize="10" Foreground="Orange" FontWeight="Bold" />
-                    </Border>
-                </Canvas>
+            <Border Height="280" Background="#F8F9FA" CornerRadius="6" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1.5" HorizontalAlignment="Stretch">
+                <Grid>
+                    <!-- Background Cheque Image from template_image/ -->
+                    <Image Source="{x:Bind ViewModel.FullImagePath, Mode=OneWay}" Stretch="Fill" Opacity="0.85" />
+
+                    <Canvas x:Name="ChequeCanvas">
+                        <!-- Date Day -->
+                        <Border Canvas.Left="{x:Bind ViewModel.DateDayX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.DateDayY, Mode=OneWay}" BorderBrush="Blue" Background="#330000FF" BorderThickness="1" Padding="4,2">
+                            <TextBlock Text="DD" FontSize="11" Foreground="Blue" FontWeight="Bold" />
+                        </Border>
+                        <!-- Date Month -->
+                        <Border Canvas.Left="{x:Bind ViewModel.DateMonthX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.DateMonthY, Mode=OneWay}" BorderBrush="Blue" Background="#330000FF" BorderThickness="1" Padding="4,2">
+                            <TextBlock Text="MM" FontSize="11" Foreground="Blue" FontWeight="Bold" />
+                        </Border>
+                        <!-- Date Year -->
+                        <Border Canvas.Left="{x:Bind ViewModel.DateYearX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.DateYearY, Mode=OneWay}" BorderBrush="Blue" Background="#330000FF" BorderThickness="1" Padding="4,2">
+                            <TextBlock Text="YYYY" FontSize="11" Foreground="Blue" FontWeight="Bold" />
+                        </Border>
+                        <!-- Payee -->
+                        <Border Canvas.Left="{x:Bind ViewModel.PayeeLine1X, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.PayeeLine1Y, Mode=OneWay}" Width="{x:Bind ViewModel.PayeeLine1W, Mode=OneWay}" BorderBrush="DarkGreen" Background="#33008000" BorderThickness="1" Padding="4,2">
+                            <TextBlock Text="PAYEE NAME LINE" FontSize="12" Foreground="DarkGreen" FontWeight="Bold" />
+                        </Border>
+                        <!-- Amount Words -->
+                        <Border Canvas.Left="{x:Bind ViewModel.AmountWordsX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.AmountWordsY, Mode=OneWay}" Width="{x:Bind ViewModel.AmountWordsW, Mode=OneWay}" BorderBrush="Purple" Background="#33800080" BorderThickness="1" Padding="4,2">
+                            <TextBlock Text="** Sri Lanka Rupees Seventy-Five Thousand Only **" FontSize="11" Foreground="Purple" FontWeight="Bold" />
+                        </Border>
+                        <!-- Amount Figures -->
+                        <Border Canvas.Left="{x:Bind ViewModel.AmountFiguresX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.AmountFiguresY, Mode=OneWay}" Width="{x:Bind ViewModel.AmountFiguresW, Mode=OneWay}" BorderBrush="Red" Background="#33FF0000" BorderThickness="1" Padding="4,2">
+                            <TextBlock Text="**75,000.00**" FontSize="12" Foreground="Red" FontWeight="Bold" />
+                        </Border>
+                        <!-- Crossing -->
+                        <Border Canvas.Left="{x:Bind ViewModel.CrossingX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.CrossingY, Mode=OneWay}" BorderBrush="Orange" Background="#33FFA500" BorderThickness="1" Padding="4,2">
+                            <TextBlock Text="// A/C PAYEE ONLY //" FontSize="10" Foreground="Orange" FontWeight="Bold" />
+                        </Border>
+                    </Canvas>
+                </Grid>
             </Border>
         </StackPanel>
 

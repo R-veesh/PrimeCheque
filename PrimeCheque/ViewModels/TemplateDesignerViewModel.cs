@@ -39,6 +39,12 @@ namespace PrimeCheque.ViewModels
         [ObservableProperty]
         private double _chequeHeightMm = 88;
 
+        [ObservableProperty]
+        private string? _templateImagePath;
+
+        [ObservableProperty]
+        private string? _fullImagePath;
+
         // Field coordinates in mm
         [ObservableProperty] private double _dateDayX = 152;
         [ObservableProperty] private double _dateDayY = 12;
@@ -98,6 +104,25 @@ namespace PrimeCheque.ViewModels
             SeriesName = value.SeriesName;
             ChequeWidthMm = (double)value.ChequeWidthMm;
             ChequeHeightMm = (double)value.ChequeHeightMm;
+            TemplateImagePath = value.TemplateImagePath;
+
+            if (!string.IsNullOrEmpty(TemplateImagePath))
+            {
+                var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                var absPath = System.IO.Path.Combine(baseDir, TemplateImagePath);
+                if (System.IO.File.Exists(absPath))
+                {
+                    FullImagePath = absPath;
+                }
+                else
+                {
+                    FullImagePath = System.IO.Path.Combine(baseDir, "template_image", System.IO.Path.GetFileName(TemplateImagePath));
+                }
+            }
+            else
+            {
+                FullImagePath = null;
+            }
 
             try
             {
@@ -150,6 +175,7 @@ namespace PrimeCheque.ViewModels
             tmpl.ChequeWidthMm = (decimal)ChequeWidthMm;
             tmpl.ChequeHeightMm = (decimal)ChequeHeightMm;
             tmpl.TemplateConfig = jsonConfig;
+            tmpl.TemplateImagePath = TemplateImagePath;
             tmpl.BankId = SelectedBank?.Id;
 
             await _templateService.SaveTemplateAsync(tmpl);
