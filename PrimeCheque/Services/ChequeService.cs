@@ -153,5 +153,40 @@ namespace PrimeCheque.Services
             await _auditService.LogEventAsync(chequeId, "Printed", user, null, new { PdfPath = pdfPath });
             return true;
         }
+
+        public async Task<bool> IsDuplicateChequeAsync(Guid companyId, string payeeName, decimal amount)
+        {
+            var cutoff = DateTime.UtcNow.AddHours(-24);
+            return await _dbContext.Cheques.AnyAsync(c =>
+                c.CompanyId == companyId &&
+                c.PayeeName.ToLower() == payeeName.Trim().ToLower() &&
+                c.Amount == amount &&
+                c.CreatedAt >= cutoff &&
+                c.Status != ChequeStatus.Void);
+        }
+
+        public async Task<List<int>> GetMissingSequenceNumbersAsync(Guid chequeBookId)
+        {
+            var book = await _dbContext.ChequeBooks.FindAsync(chequeBookId);
+            if (book == null) return new List<int>();
+
+            var existingNumbers = await _dbContext.Cheques
+                .Where(c => c.ChequeBookId == chequeBookId)
+                .Select(c => c.ChequeNumber)
+                .ToListAsync();
+
+            var missing = new List<int>();
+            int maxNo = Math.Min(book.CurrentChequeNo - 1, book.EndChequeNo);
+
+            for (int i = book.StartChequeNo; i <= maxNo; i++)
+            {
+                if (!existingNumbers.Contains(i))
+                {
+                    missing.Add(i);
+                }
+            }
+
+            return missing;
+        }
     }
 }

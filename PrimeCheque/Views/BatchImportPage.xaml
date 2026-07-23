@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PrimeCheque.Views.BatchImportPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PrimeCheque.Views"
+    xmlns:converters="using:PrimeCheque.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <converters:AmountFormatConverter x:Key="AmountFormatConverter" />
+        <converters:DateFormatConverter x:Key="DateFormatConverter" />
+    </Page.Resources>
+
+    <ScrollViewer Padding="24">
+        <StackPanel Spacing="20">
+            <TextBlock Text="Batch Cheque Import" Style="{StaticResource TitleTextBlockStyle}" />
+
+            <!-- Configuration Card -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <StackPanel Spacing="16">
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <ComboBox Grid.Column="0" Header="Target Company" ItemsSource="{x:Bind ViewModel.Companies, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedCompany, Mode=TwoWay}" DisplayMemberPath="Name" HorizontalAlignment="Stretch" />
+                        <ComboBox Grid.Column="1" Header="Target Cheque Book" ItemsSource="{x:Bind ViewModel.ChequeBooks, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedChequeBook, Mode=TwoWay}" DisplayMemberPath="MaskedAccountNumber" HorizontalAlignment="Stretch" />
+                        <Button Grid.Column="2" Content="📁 Select CSV File" Command="{x:Bind ViewModel.BrowseAndParseFileCommand}" VerticalAlignment="Bottom" Style="{StaticResource AccentButtonStyle}" Padding="16,8" />
+                    </Grid>
+
+                    <TextBlock Text="{x:Bind ViewModel.FilePath, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" />
+                </StackPanel>
+            </Border>
+
+            <!-- Status Banner -->
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="24" VerticalAlignment="Center">
+                    <TextBlock Text="{x:Bind ViewModel.TotalCount, Mode=OneWay}" FontWeight="Bold" />
+                    <TextBlock Text="{x:Bind ViewModel.ValidCount, Mode=OneWay}" Foreground="Green" FontWeight="Bold" />
+                    <TextBlock Text="{x:Bind ViewModel.TotalAmount, Mode=OneWay, Converter={StaticResource AmountFormatConverter}}" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" FontWeight="Bold" />
+                </StackPanel>
+
+                <Button Grid.Column="1" Content="⚡ Import &amp; Create Draft Cheques" Command="{x:Bind ViewModel.ProcessBatchImportCommand}" Style="{StaticResource AccentButtonStyle}" Padding="20,10" />
+            </Grid>
+
+            <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" Foreground="Green" FontWeight="SemiBold" />
+
+            <!-- Data Table -->
+            <ListView ItemsSource="{x:Bind ViewModel.ImportedRows, Mode=OneWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="12" ColumnSpacing="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="60" />
+                                <ColumnDefinition Width="200" />
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="120" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding RowNumber}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="{Binding PayeeName}" FontWeight="Bold" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="2" Text="{Binding Amount, Converter={StaticResource AmountFormatConverter}}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="3" Text="{Binding ChequeDate, Converter={StaticResource DateFormatConverter}}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="4" Text="{Binding Memo}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="5" Text="{Binding ErrorMessage}" Foreground="Red" FontSize="11" VerticalAlignment="Center" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

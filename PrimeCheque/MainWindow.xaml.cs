@@ -51,11 +51,23 @@ namespace PrimeCheque
                     case "Payees":
                         _navigationService.Navigate(typeof(PayeeManagementPage));
                         break;
+                    case "BatchImport":
+                        _navigationService.Navigate(typeof(BatchImportPage));
+                        break;
+                    case "Reports":
+                        _navigationService.Navigate(typeof(ReportsPage));
+                        break;
+                    case "AuditLog":
+                        _navigationService.Navigate(typeof(AuditLogPage));
+                        break;
                     case "Companies":
                         _navigationService.Navigate(typeof(CompanyManagementPage));
                         break;
                     case "Banks":
                         _navigationService.Navigate(typeof(BankManagementPage));
+                        break;
+                    case "TemplateDesigner":
+                        _navigationService.Navigate(typeof(TemplateDesignerPage));
                         break;
                 }
             }

@@ -21,9 +21,13 @@
             <NavigationViewItem Content="Cheques Register" Tag="Cheques" Icon="List" />
             <NavigationViewItem Content="Cheque Books" Tag="ChequeBooks" Icon="Library" />
             <NavigationViewItem Content="Payees" Tag="Payees" Icon="Contact" />
+            <NavigationViewItem Content="Batch Import" Tag="BatchImport" Icon="Download" />
+            <NavigationViewItem Content="Reports" Tag="Reports" Icon="ReportHacked" />
+            <NavigationViewItem Content="Audit Log" Tag="AuditLog" Icon="Important" />
             <NavigationViewItemSeparator />
             <NavigationViewItem Content="Companies" Tag="Companies" Icon="AllApps" />
             <NavigationViewItem Content="Banks" Tag="Banks" Icon="Shop" />
+            <NavigationViewItem Content="Template Designer" Tag="TemplateDesigner" Icon="Crop" />
         </NavigationView.MenuItems>
 
         <Frame x:Name="ContentFrame" />

@@ -14,5 +14,7 @@ namespace PrimeCheque.Services.Interfaces
         Task<bool> ApproveChequeAsync(Guid chequeId, string approver);
         Task<bool> VoidChequeAsync(Guid chequeId, string user, string reason);
         Task<bool> MarkAsPrintedAsync(Guid chequeId, string user, string pdfPath);
+        Task<bool> IsDuplicateChequeAsync(Guid companyId, string payeeName, decimal amount);
+        Task<List<int>> GetMissingSequenceNumbersAsync(Guid chequeBookId);
     }
 }

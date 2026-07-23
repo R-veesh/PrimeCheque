@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PrimeCheque.Views.ReportsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PrimeCheque.Views"
+    xmlns:converters="using:PrimeCheque.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+        <converters:AmountFormatConverter x:Key="AmountFormatConverter" />
+        <converters:DateFormatConverter x:Key="DateFormatConverter" />
+    </Page.Resources>
+
+    <ScrollViewer Padding="24">
+        <StackPanel Spacing="20">
+            <TextBlock Text="Reports &amp; Analytics" Style="{StaticResource TitleTextBlockStyle}" />
+
+            <!-- Filters Bar -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox Grid.Column="0" Header="Company" ItemsSource="{x:Bind ViewModel.Companies, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedCompany, Mode=TwoWay}" DisplayMemberPath="Name" HorizontalAlignment="Stretch" />
+                    <ComboBox Grid.Column="1" Header="Report Type" ItemsSource="{x:Bind ViewModel.ReportTypes}" SelectedItem="{x:Bind ViewModel.SelectedReportType, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+                    <DatePicker Grid.Column="2" Header="Start Date" Date="{x:Bind ViewModel.StartDate, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+                    <DatePicker Grid.Column="3" Header="End Date" Date="{x:Bind ViewModel.EndDate, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+                    <Button Grid.Column="4" Content="📊 Generate Report" Command="{x:Bind ViewModel.GenerateReportCommand}" Style="{StaticResource AccentButtonStyle}" VerticalAlignment="Bottom" Padding="16,8" />
+                </Grid>
+            </Border>
+
+            <!-- Summary Bar -->
+            <Border Background="{ThemeResource SystemFillColorSuccessBackgroundBrush}" CornerRadius="6" Padding="16">
+                <Grid ColumnSpacing="24">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{x:Bind ViewModel.TotalCount, Mode=OneWay}" FontWeight="Bold" Style="{StaticResource BodyLargeTextBlockStyle}" />
+                    <TextBlock Grid.Column="1" Text="{x:Bind ViewModel.TotalAmount, Mode=OneWay, Converter={StaticResource AmountFormatConverter}}" FontWeight="Bold" Style="{StaticResource BodyLargeTextBlockStyle}" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                </Grid>
+            </Border>
+
+            <!-- Table -->
+            <ListView ItemsSource="{x:Bind ViewModel.ReportData, Mode=OneWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="12" ColumnSpacing="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="200" />
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="120" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding ChequeNumber}" FontWeight="Bold" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="{Binding PayeeName}" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="2" Text="{Binding Amount, Converter={StaticResource AmountFormatConverter}}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="3" Text="{Binding ChequeDate, Converter={StaticResource DateFormatConverter}}" VerticalAlignment="Center" />
+                            <Border Grid.Column="4" Background="{Binding Status, Converter={StaticResource StatusToColorConverter}}" CornerRadius="4" Padding="8,4" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Status}" Foreground="White" FontSize="11" FontWeight="Bold" />
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+    </ScrollViewer>
+</Page>
