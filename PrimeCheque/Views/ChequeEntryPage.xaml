@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PrimeCheque.Views.ChequeEntryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PrimeCheque.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer Padding="24">
+        <StackPanel Spacing="20" MaxWidth="800" HorizontalAlignment="Left">
+            <TextBlock Text="New Cheque Entry" Style="{StaticResource TitleTextBlockStyle}" />
+
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <StackPanel Spacing="16">
+                    <!-- Company & Cheque Book Selection -->
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="150" />
+                        </Grid.ColumnDefinitions>
+
+                        <ComboBox Grid.Column="0" Header="Paying Company" ItemsSource="{x:Bind ViewModel.Companies, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedCompany, Mode=TwoWay}" DisplayMemberPath="Name" HorizontalAlignment="Stretch" />
+                        <ComboBox Grid.Column="1" Header="Cheque Book / Account" ItemsSource="{x:Bind ViewModel.ChequeBooks, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedChequeBook, Mode=TwoWay}" DisplayMemberPath="MaskedAccountNumber" HorizontalAlignment="Stretch" />
+                        <TextBox Grid.Column="2" Header="Cheque No" Text="{x:Bind ViewModel.ChequeNumber, Mode=OneWay}" IsReadOnly="True" />
+                    </Grid>
+
+                    <!-- Payee & Date -->
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+
+                        <AutoSuggestBox Grid.Column="0" Header="Payee Name" Text="{x:Bind ViewModel.PayeeName, Mode=TwoWay}" ItemsSource="{x:Bind ViewModel.Payees, Mode=OneWay}" DisplayMemberPath="Name" PlaceholderText="Select or type payee name..." />
+                        <DatePicker Grid.Column="1" Header="Cheque Date" Date="{x:Bind ViewModel.ChequeDate, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+                    </Grid>
+
+                    <!-- Amount & Crossing -->
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+
+                        <NumberBox Grid.Column="0" Header="Amount (LKR)" Value="{x:Bind ViewModel.Amount, Mode=TwoWay}" SmallChange="100" LargeChange="5000" SpinButtonPlacementMode="Compact" />
+                        <ComboBox Grid.Column="1" Header="Crossing Type" ItemsSource="{x:Bind ViewModel.CrossingTypes}" SelectedItem="{x:Bind ViewModel.SelectedCrossing, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+                    </Grid>
+
+                    <!-- Amount in Words Preview Card -->
+                    <Border Background="{ThemeResource SystemFillColorAttentionBackgroundBrush}" CornerRadius="6" Padding="16">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="AMOUNT IN WORDS (LKR)" FontSize="11" FontWeight="Bold" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Text="{x:Bind ViewModel.AmountInWords, Mode=OneWay}" Style="{StaticResource BodyLargeTextBlockStyle}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Memo / Reference -->
+                    <TextBox Header="Memo / Voucher Reference (Optional)" Text="{x:Bind ViewModel.Memo, Mode=TwoWay}" PlaceholderText="e.g. Inv #84920 payment" />
+
+                    <!-- Action Buttons -->
+                    <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right" Margin="0,12,0,0">
+                        <Button Content="Save as Draft" Command="{x:Bind ViewModel.SaveDraftCommand}" Padding="16,8" />
+                        <Button Content="Preview &amp; Print" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.PreviewAndPrintCommand}" Padding="20,8" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

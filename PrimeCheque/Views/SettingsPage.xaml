@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PrimeCheque.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PrimeCheque.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer Padding="24">
+        <StackPanel Spacing="24" MaxWidth="700" HorizontalAlignment="Left">
+            <TextBlock Text="Application Settings" Style="{StaticResource TitleTextBlockStyle}" />
+
+            <!-- Amount to Words Settings -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Amount to Words (LKR Engine)" Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                    <TextBox Header="Currency Prefix" Text="{x:Bind ViewModel.AmountPrefix, Mode=TwoWay}" />
+                    <TextBox Header="Currency Suffix" Text="{x:Bind ViewModel.AmountSuffix, Mode=TwoWay}" />
+                    <TextBox Header="Cents Word" Text="{x:Bind ViewModel.CentsWord, Mode=TwoWay}" />
+                    <CheckBox Content="Include 'and' before cents (e.g. and Cents Fifty Only)" IsChecked="{x:Bind ViewModel.UseAnd, Mode=TwoWay}" />
+                </StackPanel>
+            </Border>
+
+            <!-- Backup & Maintenance -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Database &amp; Local Backup" Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <TextBlock Text="Create a local offline backup of all cheques, bank books, payees, and audit logs." Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                    <Button Content="💾 Backup Database to Desktop" Command="{x:Bind ViewModel.CreateBackupCommand}" Style="{StaticResource AccentButtonStyle}" />
+                    <TextBlock Text="{x:Bind ViewModel.BackupStatusMessage, Mode=OneWay}" Foreground="Green" FontWeight="SemiBold" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

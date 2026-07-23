@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PrimeCheque.Views.PayeeManagementPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PrimeCheque.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Padding="24" ColumnSpacing="24">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- List View -->
+        <StackPanel Grid.Column="0" Spacing="16">
+            <TextBlock Text="Payee Directory" Style="{StaticResource TitleTextBlockStyle}" />
+
+            <Grid ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="250" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <ComboBox Grid.Column="0" Header="Company" ItemsSource="{x:Bind ViewModel.Companies, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedCompany, Mode=TwoWay}" DisplayMemberPath="Name" HorizontalAlignment="Stretch" />
+                <TextBox Grid.Column="1" Header="Search Payees" Text="{x:Bind ViewModel.SearchQuery, Mode=TwoWay}" PlaceholderText="Type to search..." />
+            </Grid>
+
+            <ListView ItemsSource="{x:Bind ViewModel.Payees, Mode=OneWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="12" ColumnSpacing="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="150" />
+                            </Grid.ColumnDefinitions>
+                            <Button Grid.Column="0" Style="{StaticResource TextBlockButtonStyle}">
+                                <FontIcon Glyph="&#xE735;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                            </Button>
+                            <StackPanel Grid.Column="1" Spacing="2">
+                                <TextBlock Text="{Binding Name}" FontWeight="Bold" />
+                                <TextBlock Text="{Binding NickName}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" />
+                            </StackPanel>
+                            <TextBlock Grid.Column="2" Text="{Binding DefaultMemo}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+
+        <!-- Form View -->
+        <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+            <StackPanel Spacing="16">
+                <TextBlock Text="Add Payee" Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                <TextBox Header="Payee Full Name" Text="{x:Bind ViewModel.PayeeName, Mode=TwoWay}" />
+                <TextBox Header="Nickname / Alias" Text="{x:Bind ViewModel.NickName, Mode=TwoWay}" />
+                <TextBox Header="Default Memo" Text="{x:Bind ViewModel.DefaultMemo, Mode=TwoWay}" />
+                <CheckBox Content="Mark as Favourite" IsChecked="{x:Bind ViewModel.IsFavourite, Mode=TwoWay}" />
+
+                <Button Content="Save Payee" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.SavePayeeCommand}" HorizontalAlignment="Right" Margin="0,12,0,0" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>

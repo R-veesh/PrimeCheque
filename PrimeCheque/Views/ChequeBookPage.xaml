@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PrimeCheque.Views.ChequeBookPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PrimeCheque.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Padding="24" ColumnSpacing="24">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- List View -->
+        <StackPanel Grid.Column="0" Spacing="16">
+            <TextBlock Text="Cheque Book Management" Style="{StaticResource TitleTextBlockStyle}" />
+
+            <ComboBox Header="Select Company" ItemsSource="{x:Bind ViewModel.Companies, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedCompany, Mode=TwoWay}" DisplayMemberPath="Name" Width="300" HorizontalAlignment="Left" />
+
+            <ListView ItemsSource="{x:Bind ViewModel.ChequeBooks, Mode=OneWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="12" ColumnSpacing="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="100" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Bank.Name}" FontWeight="Bold" />
+                            <TextBlock Grid.Column="1" Text="{Binding MaskedAccountNumber}" />
+                            <TextBlock Grid.Column="2" Text="{Binding StartChequeNo}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Grid.Column="3" Text="{Binding EndChequeNo}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Grid.Column="4" Text="{Binding CurrentChequeNo}" FontWeight="SemiBold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+
+        <!-- Form View -->
+        <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+            <StackPanel Spacing="16">
+                <TextBlock Text="Register New Cheque Book" Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                <ComboBox Header="Bank" ItemsSource="{x:Bind ViewModel.Banks, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedBank, Mode=TwoWay}" DisplayMemberPath="Name" HorizontalAlignment="Stretch" />
+                <TextBox Header="Bank Account Number" Text="{x:Bind ViewModel.AccountNumber, Mode=TwoWay}" />
+                <NumberBox Header="Start Cheque Number" Value="{x:Bind ViewModel.StartChequeNo, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                <NumberBox Header="End Cheque Number" Value="{x:Bind ViewModel.EndChequeNo, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+
+                <Button Content="Add Cheque Book" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.AddChequeBookCommand}" HorizontalAlignment="Right" Margin="0,12,0,0" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>

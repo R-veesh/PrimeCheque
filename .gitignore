@@ -1,0 +1,50 @@
+## Visual Studio & .NET Build Artifacts
+[Bb]in/
+[Oo]bj/
+out/
+build/
+*.user
+*.userosscache
+*.sln.docstates
+
+## Visual Studio Cache & Options
+.vs/
+.vscode/
+*.suo
+*.user
+*.userHost
+*.sln.docstates
+*.userprefs
+*.workspace
+*.pidb
+*.vsp
+*.vspx
+*.sap
+
+## NuGet
+*.nupkg
+**/packages/
+!**/packages/build/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Windows Temp Files & Caches
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.stackdump
+
+## App Database & Generated Files
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.log
+GeneratedPdfs/
+
+## ReSharper / JetBrains
+_ReSharper*/
+*.ReSharper
+*.DotSettings.user

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PrimeCheque.Views.PrintPreviewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PrimeCheque.Views"
+    xmlns:converters="using:PrimeCheque.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <converters:AmountFormatConverter x:Key="AmountFormatConverter" />
+        <converters:DateFormatConverter x:Key="DateFormatConverter" />
+    </Page.Resources>
+
+    <Grid Padding="24" ColumnSpacing="24">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Preview Section -->
+        <StackPanel Grid.Column="0" Spacing="16">
+            <TextBlock Text="Cheque Print Preview" Style="{StaticResource TitleTextBlockStyle}" />
+
+            <!-- Cheque Summary Card -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="16" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <Grid ColumnSpacing="16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="PAYEE" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Text="{x:Bind ViewModel.Cheque.PayeeName, Mode=OneWay}" FontWeight="Bold" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="AMOUNT" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Text="{x:Bind ViewModel.Cheque.Amount, Mode=OneWay, Converter={StaticResource AmountFormatConverter}}" FontWeight="Bold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="CHEQUE DATE" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Text="{x:Bind ViewModel.Cheque.ChequeDate, Mode=OneWay, Converter={StaticResource DateFormatConverter}}" FontWeight="Bold" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- PDF Container / Path display -->
+            <Border Height="350" Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}" CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="12">
+                    <FontIcon Glyph="&#xE8A5;" FontSize="48" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                    <TextBlock Text="Actual-Size Cheque PDF Ready" Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <TextBlock Text="{x:Bind ViewModel.PdfFilePath, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="11" TextWrapping="Wrap" MaxWidth="400" TextAlignment="Center" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+        <!-- Printer Settings & Calibration Panel -->
+        <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+            <StackPanel Spacing="16">
+                <TextBlock Text="Printer Controls" Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                <ComboBox Header="Select Printer" ItemsSource="{x:Bind ViewModel.Printers, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedPrinter, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+
+                <TextBlock Text="Millimetre Calibration Offsets" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
+
+                <NumberBox Header="Horizontal Offset (mm)" Value="{x:Bind ViewModel.HorizontalOffsetMm, Mode=TwoWay}" SmallChange="1" LargeChange="5" SpinButtonPlacementMode="Compact" />
+                <NumberBox Header="Vertical Offset (mm)" Value="{x:Bind ViewModel.VerticalOffsetMm, Mode=TwoWay}" SmallChange="1" LargeChange="5" SpinButtonPlacementMode="Compact" />
+
+                <Button Content="🔄 Refresh Preview" Command="{x:Bind ViewModel.GeneratePdfPreviewCommand}" HorizontalAlignment="Stretch" />
+
+                <Border Height="1" Background="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,8" />
+
+                <Button Content="🖨️ PRINT CHEQUE LEAF" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.PrintChequeCommand}" HorizontalAlignment="Stretch" Padding="0,12" FontSize="16" FontWeight="Bold" />
+
+                <TextBlock Text="✅ Cheque Printed Successfully" Foreground="Green" FontWeight="Bold" HorizontalAlignment="Center" Visibility="{x:Bind ViewModel.IsPrinted, Mode=OneWay}" Margin="0,8,0,0" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>
