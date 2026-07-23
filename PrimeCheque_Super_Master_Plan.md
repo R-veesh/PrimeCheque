@@ -461,6 +461,7 @@ public class BankTemplate
     public string BankName { get; set; } = string.Empty;
     public string SeriesName { get; set; } = string.Empty;     // e.g. "Current Account Cheque – Series A"
     public string TemplateConfig { get; set; } = "{}";         // JSON: field positions (x, y coordinates in mm)
+    public string? TemplateImagePath { get; set; }             // Relative path to cheque background image (e.g. "template_image/BOC_LK.png")
     public decimal ChequeWidthMm { get; set; }
     public decimal ChequeHeightMm { get; set; }
     public bool IsDefault { get; set; }                        // System-provided template
@@ -686,7 +687,7 @@ Each ViewModel uses `CommunityToolkit.Mvvm` source generators:
 | **ChequeBookViewModel** | `AddChequeBook`, `EditChequeBook`, `CancelChequeBook` | `ChequeBooks`, `SelectedBook`, `UsedLeaves`, `RemainingLeaves` |
 | **PayeeManagementViewModel** | `AddPayee`, `EditPayee`, `DeletePayee`, `ToggleFavourite` | `Payees`, `SearchText` |
 | **PrintPreviewViewModel** | `Print`, `ExportPdf`, `AdjustCalibration`, `TestPrint` | `PreviewImage`, `SelectedPrinter`, `SelectedTray`, `HOffset`, `VOffset` |
-| **TemplateDesignerViewModel** | `SaveTemplate`, `LoadTemplate`, `ExportJson`, `ImportJson` | `Fields`, `ChequeWidth`, `ChequeHeight`, `BackgroundImage`, `SelectedBank` |
+| **TemplateDesignerViewModel** | `SaveTemplate`, `LoadTemplate`, `ExportJson`, `ImportJson`, `LoadBackgroundImage` | `Fields`, `ChequeWidth`, `ChequeHeight`, `BackgroundImage`, `SelectedBank`, `TemplateImagePath`, `FieldOverlayVisible` |
 | **BatchImportViewModel** | `ImportExcel`, `ImportCsv`, `ValidateBatch`, `ApproveBatch`, `PrintBatch` | `ImportedRows`, `ValidationErrors`, `TotalAmount`, `ChequeCount` |
 | **ReportsViewModel** | `GenerateReport`, `ExportReport` | `SelectedReportType`, `DateRange`, `ReportData` |
 | **AuditLogViewModel** | `Search`, `Export` | `AuditEntries`, `FilterUser`, `FilterAction`, `FilterDate` |
@@ -747,7 +748,7 @@ The MainWindow uses a `NavigationView` with side navigation:
 | 8 | **BankManagementPage** | Bank master data | 🟡 Phase 1 |
 | 9 | **SettingsPage** | Amount-to-words config, backup settings, printer calibration | 🟡 Phase 1 |
 | 10 | **BatchImportPage** | Excel/CSV import, validation, bulk approval | 🟠 Phase 2 |
-| 11 | **TemplateDesignerPage** | Drag-and-drop template editor with ruler guides | 🟠 Phase 2 |
+| 11 | **TemplateDesignerPage** | Visual template editor: loads real bank cheque images from `template_image/` as background, overlays draggable field rectangles (date, payee, amount, crossing, memo) with mm coordinates, ruler guides | 🟠 Phase 2 |
 | 12 | **ReportsPage** | Cheque register, PDC, void, usage, reconciliation reports | 🟠 Phase 2 |
 | 13 | **AuditLogPage** | Searchable audit trail viewer | 🟠 Phase 2 |
 | 14 | **UserManagementPage** | RBAC user management (Professional/Enterprise) | 🔵 Phase 3 |
@@ -800,21 +801,50 @@ Each bank template stores field positions in JSON format:
 }
 ```
 
-### 10.2 Supported Sri Lankan Banks (Initial)
+### 10.2 Supported Sri Lankan Banks & Template Images
 
-| # | Bank | Short Name |
-|---|---|---|
-| 1 | Bank of Ceylon | BOC |
-| 2 | Commercial Bank of Ceylon | COMBANK |
-| 3 | Sampath Bank | SAMPATH |
-| 4 | Hatton National Bank | HNB |
-| 5 | Nations Trust Bank | NTB |
-| 6 | DFCC Bank | DFCC |
-| 7 | Seylan Bank | SEYLAN |
-| 8 | Pan Asia Bank (PABC) | PABC |
+Each bank has a real cheque template image stored in `PrimeCheque/template_image/` (sourced from existing cheque writing tool output). These serve as **visual background references** in the Template Designer, so the user can precisely position field rectangles on the actual cheque layout.
+
+| # | Bank | Short Name | Template Image File |
+|---|---|---|---|
+| 1 | Bank of Ceylon | BOC | `BOC_LK.png` |
+| 2 | Commercial Bank of Ceylon | COMBANK | `CommercialBankOfCeylon_LK.png` |
+| 3 | Sampath Bank | SAMPATH | `SampathBank_LK.png` |
+| 4 | Hatton National Bank | HNB | `HattonNationalBank_LK.jpg` |
+| 5 | Nations Trust Bank | NTB | `NationsTrustBank_LK.png` |
+| 6 | DFCC Bank | DFCC | `DFCCBank_LK.jpg` |
+| 7 | Seylan Bank | SEYLAN | `SeylanBank_LK.png` |
+| 8 | Pan Asia Bank (PABC) | PABC | `PanAsiaBank_LK.jpg` |
+| 9 | Pan Asia Bank – First Class | PABC-FC | `PanAsiaBank_FirstClass_LK.jpg` |
+| 10 | People's Bank | PB | `PeoplesBank_LK.jpg` |
+| 11 | NDB Bank | NDB | `NDB_LK.jpg` |
+| 12 | Amana Bank | AMANA | `AmanaBank_LK.jpg` |
+| 13 | Cargills Bank | CARGILLS | `CargillsBank_LK.jpg` |
+| 14 | Union Bank | UNION | `UnionBank_LK.jpg` |
+| 15 | HSBC Advance | HSBC | `HSBC_Advance_LK.jpg` |
+| 16 | Citibank | CITI | `Citibank_LK.jpg` |
+| 17 | Standard Chartered | STANCHART | `StandardChartered_LK.jpg` |
+| 18 | Public Bank | PUBLIC | `PublicBank_LK.jpg` |
+
+### 10.2.1 Template Image Workflow
+
+```mermaid
+flowchart LR
+    A["Select Bank"] --> B["Load template_image/*.jpg/png"]
+    B --> C["Display as background in Template Designer"]
+    C --> D["User positions field rectangles on top"]
+    D --> E["Save x/y/width/height in mm to TemplateConfig JSON"]
+    E --> F["PdfGenerationService uses coordinates at print time"]
+```
+
+- The Template Designer loads the bank's cheque image as a **scaled background** on a Canvas
+- Semi-transparent colored rectangles represent each field (Date, Payee, Amount Words, Amount Figures, Crossing, Memo)
+- The user adjusts field positions using **NumberBox** controls (mm precision) or by **dragging** the rectangles directly
+- Coordinates are saved as the `TemplateConfig` JSON into the `BankTemplate` table
+- At print time, the `PdfGenerationService` reads these coordinates to position text on the **blank cheque leaf** (the background image is for design reference only, not printed)
 
 > [!WARNING]
-> Publish a template ONLY after testing it against an actual cheque leaf lawfully supplied by a customer or bank. The list above is a research starting point, not a declaration of compliance.
+> Publish a template ONLY after testing it against an actual cheque leaf lawfully supplied by a customer or bank. The images above are from an existing cheque writing tool and serve as design references only.
 
 ### 10.3 Template Hierarchy
 
