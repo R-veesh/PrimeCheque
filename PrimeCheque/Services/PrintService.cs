@@ -21,16 +21,23 @@ namespace PrimeCheque.Services
         public List<string> GetInstalledPrinters()
         {
             var printers = new List<string>();
-            foreach (string printer in PrinterSettings.InstalledPrinters)
+            try
             {
-                printers.Add(printer);
+                foreach (string printer in PrinterSettings.InstalledPrinters)
+                {
+                    printers.Add(printer);
+                }
+            }
+            catch
+            {
+                // Fallback to Microsoft Print to PDF if printer enumeration fails
+                printers.Add("Microsoft Print to PDF");
             }
             return printers;
         }
 
         public Task<bool> PrintPdfAsync(string pdfPath, string printerName, string? trayName = null)
         {
-            // Windows native printing trigger for PDF file
             try
             {
                 var process = new System.Diagnostics.Process();
@@ -53,30 +60,44 @@ namespace PrimeCheque.Services
 
         public async Task<PrinterCalibration?> GetCalibrationAsync(string printerName, Guid? templateId = null)
         {
-            return await _dbContext.PrinterCalibrations
-                .FirstOrDefaultAsync(pc => pc.PrinterName == printerName && pc.TemplateId == templateId);
+            try
+            {
+                return await _dbContext.PrinterCalibrations
+                    .FirstOrDefaultAsync(pc => pc.PrinterName == printerName && pc.TemplateId == templateId);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public async Task SaveCalibrationAsync(PrinterCalibration calibration)
         {
-            var existing = await _dbContext.PrinterCalibrations
-                .FirstOrDefaultAsync(pc => pc.PrinterName == calibration.PrinterName && pc.TemplateId == calibration.TemplateId);
-
-            if (existing == null)
+            try
             {
-                calibration.CreatedAt = DateTime.UtcNow;
-                _dbContext.PrinterCalibrations.Add(calibration);
-            }
-            else
-            {
-                existing.HorizontalOffsetMm = calibration.HorizontalOffsetMm;
-                existing.VerticalOffsetMm = calibration.VerticalOffsetMm;
-                existing.TrayName = calibration.TrayName;
-                existing.UpdatedAt = DateTime.UtcNow;
-                _dbContext.PrinterCalibrations.Update(existing);
-            }
+                var existing = await _dbContext.PrinterCalibrations
+                    .FirstOrDefaultAsync(pc => pc.PrinterName == calibration.PrinterName && pc.TemplateId == calibration.TemplateId);
 
-            await _dbContext.SaveChangesAsync();
+                if (existing == null)
+                {
+                    calibration.CreatedAt = DateTime.UtcNow;
+                    _dbContext.PrinterCalibrations.Add(calibration);
+                }
+                else
+                {
+                    existing.HorizontalOffsetMm = calibration.HorizontalOffsetMm;
+                    existing.VerticalOffsetMm = calibration.VerticalOffsetMm;
+                    existing.TrayName = calibration.TrayName;
+                    existing.UpdatedAt = DateTime.UtcNow;
+                    _dbContext.PrinterCalibrations.Update(existing);
+                }
+
+                await _dbContext.SaveChangesAsync();
+            }
+            catch
+            {
+                // Gracefully handle calibration save exceptions
+            }
         }
     }
 }

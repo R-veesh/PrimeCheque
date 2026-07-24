@@ -72,7 +72,7 @@ namespace PrimeCheque.ViewModels
         {
             if (cheque == null) return;
             await _chequeService.ApproveChequeAsync(cheque.Id, "Checker");
-            await LoadChequesAsync();
+            _navigationService.Navigate(typeof(PrintPreviewPage), cheque.Id);
         }
 
         [RelayCommand]

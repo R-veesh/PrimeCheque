@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PrimeCheque.Data;
@@ -14,6 +15,12 @@ namespace PrimeCheque.Services
     {
         private readonly PrimeChequeDbContext _dbContext;
 
+        private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions
+        {
+            ReferenceHandler = ReferenceHandler.IgnoreCycles,
+            WriteIndented = false
+        };
+
         public AuditService(PrimeChequeDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -21,19 +28,39 @@ namespace PrimeCheque.Services
 
         public async Task LogEventAsync(Guid chequeId, string actionType, string performedBy, object? beforeState = null, object? afterState = null)
         {
-            var auditLog = new ChequeAuditLog
+            try
             {
-                Id = Guid.NewGuid(),
-                ChequeId = chequeId,
-                ActionType = actionType,
-                PerformedBy = performedBy,
-                Timestamp = DateTime.UtcNow,
-                BeforeState = beforeState != null ? JsonSerializer.Serialize(beforeState) : null,
-                AfterState = afterState != null ? JsonSerializer.Serialize(afterState) : null
-            };
+                var auditLog = new ChequeAuditLog
+                {
+                    Id = Guid.NewGuid(),
+                    ChequeId = chequeId,
+                    ActionType = actionType,
+                    PerformedBy = performedBy,
+                    Timestamp = DateTime.UtcNow,
+                    BeforeState = SafeSerialize(beforeState),
+                    AfterState = SafeSerialize(afterState)
+                };
 
-            _dbContext.ChequeAuditLogs.Add(auditLog);
-            await _dbContext.SaveChangesAsync();
+                _dbContext.ChequeAuditLogs.Add(auditLog);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch
+            {
+                // Prevent logging exceptions from interrupting core workflow
+            }
+        }
+
+        private static string? SafeSerialize(object? obj)
+        {
+            if (obj == null) return null;
+            try
+            {
+                return JsonSerializer.Serialize(obj, JsonOptions);
+            }
+            catch
+            {
+                return obj.ToString();
+            }
         }
 
         public async Task<List<ChequeAuditLog>> GetAuditLogsForChequeAsync(Guid chequeId)

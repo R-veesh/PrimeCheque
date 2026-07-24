@@ -63,5 +63,12 @@ namespace PrimeCheque.ViewModels
         {
             _navigationService.Navigate(typeof(ChequeListPage));
         }
+
+        [RelayCommand]
+        private void PrintCheque(Cheque? cheque)
+        {
+            if (cheque == null) return;
+            _navigationService.Navigate(typeof(PrintPreviewPage), cheque.Id);
+        }
     }
 }

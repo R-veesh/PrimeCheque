@@ -39,12 +39,12 @@
                     <DataTemplate>
                         <Grid Padding="12" ColumnSpacing="16">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="100" />
-                                <ColumnDefinition Width="200" />
-                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="80" />
+                                <ColumnDefinition Width="180" />
+                                <ColumnDefinition Width="140" />
+                                <ColumnDefinition Width="110" />
                                 <ColumnDefinition Width="120" />
-                                <ColumnDefinition Width="120" />
-                                <ColumnDefinition Width="160" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="{Binding ChequeNumber}" FontWeight="Bold" VerticalAlignment="Center" />
                             <TextBlock Grid.Column="1" Text="{Binding PayeeName}" VerticalAlignment="Center" />
@@ -57,7 +57,7 @@
                                 <Button Content="Submit" Command="{Binding DataContext.SubmitForApprovalCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Padding="8,4" FontSize="11" />
                                 <Button Content="Approve" Command="{Binding DataContext.ApproveChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Style="{StaticResource AccentButtonStyle}" Padding="8,4" FontSize="11" />
                                 <Button Content="Reject" Command="{Binding DataContext.RejectChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Padding="8,4" FontSize="11" />
-                                <Button Content="Print" Command="{Binding DataContext.PrintChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Padding="8,4" FontSize="11" />
+                                <Button Content="🖨️ Print / Preview" Command="{Binding DataContext.PrintChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Style="{StaticResource AccentButtonStyle}" Padding="10,4" FontSize="11" FontWeight="Bold" />
                             </StackPanel>
                         </Grid>
                     </DataTemplate>
