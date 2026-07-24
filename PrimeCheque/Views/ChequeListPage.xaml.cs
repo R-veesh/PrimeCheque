@@ -18,7 +18,14 @@ namespace PrimeCheque.Views
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            await ViewModel.LoadChequesAsync();
+            try
+            {
+                await ViewModel.LoadChequesAsync();
+            }
+            catch
+            {
+                // Prevent async void unhandled exception from crashing the app
+            }
         }
     }
 }

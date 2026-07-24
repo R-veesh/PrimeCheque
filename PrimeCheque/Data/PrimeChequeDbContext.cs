@@ -33,9 +33,25 @@ namespace PrimeCheque.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PrimeCheque");
-                Directory.CreateDirectory(folder);
-                var dbPath = Path.Combine(folder, "primecheque.db");
+                var explicitDbPath = @"D:\PrimeOneWork\C#\PrimeCheque\PrimeCheque\PrimeCheque.db";
+                var localBinDb = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PrimeCheque.db");
+
+                string dbPath;
+                if (File.Exists(explicitDbPath))
+                {
+                    dbPath = explicitDbPath;
+                }
+                else if (File.Exists(localBinDb))
+                {
+                    dbPath = localBinDb;
+                }
+                else
+                {
+                    var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PrimeCheque");
+                    Directory.CreateDirectory(folder);
+                    dbPath = Path.Combine(folder, "primecheque.db");
+                }
+
                 optionsBuilder.UseSqlite($"Data Source={dbPath}");
             }
         }

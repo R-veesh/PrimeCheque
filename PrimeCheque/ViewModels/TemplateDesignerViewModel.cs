@@ -82,17 +82,24 @@ namespace PrimeCheque.ViewModels
 
         public async Task LoadDataAsync()
         {
-            var bnks = await _bankService.GetAllBanksAsync();
-            Banks.Clear();
-            foreach (var b in bnks) Banks.Add(b);
-
-            var tmpls = await _templateService.GetAllTemplatesAsync();
-            Templates.Clear();
-            foreach (var t in tmpls) Templates.Add(t);
-
-            if (Templates.Count > 0)
+            try
             {
-                SelectedTemplate = Templates[0];
+                var bnks = await _bankService.GetAllBanksAsync();
+                Banks.Clear();
+                foreach (var b in bnks) Banks.Add(b);
+
+                var tmpls = await _templateService.GetAllTemplatesAsync();
+                Templates.Clear();
+                foreach (var t in tmpls) Templates.Add(t);
+
+                if (Templates.Count > 0)
+                {
+                    SelectedTemplate = Templates[0];
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = "Error loading template data: " + ex.Message;
             }
         }
 
@@ -100,32 +107,37 @@ namespace PrimeCheque.ViewModels
         {
             if (value == null) return;
 
-            BankName = value.BankName;
-            SeriesName = value.SeriesName;
-            ChequeWidthMm = (double)value.ChequeWidthMm;
-            ChequeHeightMm = (double)value.ChequeHeightMm;
-            TemplateImagePath = value.TemplateImagePath;
-
-            if (!string.IsNullOrEmpty(TemplateImagePath))
+            try
             {
-                var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-                var absPath = System.IO.Path.Combine(baseDir, TemplateImagePath);
-                if (System.IO.File.Exists(absPath))
+                BankName = value.BankName ?? string.Empty;
+                SeriesName = value.SeriesName ?? string.Empty;
+                ChequeWidthMm = (double)value.ChequeWidthMm;
+                ChequeHeightMm = (double)value.ChequeHeightMm;
+                TemplateImagePath = value.TemplateImagePath;
+
+                if (!string.IsNullOrEmpty(TemplateImagePath))
                 {
-                    FullImagePath = absPath;
+                    var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                    var absPath = System.IO.Path.Combine(baseDir, TemplateImagePath);
+                    if (!System.IO.File.Exists(absPath))
+                    {
+                        absPath = System.IO.Path.Combine(baseDir, "template_image", System.IO.Path.GetFileName(TemplateImagePath));
+                    }
+
+                    if (System.IO.File.Exists(absPath))
+                    {
+                        FullImagePath = new Uri(absPath).AbsoluteUri;
+                    }
+                    else
+                    {
+                        FullImagePath = null;
+                    }
                 }
                 else
                 {
-                    FullImagePath = System.IO.Path.Combine(baseDir, "template_image", System.IO.Path.GetFileName(TemplateImagePath));
+                    FullImagePath = null;
                 }
-            }
-            else
-            {
-                FullImagePath = null;
-            }
 
-            try
-            {
                 if (!string.IsNullOrWhiteSpace(value.TemplateConfig))
                 {
                     var cfg = JsonSerializer.Deserialize<TemplateConfigDto>(value.TemplateConfig);
@@ -145,7 +157,7 @@ namespace PrimeCheque.ViewModels
             }
             catch
             {
-                // Fallback
+                // Fallback gracefully
             }
         }
 
