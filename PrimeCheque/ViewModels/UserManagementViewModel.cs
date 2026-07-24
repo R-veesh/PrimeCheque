@@ -25,7 +25,7 @@ namespace PrimeCheque.ViewModels
         private string _displayName = string.Empty;
 
         [ObservableProperty]
-        private UserRole _selectedRole = UserRole.Maker;
+        private UserRole _selectedRole = UserRole.ChequePreparer;
 
         [ObservableProperty]
         private string _statusMessage = string.Empty;

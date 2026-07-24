@@ -1119,85 +1119,86 @@ All printed content must be:
 ## 19. File-by-File Implementation Checklist
 
 ### Models (Phase 1)
-- [ ] `Models/Company.cs`
-- [ ] `Models/Bank.cs`
-- [ ] `Models/ChequeBook.cs` + `ChequeBookStatus` enum
-- [ ] `Models/Cheque.cs` + `ChequeStatus` enum + `CrossingType` enum
-- [ ] `Models/ChequeAuditLog.cs`
-- [ ] `Models/BankTemplate.cs`
-- [ ] `Models/Payee.cs`
-- [ ] `Models/User.cs` + `UserRole` enum
-- [ ] `Models/PrinterCalibration.cs`
-- [ ] `Models/AppSettings.cs`
+- [x] `Models/Company.cs`
+- [x] `Models/Bank.cs`
+- [x] `Models/ChequeBook.cs` + `ChequeBookStatus` enum
+- [x] `Models/Cheque.cs` + `ChequeStatus` enum + `CrossingType` enum
+- [x] `Models/ChequeAuditLog.cs`
+- [x] `Models/BankTemplate.cs`
+- [x] `Models/Payee.cs`
+- [x] `Models/User.cs` + `UserRole` enum
+- [x] `Models/PrinterCalibration.cs`
+- [x] `Models/AppSettings.cs`
 
 ### Data Layer (Phase 1)
-- [ ] `Data/PrimeChequeDbContext.cs`
-- [ ] `Data/Configurations/CompanyConfiguration.cs`
-- [ ] `Data/Configurations/ChequeBookConfiguration.cs`
-- [ ] `Data/Configurations/ChequeConfiguration.cs`
-- [ ] `Data/Configurations/ChequeAuditLogConfiguration.cs`
-- [ ] `Data/Configurations/BankTemplateConfiguration.cs`
-- [ ] `Data/Configurations/PayeeConfiguration.cs`
-- [ ] `Data/Configurations/UserConfiguration.cs`
-- [ ] `Data/Seed/BankSeedData.cs`
-- [ ] `Data/Seed/TemplateSeedData.cs`
-- [ ] `Database/DatabaseInitializer.cs`
+- [x] `Data/PrimeChequeDbContext.cs`
+- [x] `Data/Configurations/CompanyConfiguration.cs`
+- [x] `Data/Configurations/ChequeBookConfiguration.cs`
+- [x] `Data/Configurations/ChequeConfiguration.cs`
+- [x] `Data/Configurations/ChequeAuditLogConfiguration.cs`
+- [x] `Data/Configurations/BankTemplateConfiguration.cs`
+- [x] `Data/Configurations/PayeeConfiguration.cs`
+- [x] `Data/Configurations/UserConfiguration.cs`
+- [x] `Data/Seed/BankSeedData.cs`
+- [x] `Data/Seed/TemplateSeedData.cs`
+- [x] `Database/DatabaseInitializer.cs`
 
 ### Services (Phase 1-2)
-- [ ] `Services/Interfaces/` (all 13 interfaces)
-- [ ] `Services/NavigationService.cs`
-- [ ] `Services/CompanyService.cs`
-- [ ] `Services/BankService.cs`
-- [ ] `Services/ChequeBookService.cs`
-- [ ] `Services/PayeeService.cs`
-- [ ] `Services/AmountToWordsService.cs`
-- [ ] `Services/ChequeService.cs`
-- [ ] `Services/AuditService.cs`
-- [ ] `Services/PdfGenerationService.cs`
-- [ ] `Services/PrintService.cs`
-- [ ] `Services/TemplateService.cs`
-- [ ] `Services/BackupService.cs`
-- [ ] `Services/UserService.cs`
-- [ ] `Services/ReportService.cs`
+- [x] `Services/Interfaces/` (all 15 interfaces)
+- [x] `Services/NavigationService.cs`
+- [x] `Services/CompanyService.cs`
+- [x] `Services/BankService.cs`
+- [x] `Services/ChequeBookService.cs`
+- [x] `Services/PayeeService.cs`
+- [x] `Services/AmountToWordsService.cs`
+- [x] `Services/ChequeService.cs`
+- [x] `Services/AuditService.cs`
+- [x] `Services/PdfGenerationService.cs`
+- [x] `Services/PrintService.cs`
+- [x] `Services/TemplateService.cs`
+- [x] `Services/BackupService.cs`
+- [x] `Services/UserService.cs`
+- [x] `Services/ReportService.cs`
+- [x] `Services/LicenceService.cs`
 
 ### ViewModels (Phase 1-3)
-- [ ] `ViewModels/DashboardViewModel.cs`
-- [ ] `ViewModels/ChequeEntryViewModel.cs`
-- [ ] `ViewModels/ChequeListViewModel.cs`
-- [ ] `ViewModels/ChequeBookViewModel.cs`
-- [ ] `ViewModels/PayeeManagementViewModel.cs`
-- [ ] `ViewModels/PrintPreviewViewModel.cs`
-- [ ] `ViewModels/CompanyManagementViewModel.cs`
-- [ ] `ViewModels/BankManagementViewModel.cs`
-- [ ] `ViewModels/SettingsViewModel.cs`
-- [ ] `ViewModels/TemplateDesignerViewModel.cs`
-- [ ] `ViewModels/BatchImportViewModel.cs`
-- [ ] `ViewModels/ReportsViewModel.cs`
-- [ ] `ViewModels/AuditLogViewModel.cs`
-- [ ] `ViewModels/UserManagementViewModel.cs`
+- [x] `ViewModels/DashboardViewModel.cs`
+- [x] `ViewModels/ChequeEntryViewModel.cs`
+- [x] `ViewModels/ChequeListViewModel.cs`
+- [x] `ViewModels/ChequeBookViewModel.cs`
+- [x] `ViewModels/PayeeManagementViewModel.cs`
+- [x] `ViewModels/PrintPreviewViewModel.cs`
+- [x] `ViewModels/CompanyManagementViewModel.cs`
+- [x] `ViewModels/BankManagementViewModel.cs`
+- [x] `ViewModels/SettingsViewModel.cs`
+- [x] `ViewModels/TemplateDesignerViewModel.cs`
+- [x] `ViewModels/BatchImportViewModel.cs`
+- [x] `ViewModels/ReportsViewModel.cs`
+- [x] `ViewModels/AuditLogViewModel.cs`
+- [x] `ViewModels/UserManagementViewModel.cs`
 
 ### Views (Phase 1-3)
-- [ ] `Views/DashboardPage.xaml`
-- [ ] `Views/ChequeEntryPage.xaml`
-- [ ] `Views/ChequeListPage.xaml`
-- [ ] `Views/ChequeBookPage.xaml`
-- [ ] `Views/PayeeManagementPage.xaml`
-- [ ] `Views/PrintPreviewPage.xaml`
-- [ ] `Views/CompanyManagementPage.xaml`
-- [ ] `Views/BankManagementPage.xaml`
-- [ ] `Views/SettingsPage.xaml`
-- [ ] `Views/TemplateDesignerPage.xaml`
-- [ ] `Views/BatchImportPage.xaml`
-- [ ] `Views/ReportsPage.xaml`
-- [ ] `Views/AuditLogPage.xaml`
-- [ ] `Views/UserManagementPage.xaml`
+- [x] `Views/DashboardPage.xaml`
+- [x] `Views/ChequeEntryPage.xaml`
+- [x] `Views/ChequeListPage.xaml`
+- [x] `Views/ChequeBookPage.xaml`
+- [x] `Views/PayeeManagementPage.xaml`
+- [x] `Views/PrintPreviewPage.xaml`
+- [x] `Views/CompanyManagementPage.xaml`
+- [x] `Views/BankManagementPage.xaml`
+- [x] `Views/SettingsPage.xaml`
+- [x] `Views/TemplateDesignerPage.xaml`
+- [x] `Views/BatchImportPage.xaml`
+- [x] `Views/ReportsPage.xaml`
+- [x] `Views/AuditLogPage.xaml`
+- [x] `Views/UserManagementPage.xaml`
 
 ### Infrastructure
-- [ ] `App.xaml.cs` — DI setup, service registration
-- [ ] `MainWindow.xaml` — NavigationView shell
-- [ ] `Converters/*.cs`
-- [ ] `Helpers/*.cs`
-- [ ] `Themes/*.xaml`
+- [x] `App.xaml.cs` — DI setup, service registration
+- [x] `MainWindow.xaml` — NavigationView shell
+- [x] `Converters/*.cs`
+- [x] `Helpers/*.cs` (EncryptionHelper, ValidationHelper, PrintCalibrationHelper, CsvImportHelper, ExcelImportHelper)
+- [x] `Themes/*.xaml` (Colors.xaml, Styles.xaml, AppTheme.xaml)
 
 ---
 

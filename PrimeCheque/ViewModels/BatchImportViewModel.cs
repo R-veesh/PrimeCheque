@@ -85,6 +85,9 @@ namespace PrimeCheque.ViewModels
                 var picker = new FileOpenPicker();
                 picker.FileTypeFilter.Add(".csv");
                 picker.FileTypeFilter.Add(".txt");
+                picker.FileTypeFilter.Add(".xml");
+                picker.FileTypeFilter.Add(".xlsx");
+                picker.FileTypeFilter.Add(".xls");
 
                 // Retrieve window handle for WinUI 3 file picker
                 var hwnd = WindowNative.GetWindowHandle(App.Current);
@@ -94,7 +97,7 @@ namespace PrimeCheque.ViewModels
                 if (file != null)
                 {
                     FilePath = file.Path;
-                    var rows = await CsvImportHelper.ParseCsvAsync(FilePath);
+                    var rows = await ExcelImportHelper.ParseExcelOrCsvAsync(FilePath);
                     ImportedRows.Clear();
                     foreach (var r in rows) ImportedRows.Add(r);
 

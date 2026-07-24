@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Brand Color Palette -->
+    <Color x:Key="PrimeBrandPrimaryColor">#0F3460</Color>
+    <Color x:Key="PrimeBrandAccentColor">#1B998B</Color>
+    <Color x:Key="PrimeBrandDarkColor">#1A1A2E</Color>
+
+    <!-- Solid Color Brushes -->
+    <SolidColorBrush x:Key="PrimeBrandPrimaryBrush" Color="{StaticResource PrimeBrandPrimaryColor}" />
+    <SolidColorBrush x:Key="PrimeBrandAccentBrush" Color="{StaticResource PrimeBrandAccentColor}" />
+    <SolidColorBrush x:Key="PrimeBrandDarkBrush" Color="{StaticResource PrimeBrandDarkColor}" />
+
+    <!-- Status Colors & Brushes -->
+    <SolidColorBrush x:Key="StatusDraftBrush" Color="#6C757D" />
+    <SolidColorBrush x:Key="StatusPendingBrush" Color="#FD7E14" />
+    <SolidColorBrush x:Key="StatusApprovedBrush" Color="#0D6EFD" />
+    <SolidColorBrush x:Key="StatusPrintedBrush" Color="#198754" />
+    <SolidColorBrush x:Key="StatusRejectedBrush" Color="#DC3545" />
+    <SolidColorBrush x:Key="StatusVoidBrush" Color="#D63384" />
+</ResourceDictionary>
