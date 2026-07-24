@@ -58,5 +58,29 @@ namespace PrimeCheque.ViewModels
             await _chequeService.VoidChequeAsync(cheque.Id, "User", "User manual void");
             await LoadChequesAsync();
         }
+
+        [RelayCommand]
+        private async Task SubmitForApprovalAsync(Cheque? cheque)
+        {
+            if (cheque == null) return;
+            await _chequeService.SubmitForApprovalAsync(cheque.Id, "Maker");
+            await LoadChequesAsync();
+        }
+
+        [RelayCommand]
+        private async Task ApproveChequeAsync(Cheque? cheque)
+        {
+            if (cheque == null) return;
+            await _chequeService.ApproveChequeAsync(cheque.Id, "Checker");
+            await LoadChequesAsync();
+        }
+
+        [RelayCommand]
+        private async Task RejectChequeAsync(Cheque? cheque)
+        {
+            if (cheque == null) return;
+            await _chequeService.RejectChequeAsync(cheque.Id, "Checker", "Amount mismatch or incomplete details");
+            await LoadChequesAsync();
+        }
     }
 }

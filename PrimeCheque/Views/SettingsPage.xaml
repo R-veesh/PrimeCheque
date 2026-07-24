@@ -34,6 +34,24 @@
                     <TextBlock Text="{x:Bind ViewModel.BackupStatusMessage, Mode=OneWay}" Foreground="Green" FontWeight="SemiBold" TextWrapping="Wrap" />
                 </StackPanel>
             </Border>
+
+            <!-- Licence & Activation -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="Licence &amp; Activation" Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <TextBlock Text="{x:Bind ViewModel.LicenceStatus, Mode=OneWay}" FontWeight="Bold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                    <TextBlock Text="{x:Bind ViewModel.RemainingGraceDays, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+
+                    <Grid ColumnSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" Header="Licence Key" Text="{x:Bind ViewModel.LicenceKey, Mode=TwoWay}" PlaceholderText="PRIME-XXXX-XXXX-XXXX" />
+                        <Button Grid.Column="1" Content="🔑 Activate Key" Command="{x:Bind ViewModel.ActivateLicenceCommand}" Style="{StaticResource AccentButtonStyle}" VerticalAlignment="Bottom" />
+                    </Grid>
+                </StackPanel>
+            </Border>
         </StackPanel>
     </ScrollViewer>
 </Page>

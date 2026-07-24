@@ -10,6 +10,8 @@ namespace PrimeCheque.ViewModels
     {
         private readonly IBackupService _backupService;
 
+        private readonly ILicenceService _licenceService;
+
         [ObservableProperty]
         private string _amountPrefix = "Sri Lanka Rupees";
 
@@ -25,9 +27,44 @@ namespace PrimeCheque.ViewModels
         [ObservableProperty]
         private string _backupStatusMessage = string.Empty;
 
-        public SettingsViewModel(IBackupService backupService)
+        [ObservableProperty]
+        private string _licenceKey = string.Empty;
+
+        [ObservableProperty]
+        private string _licenceStatus = "Checking...";
+
+        [ObservableProperty]
+        private int _remainingGraceDays = 30;
+
+        public SettingsViewModel(IBackupService backupService, ILicenceService licenceService)
         {
             _backupService = backupService;
+            _licenceService = licenceService;
+        }
+
+        public async Task LoadSettingsAsync()
+        {
+            var info = await _licenceService.GetLicenceInfoAsync();
+            LicenceKey = info.LicenceKey;
+            LicenceStatus = info.Status;
+            RemainingGraceDays = info.RemainingGraceDays;
+        }
+
+        [RelayCommand]
+        private async Task ActivateLicenceAsync()
+        {
+            var success = await _licenceService.ActivateLicenceAsync(LicenceKey);
+            if (success)
+            {
+                var info = await _licenceService.GetLicenceInfoAsync();
+                LicenceStatus = info.Status;
+                RemainingGraceDays = info.RemainingGraceDays;
+                BackupStatusMessage = "Licence key activated successfully!";
+            }
+            else
+            {
+                BackupStatusMessage = "Invalid licence key.";
+            }
         }
 
         [RelayCommand]

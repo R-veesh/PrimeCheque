@@ -69,6 +69,9 @@ namespace PrimeCheque
                     case "TemplateDesigner":
                         _navigationService.Navigate(typeof(TemplateDesignerPage));
                         break;
+                    case "Users":
+                        _navigationService.Navigate(typeof(UserManagementPage));
+                        break;
                 }
             }
         }

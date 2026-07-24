@@ -28,6 +28,7 @@
             <NavigationViewItem Content="Companies" Tag="Companies" Icon="AllApps" />
             <NavigationViewItem Content="Banks" Tag="Banks" Icon="Shop" />
             <NavigationViewItem Content="Template Designer" Tag="TemplateDesigner" Icon="Crop" />
+            <NavigationViewItem Content="User Management" Tag="Users" Icon="People" />
         </NavigationView.MenuItems>
 
         <Frame x:Name="ContentFrame" />

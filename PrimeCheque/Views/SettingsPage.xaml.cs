@@ -13,5 +13,11 @@ namespace PrimeCheque.Views
             ViewModel = App.GetService<SettingsViewModel>();
             DataContext = ViewModel;
         }
+
+        protected override async void OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            await ViewModel.LoadSettingsAsync();
+        }
     }
 }

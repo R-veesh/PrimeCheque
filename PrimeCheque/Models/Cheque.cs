@@ -6,7 +6,9 @@ namespace PrimeCheque.Models
     public enum ChequeStatus
     {
         Draft,
+        PendingApproval,
         Approved,
+        Rejected,
         Printed,
         Void,
         StopPayment
@@ -35,6 +37,7 @@ namespace PrimeCheque.Models
         public CrossingType CrossingType { get; set; } = CrossingType.None;
         public string? CreatedBy { get; set; }
         public string? ApprovedBy { get; set; }
+        public string? RejectionReason { get; set; }
         public DateTime? PrintedAt { get; set; }
         public string? PdfPath { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

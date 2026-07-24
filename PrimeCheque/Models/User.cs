@@ -4,11 +4,10 @@ namespace PrimeCheque.Models
 {
     public enum UserRole
     {
-        Administrator,
-        ChequePreparer,
-        Approver,
-        Printer,
-        Auditor
+        Admin,
+        Maker,
+        Checker,
+        Viewer
     }
 
     public class User
@@ -17,7 +16,7 @@ namespace PrimeCheque.Models
         public string Username { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
         public string DisplayName { get; set; } = string.Empty;
-        public UserRole Role { get; set; } = UserRole.ChequePreparer;
+        public UserRole Role { get; set; } = UserRole.Maker;
         public bool IsActive { get; set; } = true;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? LastLoginAt { get; set; }

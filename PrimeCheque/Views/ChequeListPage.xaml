@@ -53,9 +53,11 @@
                             <Border Grid.Column="4" Background="{Binding Status, Converter={StaticResource StatusToColorConverter}}" CornerRadius="4" Padding="8,4" HorizontalAlignment="Left" VerticalAlignment="Center">
                                 <TextBlock Text="{Binding Status}" Foreground="White" FontSize="11" FontWeight="Bold" />
                             </Border>
-                            <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
-                                <Button Content="Print" Command="{Binding DataContext.PrintChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" />
-                                <Button Content="Void" Command="{Binding DataContext.VoidChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" />
+                            <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                                <Button Content="Submit" Command="{Binding DataContext.SubmitForApprovalCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Padding="8,4" FontSize="11" />
+                                <Button Content="Approve" Command="{Binding DataContext.ApproveChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Style="{StaticResource AccentButtonStyle}" Padding="8,4" FontSize="11" />
+                                <Button Content="Reject" Command="{Binding DataContext.RejectChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Padding="8,4" FontSize="11" />
+                                <Button Content="Print" Command="{Binding DataContext.PrintChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Padding="8,4" FontSize="11" />
                             </StackPanel>
                         </Grid>
                     </DataTemplate>

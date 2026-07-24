@@ -43,6 +43,7 @@ namespace PrimeCheque
             services.AddTransient<IBackupService, BackupService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IReportService, ReportService>();
+            services.AddSingleton<ILicenceService, LicenceService>();
 
             // ViewModels
             services.AddTransient<DashboardViewModel>();
@@ -58,6 +59,7 @@ namespace PrimeCheque
             services.AddTransient<BatchImportViewModel>();
             services.AddTransient<ReportsViewModel>();
             services.AddTransient<AuditLogViewModel>();
+            services.AddTransient<UserManagementViewModel>();
 
             return services.BuildServiceProvider();
         }

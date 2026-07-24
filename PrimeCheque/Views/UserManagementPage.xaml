@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PrimeCheque.Views.UserManagementPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PrimeCheque.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Padding="24" ColumnSpacing="24">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- User Directory List -->
+        <StackPanel Grid.Column="0" Spacing="20">
+            <TextBlock Text="User &amp; Role Management (RBAC)" Style="{StaticResource TitleTextBlockStyle}" />
+
+            <ListView ItemsSource="{x:Bind ViewModel.Users, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedUser, Mode=TwoWay}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="12" ColumnSpacing="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="180" />
+                                <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="100" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Username}" FontWeight="Bold" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="{Binding DisplayName}" VerticalAlignment="Center" />
+                            <Border Grid.Column="2" Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="4" Padding="8,2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Role}" Foreground="White" FontSize="11" FontWeight="Bold" />
+                            </Border>
+                            <TextBlock Grid.Column="3" Text="{Binding IsActive}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+
+        <!-- Add / Edit User Form -->
+        <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" VerticalAlignment="Top">
+            <StackPanel Spacing="16">
+                <TextBlock Text="Add New System User" Style="{StaticResource SubtitleTextBlockStyle}" />
+
+                <TextBox Header="Username" Text="{x:Bind ViewModel.Username, Mode=TwoWay}" PlaceholderText="johndoe" />
+                <TextBox Header="Display Name" Text="{x:Bind ViewModel.DisplayName, Mode=TwoWay}" PlaceholderText="John Doe" />
+                <ComboBox Header="Role (RBAC)" ItemsSource="{x:Bind ViewModel.AvailableRoles}" SelectedItem="{x:Bind ViewModel.SelectedRole, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+
+                <Button Content="➕ Create User" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.CreateUserCommand}" HorizontalAlignment="Stretch" Margin="0,12,0,0" />
+                <Button Content="🔄 Toggle Active Status" Command="{x:Bind ViewModel.ToggleUserActiveCommand}" HorizontalAlignment="Stretch" />
+
+                <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" Foreground="Green" FontWeight="SemiBold" HorizontalAlignment="Center" TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>

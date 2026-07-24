@@ -108,6 +108,19 @@ namespace PrimeCheque.Services
             return existing;
         }
 
+        public async Task<bool> SubmitForApprovalAsync(Guid chequeId, string user)
+        {
+            var cheque = await _dbContext.Cheques.FindAsync(chequeId);
+            if (cheque == null) return false;
+
+            cheque.Status = ChequeStatus.PendingApproval;
+            cheque.UpdatedAt = DateTime.UtcNow;
+
+            await _dbContext.SaveChangesAsync();
+            await _auditService.LogEventAsync(chequeId, "SubmittedForApproval", user);
+            return true;
+        }
+
         public async Task<bool> ApproveChequeAsync(Guid chequeId, string approver)
         {
             var cheque = await _dbContext.Cheques.FindAsync(chequeId);
@@ -120,6 +133,20 @@ namespace PrimeCheque.Services
             await _dbContext.SaveChangesAsync();
 
             await _auditService.LogEventAsync(chequeId, "Approved", approver);
+            return true;
+        }
+
+        public async Task<bool> RejectChequeAsync(Guid chequeId, string rejecter, string reason)
+        {
+            var cheque = await _dbContext.Cheques.FindAsync(chequeId);
+            if (cheque == null) return false;
+
+            cheque.Status = ChequeStatus.Rejected;
+            cheque.RejectionReason = reason;
+            cheque.UpdatedAt = DateTime.UtcNow;
+
+            await _dbContext.SaveChangesAsync();
+            await _auditService.LogEventAsync(chequeId, "Rejected", rejecter, null, new { reason });
             return true;
         }
 
