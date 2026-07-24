@@ -45,6 +45,12 @@ namespace PrimeCheque.ViewModels
         [ObservableProperty]
         private string? _fullImagePath;
 
+        [ObservableProperty]
+        private double _canvasWidth = 600;
+
+        public double ScaleFactor => CanvasWidth / (ChequeWidthMm > 0 ? ChequeWidthMm : 200);
+        public double CanvasHeight => ChequeHeightMm * ScaleFactor;
+
         // Field coordinates in mm
         [ObservableProperty] private double _dateDayX = 152;
         [ObservableProperty] private double _dateDayY = 12;
@@ -71,6 +77,32 @@ namespace PrimeCheque.ViewModels
         [ObservableProperty] private double _memoX = 12;
         [ObservableProperty] private double _memoY = 70;
 
+        // Scaled Canvas Pixel Position Helper Properties
+        public double DateDayPxX => DateDayX * ScaleFactor;
+        public double DateDayPxY => DateDayY * ScaleFactor;
+        public double DateMonthPxX => DateMonthX * ScaleFactor;
+        public double DateMonthPxY => DateMonthY * ScaleFactor;
+        public double DateYearPxX => DateYearX * ScaleFactor;
+        public double DateYearPxY => DateYearY * ScaleFactor;
+
+        public double PayeeLine1PxX => PayeeLine1X * ScaleFactor;
+        public double PayeeLine1PxY => PayeeLine1Y * ScaleFactor;
+        public double PayeeLine1PxW => PayeeLine1W * ScaleFactor;
+
+        public double AmountWordsPxX => AmountWordsX * ScaleFactor;
+        public double AmountWordsPxY => AmountWordsY * ScaleFactor;
+        public double AmountWordsPxW => AmountWordsW * ScaleFactor;
+
+        public double AmountFiguresPxX => AmountFiguresX * ScaleFactor;
+        public double AmountFiguresPxY => AmountFiguresY * ScaleFactor;
+        public double AmountFiguresPxW => AmountFiguresW * ScaleFactor;
+
+        public double CrossingPxX => CrossingX * ScaleFactor;
+        public double CrossingPxY => CrossingY * ScaleFactor;
+
+        public double MemoPxX => MemoX * ScaleFactor;
+        public double MemoPxY => MemoY * ScaleFactor;
+
         [ObservableProperty]
         private string _statusMessage = string.Empty;
 
@@ -78,6 +110,40 @@ namespace PrimeCheque.ViewModels
         {
             _templateService = templateService;
             _bankService = bankService;
+        }
+
+        public void UpdateCanvasDimensions(double newWidth)
+        {
+            if (newWidth > 100)
+            {
+                CanvasWidth = newWidth;
+                NotifyScaledProperties();
+            }
+        }
+
+        public void NotifyScaledProperties()
+        {
+            OnPropertyChanged(nameof(ScaleFactor));
+            OnPropertyChanged(nameof(CanvasHeight));
+            OnPropertyChanged(nameof(DateDayPxX));
+            OnPropertyChanged(nameof(DateDayPxY));
+            OnPropertyChanged(nameof(DateMonthPxX));
+            OnPropertyChanged(nameof(DateMonthPxY));
+            OnPropertyChanged(nameof(DateYearPxX));
+            OnPropertyChanged(nameof(DateYearPxY));
+            OnPropertyChanged(nameof(PayeeLine1PxX));
+            OnPropertyChanged(nameof(PayeeLine1PxY));
+            OnPropertyChanged(nameof(PayeeLine1PxW));
+            OnPropertyChanged(nameof(AmountWordsPxX));
+            OnPropertyChanged(nameof(AmountWordsPxY));
+            OnPropertyChanged(nameof(AmountWordsPxW));
+            OnPropertyChanged(nameof(AmountFiguresPxX));
+            OnPropertyChanged(nameof(AmountFiguresPxY));
+            OnPropertyChanged(nameof(AmountFiguresPxW));
+            OnPropertyChanged(nameof(CrossingPxX));
+            OnPropertyChanged(nameof(CrossingPxY));
+            OnPropertyChanged(nameof(MemoPxX));
+            OnPropertyChanged(nameof(MemoPxY));
         }
 
         public async Task LoadDataAsync()
@@ -154,12 +220,34 @@ namespace PrimeCheque.ViewModels
                         if (cfg.memoLine != null) { MemoX = cfg.memoLine.x; MemoY = cfg.memoLine.y; }
                     }
                 }
+
+                NotifyScaledProperties();
             }
             catch
             {
                 // Fallback gracefully
             }
         }
+
+        partial void OnDateDayXChanged(double value) => NotifyScaledProperties();
+        partial void OnDateDayYChanged(double value) => NotifyScaledProperties();
+        partial void OnDateMonthXChanged(double value) => NotifyScaledProperties();
+        partial void OnDateMonthYChanged(double value) => NotifyScaledProperties();
+        partial void OnDateYearXChanged(double value) => NotifyScaledProperties();
+        partial void OnDateYearYChanged(double value) => NotifyScaledProperties();
+        partial void OnPayeeLine1XChanged(double value) => NotifyScaledProperties();
+        partial void OnPayeeLine1YChanged(double value) => NotifyScaledProperties();
+        partial void OnPayeeLine1WChanged(double value) => NotifyScaledProperties();
+        partial void OnAmountWordsXChanged(double value) => NotifyScaledProperties();
+        partial void OnAmountWordsYChanged(double value) => NotifyScaledProperties();
+        partial void OnAmountWordsWChanged(double value) => NotifyScaledProperties();
+        partial void OnAmountFiguresXChanged(double value) => NotifyScaledProperties();
+        partial void OnAmountFiguresYChanged(double value) => NotifyScaledProperties();
+        partial void OnAmountFiguresWChanged(double value) => NotifyScaledProperties();
+        partial void OnCrossingXChanged(double value) => NotifyScaledProperties();
+        partial void OnCrossingYChanged(double value) => NotifyScaledProperties();
+        partial void OnMemoXChanged(double value) => NotifyScaledProperties();
+        partial void OnMemoYChanged(double value) => NotifyScaledProperties();
 
         [RelayCommand]
         private async Task SaveTemplateAsync()
@@ -175,7 +263,7 @@ namespace PrimeCheque.ViewModels
                 payeeLine1 = new FieldConfig { x = (float)PayeeLine1X, y = (float)PayeeLine1Y, width = (float)PayeeLine1W, height = 7, fontSize = 12 },
                 amountWordsLine1 = new FieldConfig { x = (float)AmountWordsX, y = (float)AmountWordsY, width = (float)AmountWordsW, height = 7, fontSize = 11 },
                 amountFigures = new FieldConfig { x = (float)AmountFiguresX, y = (float)AmountFiguresY, width = (float)AmountFiguresW, height = 8, fontSize = 12 },
-                crossingZone = new FieldConfig { x = (float)CrossingX, y = (float)CrossingY, width = 30, height = 18 },
+                crossingZone = new FieldConfig { x = (float)CrossingX, y = (float)CrossingY, width = 35, height = 18 },
                 memoLine = new FieldConfig { x = (float)MemoX, y = (float)MemoY, width = 100, height = 6, fontSize = 9 }
             };
 

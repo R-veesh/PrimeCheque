@@ -106,8 +106,23 @@ namespace PrimeCheque.Services
                         AddField(config.dateMonth, monthStr, true);
                         AddField(config.dateYear, yearStr, true);
 
-                        // Payee
-                        AddField(config.payeeLine1, cheque.PayeeName, true);
+                        // Payee Name (with line 2 support if long)
+                        string payeeStr = $"**{cheque.PayeeName}**";
+                        if (payeeStr.Length > 45 && config.payeeLine2 != null)
+                        {
+                            int splitIdx = cheque.PayeeName.LastIndexOf(' ', 40);
+                            if (splitIdx <= 0) splitIdx = 40;
+
+                            string line1 = $"**{cheque.PayeeName.Substring(0, splitIdx)}";
+                            string line2 = $"{cheque.PayeeName.Substring(splitIdx).Trim()}**";
+
+                            AddField(config.payeeLine1, line1, true);
+                            AddField(config.payeeLine2, line2, true);
+                        }
+                        else
+                        {
+                            AddField(config.payeeLine1, payeeStr, true);
+                        }
 
                         // Amount Words
                         string words = cheque.AmountInWords;

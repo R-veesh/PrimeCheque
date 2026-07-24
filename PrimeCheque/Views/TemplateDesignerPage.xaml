@@ -23,44 +23,48 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <ComboBox Grid.Column="0" Header="Select Template to Edit" ItemsSource="{x:Bind ViewModel.Templates, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedTemplate, Mode=TwoWay}" DisplayMemberPath="SeriesName" HorizontalAlignment="Stretch" />
+                <ComboBox Grid.Column="0" Header="Select Template to Edit" ItemsSource="{x:Bind ViewModel.Templates, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedTemplate, Mode=TwoWay}" DisplayMemberPath="BankName" HorizontalAlignment="Stretch" />
                 <Button Grid.Column="1" Content="➕ New Template" Command="{x:Bind ViewModel.CreateNewTemplateCommand}" VerticalAlignment="Bottom" />
             </Grid>
 
             <!-- Visual Cheque Leaf Representation -->
-            <Border Height="280" Background="#F8F9FA" CornerRadius="6" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1.5" HorizontalAlignment="Stretch">
+            <Border x:Name="PreviewBorder" SizeChanged="PreviewBorder_SizeChanged" Height="{x:Bind ViewModel.CanvasHeight, Mode=OneWay}" Background="#F8F9FA" CornerRadius="6" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1.5" HorizontalAlignment="Stretch">
                 <Grid>
                     <!-- Background Cheque Image from template_image/ -->
                     <Image Source="{x:Bind ViewModel.FullImagePath, Mode=OneWay}" Stretch="Fill" Opacity="0.85" />
 
                     <Canvas x:Name="ChequeCanvas">
                         <!-- Date Day -->
-                        <Border Canvas.Left="{x:Bind ViewModel.DateDayX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.DateDayY, Mode=OneWay}" BorderBrush="Blue" Background="#330000FF" BorderThickness="1" Padding="4,2">
-                            <TextBlock Text="DD" FontSize="11" Foreground="Blue" FontWeight="Bold" />
+                        <Border Canvas.Left="{x:Bind ViewModel.DateDayPxX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.DateDayPxY, Mode=OneWay}" BorderBrush="Blue" Background="#330000FF" BorderThickness="1" Padding="4,2">
+                            <TextBlock Text="DD" FontSize="10" Foreground="Blue" FontWeight="Bold" />
                         </Border>
                         <!-- Date Month -->
-                        <Border Canvas.Left="{x:Bind ViewModel.DateMonthX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.DateMonthY, Mode=OneWay}" BorderBrush="Blue" Background="#330000FF" BorderThickness="1" Padding="4,2">
-                            <TextBlock Text="MM" FontSize="11" Foreground="Blue" FontWeight="Bold" />
+                        <Border Canvas.Left="{x:Bind ViewModel.DateMonthPxX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.DateMonthPxY, Mode=OneWay}" BorderBrush="Blue" Background="#330000FF" BorderThickness="1" Padding="4,2">
+                            <TextBlock Text="MM" FontSize="10" Foreground="Blue" FontWeight="Bold" />
                         </Border>
                         <!-- Date Year -->
-                        <Border Canvas.Left="{x:Bind ViewModel.DateYearX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.DateYearY, Mode=OneWay}" BorderBrush="Blue" Background="#330000FF" BorderThickness="1" Padding="4,2">
-                            <TextBlock Text="YYYY" FontSize="11" Foreground="Blue" FontWeight="Bold" />
+                        <Border Canvas.Left="{x:Bind ViewModel.DateYearPxX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.DateYearPxY, Mode=OneWay}" BorderBrush="Blue" Background="#330000FF" BorderThickness="1" Padding="4,2">
+                            <TextBlock Text="YYYY" FontSize="10" Foreground="Blue" FontWeight="Bold" />
                         </Border>
                         <!-- Payee -->
-                        <Border Canvas.Left="{x:Bind ViewModel.PayeeLine1X, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.PayeeLine1Y, Mode=OneWay}" Width="{x:Bind ViewModel.PayeeLine1W, Mode=OneWay}" BorderBrush="DarkGreen" Background="#33008000" BorderThickness="1" Padding="4,2">
-                            <TextBlock Text="PAYEE NAME LINE" FontSize="12" Foreground="DarkGreen" FontWeight="Bold" />
+                        <Border Canvas.Left="{x:Bind ViewModel.PayeeLine1PxX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.PayeeLine1PxY, Mode=OneWay}" Width="{x:Bind ViewModel.PayeeLine1PxW, Mode=OneWay}" BorderBrush="DarkGreen" Background="#33008000" BorderThickness="1" Padding="4,2">
+                            <TextBlock Text="PAYEE NAME LINE" FontSize="11" Foreground="DarkGreen" FontWeight="Bold" />
                         </Border>
                         <!-- Amount Words -->
-                        <Border Canvas.Left="{x:Bind ViewModel.AmountWordsX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.AmountWordsY, Mode=OneWay}" Width="{x:Bind ViewModel.AmountWordsW, Mode=OneWay}" BorderBrush="Purple" Background="#33800080" BorderThickness="1" Padding="4,2">
-                            <TextBlock Text="** Sri Lanka Rupees Seventy-Five Thousand Only **" FontSize="11" Foreground="Purple" FontWeight="Bold" />
+                        <Border Canvas.Left="{x:Bind ViewModel.AmountWordsPxX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.AmountWordsPxY, Mode=OneWay}" Width="{x:Bind ViewModel.AmountWordsPxW, Mode=OneWay}" BorderBrush="Purple" Background="#33800080" BorderThickness="1" Padding="4,2">
+                            <TextBlock Text="** Sri Lanka Rupees Seventy-Five Thousand Only **" FontSize="10" Foreground="Purple" FontWeight="Bold" />
                         </Border>
                         <!-- Amount Figures -->
-                        <Border Canvas.Left="{x:Bind ViewModel.AmountFiguresX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.AmountFiguresY, Mode=OneWay}" Width="{x:Bind ViewModel.AmountFiguresW, Mode=OneWay}" BorderBrush="Red" Background="#33FF0000" BorderThickness="1" Padding="4,2">
-                            <TextBlock Text="**75,000.00**" FontSize="12" Foreground="Red" FontWeight="Bold" />
+                        <Border Canvas.Left="{x:Bind ViewModel.AmountFiguresPxX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.AmountFiguresPxY, Mode=OneWay}" Width="{x:Bind ViewModel.AmountFiguresPxW, Mode=OneWay}" BorderBrush="Red" Background="#33FF0000" BorderThickness="1" Padding="4,2">
+                            <TextBlock Text="**75,000.00**" FontSize="11" Foreground="Red" FontWeight="Bold" />
                         </Border>
                         <!-- Crossing -->
-                        <Border Canvas.Left="{x:Bind ViewModel.CrossingX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.CrossingY, Mode=OneWay}" BorderBrush="Orange" Background="#33FFA500" BorderThickness="1" Padding="4,2">
-                            <TextBlock Text="// A/C PAYEE ONLY //" FontSize="10" Foreground="Orange" FontWeight="Bold" />
+                        <Border Canvas.Left="{x:Bind ViewModel.CrossingPxX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.CrossingPxY, Mode=OneWay}" BorderBrush="Orange" Background="#33FFA500" BorderThickness="1" Padding="4,2">
+                            <TextBlock Text="// A/C PAYEE ONLY //" FontSize="9" Foreground="Orange" FontWeight="Bold" />
+                        </Border>
+                        <!-- Memo -->
+                        <Border Canvas.Left="{x:Bind ViewModel.MemoPxX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.MemoPxY, Mode=OneWay}" BorderBrush="Teal" Background="#33008080" BorderThickness="1" Padding="4,2">
+                            <TextBlock Text="MEMO / NOTE" FontSize="9" Foreground="Teal" FontWeight="Bold" />
                         </Border>
                     </Canvas>
                 </Grid>
@@ -76,7 +80,7 @@
                     <TextBox Header="Bank Name" Text="{x:Bind ViewModel.BankName, Mode=TwoWay}" />
                     <TextBox Header="Series Name" Text="{x:Bind ViewModel.SeriesName, Mode=TwoWay}" />
 
-                    <TextBlock Text="Date Coordinates" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
+                    <TextBlock Text="Date Day Coordinates" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
                     <Grid ColumnSpacing="8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -86,14 +90,32 @@
                         <NumberBox Grid.Column="1" Header="Day Y (mm)" Value="{x:Bind ViewModel.DateDayY, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
                     </Grid>
 
+                    <TextBlock Text="Date Month &amp; Year Coordinates" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
+                    <Grid ColumnSpacing="8" RowSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <NumberBox Grid.Row="0" Grid.Column="0" Header="Month X (mm)" Value="{x:Bind ViewModel.DateMonthX, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Row="0" Grid.Column="1" Header="Month Y (mm)" Value="{x:Bind ViewModel.DateMonthY, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Row="1" Grid.Column="0" Header="Year X (mm)" Value="{x:Bind ViewModel.DateYearX, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Row="1" Grid.Column="1" Header="Year Y (mm)" Value="{x:Bind ViewModel.DateYearY, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                    </Grid>
+
                     <TextBlock Text="Payee Line Coordinates" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
                     <Grid ColumnSpacing="8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <NumberBox Grid.Column="0" Header="Payee X (mm)" Value="{x:Bind ViewModel.PayeeLine1X, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                        <NumberBox Grid.Column="1" Header="Payee Y (mm)" Value="{x:Bind ViewModel.PayeeLine1Y, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Column="0" Header="Payee X" Value="{x:Bind ViewModel.PayeeLine1X, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Column="1" Header="Payee Y" Value="{x:Bind ViewModel.PayeeLine1Y, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Column="2" Header="Width" Value="{x:Bind ViewModel.PayeeLine1W, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
                     </Grid>
 
                     <TextBlock Text="Amount Words Coordinates" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
@@ -101,9 +123,11 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <NumberBox Grid.Column="0" Header="Words X (mm)" Value="{x:Bind ViewModel.AmountWordsX, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                        <NumberBox Grid.Column="1" Header="Words Y (mm)" Value="{x:Bind ViewModel.AmountWordsY, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Column="0" Header="Words X" Value="{x:Bind ViewModel.AmountWordsX, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Column="1" Header="Words Y" Value="{x:Bind ViewModel.AmountWordsY, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Column="2" Header="Width" Value="{x:Bind ViewModel.AmountWordsW, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
                     </Grid>
 
                     <TextBlock Text="Amount Figures Coordinates" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
@@ -111,9 +135,27 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <NumberBox Grid.Column="0" Header="Figures X (mm)" Value="{x:Bind ViewModel.AmountFiguresX, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                        <NumberBox Grid.Column="1" Header="Figures Y (mm)" Value="{x:Bind ViewModel.AmountFiguresY, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Column="0" Header="Figures X" Value="{x:Bind ViewModel.AmountFiguresX, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Column="1" Header="Figures Y" Value="{x:Bind ViewModel.AmountFiguresY, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Column="2" Header="Width" Value="{x:Bind ViewModel.AmountFiguresW, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                    </Grid>
+
+                    <TextBlock Text="Crossing &amp; Memo Coordinates" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
+                    <Grid ColumnSpacing="8" RowSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <NumberBox Grid.Row="0" Grid.Column="0" Header="Crossing X" Value="{x:Bind ViewModel.CrossingX, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Row="0" Grid.Column="1" Header="Crossing Y" Value="{x:Bind ViewModel.CrossingY, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Row="1" Grid.Column="0" Header="Memo X" Value="{x:Bind ViewModel.MemoX, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Row="1" Grid.Column="1" Header="Memo Y" Value="{x:Bind ViewModel.MemoY, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
                     </Grid>
 
                     <Button Content="💾 Save Template" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.SaveTemplateCommand}" HorizontalAlignment="Stretch" Margin="0,16,0,0" />
