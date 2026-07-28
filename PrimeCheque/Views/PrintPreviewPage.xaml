@@ -12,6 +12,7 @@
     <Page.Resources>
         <converters:AmountFormatConverter x:Key="AmountFormatConverter" />
         <converters:DateFormatConverter x:Key="DateFormatConverter" />
+        <converters:BoolToIndexConverter x:Key="BoolToIndexConverter" />
     </Page.Resources>
 
     <Grid Padding="24" ColumnSpacing="24">
@@ -66,6 +67,11 @@
                 <TextBlock Text="Printer Controls" Style="{StaticResource SubtitleTextBlockStyle}" />
 
                 <ComboBox Header="Select Printer" ItemsSource="{x:Bind ViewModel.Printers, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedPrinter, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+
+                <ComboBox Header="Orientation" SelectedIndex="{x:Bind ViewModel.PrintLandscape, Mode=TwoWay, Converter={StaticResource BoolToIndexConverter}}" HorizontalAlignment="Stretch">
+                    <x:String>Portrait</x:String>
+                    <x:String>Landscape</x:String>
+                </ComboBox>
 
                 <TextBlock Text="Millimetre Calibration Offsets" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
 

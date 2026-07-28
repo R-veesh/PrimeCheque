@@ -1,39 +1,25 @@
 using System;
-using System.Drawing.Printing;
-using System.Drawing;
-using PdfiumViewer;
+using Microsoft.Data.Sqlite;
 
-try 
+class Program
 {
-    Console.WriteLine("Testing Printer without CreatePrintDocument()");
-    
-    string dummyPdf = "test.pdf";
-    if (!System.IO.File.Exists(dummyPdf)) return;
-
-    using (var document = PdfiumViewer.PdfDocument.Load(dummyPdf))
+    static void Main()
     {
-        using (var printDoc = new PrintDocument())
+        string dbPath = @"D:\PrimeOneWork\C#\PrimeCheque\PrimeCheque\PrimeCheque.db";
+        using (var connection = new SqliteConnection($"Data Source={dbPath}"))
         {
-            printDoc.PrinterSettings.PrinterName = "Microsoft Print to PDF";
-            printDoc.PrintController = new StandardPrintController();
-            
-            int currentPage = 0;
-            printDoc.PrintPage += (s, e) => 
+            connection.Open();
+            try
             {
-                using (var image = document.Render(currentPage, (int)e.PageBounds.Width, (int)e.PageBounds.Height, e.Graphics.DpiX, e.Graphics.DpiY, PdfRenderFlags.ForPrinting))
-                {
-                    e.Graphics.DrawImage(image, e.PageBounds);
-                }
-                currentPage++;
-                e.HasMorePages = currentPage < document.PageCount;
-            };
-
-            printDoc.Print();
-            Console.WriteLine("Print successful!");
+                var command = connection.CreateCommand();
+                command.CommandText = "ALTER TABLE PrinterCalibrations ADD COLUMN PrintLandscape INTEGER NOT NULL DEFAULT 0;";
+                command.ExecuteNonQuery();
+                Console.WriteLine("Column added successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: " + ex.Message);
+            }
         }
     }
-}
-catch (Exception ex)
-{
-    Console.WriteLine("ERROR: " + ex.GetType().Name + " - " + ex.Message);
 }

@@ -35,6 +35,9 @@ namespace PrimeCheque.ViewModels
         private double _verticalOffsetMm;
 
         [ObservableProperty]
+        private bool _printLandscape;
+
+        [ObservableProperty]
         private string? _pdfFilePath;
 
         [ObservableProperty]
@@ -93,11 +96,13 @@ namespace PrimeCheque.ViewModels
             {
                 HorizontalOffsetMm = (double)cal.HorizontalOffsetMm;
                 VerticalOffsetMm = (double)cal.VerticalOffsetMm;
+                PrintLandscape = cal.PrintLandscape;
             }
             else
             {
                 HorizontalOffsetMm = 0;
                 VerticalOffsetMm = 0;
+                PrintLandscape = false;
             }
         }
 
@@ -110,7 +115,8 @@ namespace PrimeCheque.ViewModels
             {
                 PrinterName = SelectedPrinter ?? "Default",
                 HorizontalOffsetMm = (decimal)HorizontalOffsetMm,
-                VerticalOffsetMm = (decimal)VerticalOffsetMm
+                VerticalOffsetMm = (decimal)VerticalOffsetMm,
+                PrintLandscape = PrintLandscape
             };
 
             PdfFilePath = await _pdfGenerationService.GenerateChequePdfAsync(Cheque, Template, calibration);
@@ -134,6 +140,7 @@ namespace PrimeCheque.ViewModels
                     PrinterName = SelectedPrinter,
                     HorizontalOffsetMm = (decimal)HorizontalOffsetMm,
                     VerticalOffsetMm = (decimal)VerticalOffsetMm,
+                    PrintLandscape = PrintLandscape,
                     TemplateId = Template?.Id
                 });
             }

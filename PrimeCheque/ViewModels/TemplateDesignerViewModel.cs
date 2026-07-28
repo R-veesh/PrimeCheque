@@ -88,6 +88,9 @@ namespace PrimeCheque.ViewModels
         private bool _showCalibrationOffsets;
 
         [ObservableProperty]
+        private bool _printLandscape;
+
+        [ObservableProperty]
         private double _calibrationHOffset = 0;
         partial void OnCalibrationHOffsetChanged(double value) => UpdateFieldScales();
 
@@ -358,7 +361,8 @@ namespace PrimeCheque.ViewModels
                     calibration = new PrinterCalibration
                     {
                         HorizontalOffsetMm = (decimal)CalibrationHOffset,
-                        VerticalOffsetMm = (decimal)CalibrationVOffset
+                        VerticalOffsetMm = (decimal)CalibrationVOffset,
+                        PrintLandscape = PrintLandscape
                     };
                 }
 
@@ -435,7 +439,8 @@ namespace PrimeCheque.ViewModels
                         calibration = new PrinterCalibration
                         {
                             HorizontalOffsetMm = (decimal)CalibrationHOffset,
-                            VerticalOffsetMm = (decimal)CalibrationVOffset
+                            VerticalOffsetMm = (decimal)CalibrationVOffset,
+                            PrintLandscape = PrintLandscape
                         };
                     }
 

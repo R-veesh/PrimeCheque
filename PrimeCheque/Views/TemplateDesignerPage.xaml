@@ -15,6 +15,7 @@
         <conv:SelectedToThicknessConverter x:Key="SelectedToThicknessConverter" />
         <conv:NullToCollapsedConverter x:Key="NullToCollapsedConverter" />
         <conv:NullToVisibleConverter x:Key="NullToVisibleConverter" />
+        <conv:BoolToIndexConverter x:Key="BoolToIndexConverter" />
     </Page.Resources>
 
     <Grid Padding="24" ColumnSpacing="24">
@@ -151,6 +152,12 @@
                     <!-- Printer Calibration -->
                     <TextBlock Text="Printer Calibration" Style="{StaticResource BodyStrongTextBlockStyle}" />
                     <ComboBox Header="Printer" ItemsSource="{x:Bind ViewModel.InstalledPrinters, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedPrinter, Mode=TwoWay}" HorizontalAlignment="Stretch" PlaceholderText="Select printer..." />
+                    
+                    <ComboBox Header="Orientation" SelectedIndex="{x:Bind ViewModel.PrintLandscape, Mode=TwoWay, Converter={StaticResource BoolToIndexConverter}}" HorizontalAlignment="Stretch">
+                        <x:String>Portrait</x:String>
+                        <x:String>Landscape</x:String>
+                    </ComboBox>
+
                     <ToggleSwitch Header="Show Calibration Offsets" IsOn="{x:Bind ViewModel.ShowCalibrationOffsets, Mode=TwoWay}" />
                     <Grid ColumnSpacing="8" Visibility="{x:Bind ViewModel.ShowCalibrationOffsets, Mode=OneWay}">
                         <Grid.ColumnDefinitions>

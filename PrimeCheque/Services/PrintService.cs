@@ -39,7 +39,7 @@ namespace PrimeCheque.Services
         [System.Runtime.InteropServices.DllImport("kernel32.dll", SetLastError = true, CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
         private static extern IntPtr LoadLibrary(string lpFileName);
 
-        public async Task<bool> PrintPdfAsync(string pdfPath, string printerName, string? trayName = null)
+        public async Task<bool> PrintPdfAsync(string pdfPath, string printerName, PrinterCalibration? calibration = null)
         {
             try
             {
@@ -58,6 +58,11 @@ namespace PrimeCheque.Services
                     {
                         printDocument.PrinterSettings.PrinterName = printerName;
                         printDocument.PrintController = new System.Drawing.Printing.StandardPrintController(); // Hide print dialog
+                        
+                        if (calibration != null)
+                        {
+                            printDocument.DefaultPageSettings.Landscape = calibration.PrintLandscape;
+                        }
                         
                         int currentPage = 0;
                         printDocument.PrintPage += (sender, e) =>
@@ -150,6 +155,7 @@ namespace PrimeCheque.Services
                     existing.HorizontalOffsetMm = calibration.HorizontalOffsetMm;
                     existing.VerticalOffsetMm = calibration.VerticalOffsetMm;
                     existing.TrayName = calibration.TrayName;
+                    existing.PrintLandscape = calibration.PrintLandscape;
                     existing.UpdatedAt = DateTime.UtcNow;
                     _dbContext.PrinterCalibrations.Update(existing);
                 }
