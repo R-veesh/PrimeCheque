@@ -99,27 +99,27 @@ layers.Layer()
 ## 4. Implementation Steps (Phases)
 
 ### Phase 1: Reference Overlay Integration
-- [ ] Add a file picker to load reference PDFs from `outPutSamplePdf`.
-- [ ] Convert the selected PDF page to an image (using Windows.Data.Pdf or similar).
-- [ ] Add the reference image as an overlay layer in the XAML canvas.
-- [ ] Add an opacity slider binding to the overlay layer's opacity.
+- [x] Add a file picker to load reference PDFs from `outPutSamplePdf`.
+- [x] Convert the selected PDF page to an image (using Windows.Data.Pdf or similar).
+- [x] Add the reference image as an overlay layer in the XAML canvas.
+- [x] Add an opacity slider binding to the overlay layer's opacity.
 
 ### Phase 2: Interactive Drag & Drop Canvas
-- [ ] Create `ChequeFieldViewModel` to manage individual field state (X, Y, W, H).
-- [ ] Replace hardcoded XAML borders with an `ItemsControl` bound to the collection of fields.
-- [ ] Implement `ManipulationDelta` events on the field templates to support dragging elements with the mouse/touch.
-- [ ] Bind the real-time pixel coordinates back to the millimetre properties in the ViewModel.
+- [x] Create `ChequeFieldViewModel` to manage individual field state (X, Y, W, H).
+- [x] Replace hardcoded XAML borders with an `ItemsControl` bound to the collection of fields.
+- [x] Implement `ManipulationDelta` events on the field templates to support dragging elements with the mouse/touch.
+- [x] Bind the real-time pixel coordinates back to the millimetre properties in the ViewModel.
 
 ### Phase 3: Resize and Rotation Handles
-- [ ] Add resize adorner boxes to the edges of the selected field.
-- [ ] Add a rotation handle above the field.
-- [ ] Implement math to translate pixel rotation/scaling back to the `FieldConfig` mm constraints.
+- [x] Add resize adorner boxes to the edges of the selected field.
+- [x] Add a rotation handle above the field.
+- [x] Implement math to translate pixel rotation/scaling back to the `FieldConfig` mm constraints.
 
 ### Phase 4: PDF Engine & Calibration Integration
-- [ ] Update `TemplateConfigDto` and `FieldConfig` classes.
-- [ ] Update `PdfGenerationService.cs` to apply rotation and font weights.
-- [ ] Add a toggle button in the designer: "Show Calibration Offsets". When enabled, add the selected printer's H/V offsets to the visual coordinates so the user can see the exact physical print position.
-- [ ] Add a "Generate Print Preview" button that creates a temp PDF and displays it.
+- [x] Update `TemplateConfigDto` and `FieldConfig` classes.
+- [x] Update `PdfGenerationService.cs` to apply rotation and font weights.
+- [x] Add a toggle button in the designer: "Show Calibration Offsets". When enabled, add the selected printer's H/V offsets to the visual coordinates so the user can see the exact physical print position.
+- [x] Add a "Generate Print Preview" button that creates a temp PDF and displays it.
 
 ---
 

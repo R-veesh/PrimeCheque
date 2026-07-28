@@ -11,12 +11,15 @@ namespace PrimeCheque.ViewModels
         public string DisplayName { get; }
         public string SampleText { get; }
 
-        public ChequeFieldViewModel(string fieldId, string displayName, string sampleText, FieldConfig model)
+        private readonly TemplateDesignerViewModel? _parent;
+
+        public ChequeFieldViewModel(string fieldId, string displayName, string sampleText, FieldConfig model, TemplateDesignerViewModel? parent = null)
         {
             FieldId = fieldId;
             DisplayName = displayName;
             SampleText = sampleText;
             _model = model;
+            _parent = parent;
         }
 
         public float X
@@ -83,8 +86,11 @@ namespace PrimeCheque.ViewModels
             }
         }
 
-        public double PxX => X * ScaleFactor;
-        public double PxY => Y * ScaleFactor;
+        public double OffsetX => (_parent?.ShowCalibrationOffsets == true) ? _parent.CalibrationHOffset : 0;
+        public double OffsetY => (_parent?.ShowCalibrationOffsets == true) ? _parent.CalibrationVOffset : 0;
+
+        public double PxX => (X + OffsetX) * ScaleFactor;
+        public double PxY => (Y + OffsetY) * ScaleFactor;
         public double PxWidth => Width * ScaleFactor;
         public double PxHeight => Height * ScaleFactor;
         public double PxXPlusW => PxX + PxWidth - 8;
@@ -111,12 +117,25 @@ namespace PrimeCheque.ViewModels
             Height = System.Math.Max(3, Height + (float)(dPxH / ScaleFactor));
         }
 
-        public void ApplyAngleDelta(double dPxX, double dPxY)
+        public void ApplyAngle(double pointerX, double pointerY)
         {
             double centerPxX = PxCenterX;
             double centerPxY = PxCenterY;
-            double currentAngle = System.Math.Atan2(dPxY, dPxX) * (180.0 / System.Math.PI);
-            Angle = (float)currentAngle % 360;
+            
+            // Calculate the angle between the vertical axis (up) and the pointer,
+            // relative to the center of the field.
+            double deltaX = pointerX - centerPxX;
+            double deltaY = pointerY - centerPxY;
+            
+            // Atan2 takes (y, x). Note that screen coordinates have Y going down.
+            // A point directly above the center has negative deltaY, deltaX = 0.
+            // We want that to be 0 degrees.
+            double currentAngle = (System.Math.Atan2(deltaY, deltaX) * (180.0 / System.Math.PI)) + 90.0;
+            
+            if (currentAngle < 0) currentAngle += 360.0;
+            
+            // Round to nearest degree for usability
+            Angle = (float)System.Math.Round(currentAngle);
         }
     }
 }

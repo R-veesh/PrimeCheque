@@ -91,7 +91,14 @@ namespace PrimeCheque.Views
         {
             if (sender is FrameworkElement element && element.DataContext is ChequeFieldViewModel fieldVm)
             {
-                fieldVm.ApplyAngleDelta(e.Delta.Translation.X, e.Delta.Translation.Y);
+                // The position of the pointer relative to the Canvas
+                var position = e.Position; 
+                // However, e.Position is relative to the RotateHandle itself. 
+                // To get the absolute position on the Canvas, we add the handle's location + the pointer offset.
+                double absoluteX = fieldVm.RotateHandleX + position.X;
+                double absoluteY = fieldVm.RotateHandleY + position.Y;
+                
+                fieldVm.ApplyAngle(absoluteX, absoluteY);
             }
         }
 
