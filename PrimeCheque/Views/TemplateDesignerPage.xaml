@@ -206,7 +206,15 @@
                     <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,8"/>
 
                     <!-- Actions -->
-                    <Button Content="&#x1F5A8; Generate Print Preview" Command="{x:Bind ViewModel.GeneratePrintPreviewCommand}" HorizontalAlignment="Stretch" />
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="&#x1F5A8; Quick Preview" Command="{x:Bind ViewModel.GeneratePrintPreviewCommand}" HorizontalAlignment="Stretch" />
+                        <Button Grid.Column="1" Content="&#x1F4BE; Save PDF (Test)" Command="{x:Bind ViewModel.TestSavePdfCommand}" HorizontalAlignment="Stretch" />
+                    </Grid>
+                    
                     <Button Content="&#x1F4BE; Save Template" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.SaveTemplateCommand}" HorizontalAlignment="Stretch" Margin="0,4,0,0" />
                     <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" Foreground="Green" FontWeight="Bold" HorizontalAlignment="Center" TextWrapping="Wrap" />
                 </StackPanel>

@@ -381,6 +381,86 @@ namespace PrimeCheque.ViewModels
         }
 
         [RelayCommand]
+        private async Task TestSavePdfAsync()
+        {
+            try
+            {
+                var savePicker = new Windows.Storage.Pickers.FileSavePicker();
+                
+                // Get the window handle for the picker
+                var window = App.MainWindow;
+                var hWnd = WinRT.Interop.WindowNative.GetWindowHandle(window);
+                WinRT.Interop.InitializeWithWindow.Initialize(savePicker, hWnd);
+
+                savePicker.SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.DocumentsLibrary;
+                savePicker.FileTypeChoices.Add("PDF Document", new System.Collections.Generic.List<string>() { ".pdf" });
+                savePicker.SuggestedFileName = "Test_Print_Cheque.pdf";
+
+                var file = await savePicker.PickSaveFileAsync();
+                if (file != null)
+                {
+                    StatusMessage = "Generating PDF...";
+                    
+                    var dummyCheque = new Cheque
+                    {
+                        ChequeNumber = 123456,
+                        ChequeDate = DateOnly.FromDateTime(DateTime.Now),
+                        PayeeName = "SAMPLE PAYEE NAME",
+                        Amount = 75000.00m,
+                        AmountInWords = "** Sri Lanka Rupees Seventy-Five Thousand Only **",
+                        Memo = "TEST SAVE MEMO",
+                        CrossingType = PrimeCheque.Models.CrossingType.AccountPayeeOnly
+                    };
+
+                    var tmpl = SelectedTemplate ?? new BankTemplate();
+                    tmpl.ChequeWidthMm = (decimal)ChequeWidthMm;
+                    tmpl.ChequeHeightMm = (decimal)ChequeHeightMm;
+                    
+                    var dto = new TemplateConfigDto
+                    {
+                        dateDay = Fields.FirstOrDefault(f => f.FieldId == "dateDay")?.GetModel(),
+                        dateMonth = Fields.FirstOrDefault(f => f.FieldId == "dateMonth")?.GetModel(),
+                        dateYear = Fields.FirstOrDefault(f => f.FieldId == "dateYear")?.GetModel(),
+                        payeeLine1 = Fields.FirstOrDefault(f => f.FieldId == "payeeLine1")?.GetModel(),
+                        amountWordsLine1 = Fields.FirstOrDefault(f => f.FieldId == "amountWordsLine1")?.GetModel(),
+                        amountFigures = Fields.FirstOrDefault(f => f.FieldId == "amountFigures")?.GetModel(),
+                        crossingZone = Fields.FirstOrDefault(f => f.FieldId == "crossingZone")?.GetModel(),
+                        memoLine = Fields.FirstOrDefault(f => f.FieldId == "memoLine")?.GetModel()
+                    };
+                    tmpl.TemplateConfig = JsonSerializer.Serialize(dto);
+
+                    PrinterCalibration? calibration = null;
+                    if (ShowCalibrationOffsets)
+                    {
+                        calibration = new PrinterCalibration
+                        {
+                            HorizontalOffsetMm = (decimal)CalibrationHOffset,
+                            VerticalOffsetMm = (decimal)CalibrationVOffset
+                        };
+                    }
+
+                    var pdfService = App.GetService<IPdfGenerationService>();
+                    var tempPdfPath = await pdfService.GenerateChequePdfAsync(dummyCheque, tmpl, calibration, "TEST PRINT");
+
+                    // Copy the generated PDF to the chosen location
+                    var tempFile = await Windows.Storage.StorageFile.GetFileFromPathAsync(tempPdfPath);
+                    
+                    // Windows.Storage.NameCollisionOption.ReplaceExisting is 1
+                    await tempFile.CopyAndReplaceAsync(file);
+
+                    StatusMessage = $"Saved to: {file.Name}";
+                    
+                    // Optionally open the saved file
+                    await Windows.System.Launcher.LaunchFileAsync(file);
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Save PDF error: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
         private void SelectField(ChequeFieldViewModel field)
         {
             foreach (var f in Fields) f.IsSelected = false;

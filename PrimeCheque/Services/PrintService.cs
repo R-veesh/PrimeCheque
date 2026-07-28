@@ -47,14 +47,30 @@ namespace PrimeCheque.Services
                     Verb = "printto",
                     Arguments = $"\"{printerName}\"",
                     CreateNoWindow = true,
-                    WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden
+                    WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden,
+                    UseShellExecute = true
                 };
                 process.Start();
                 return Task.FromResult(true);
             }
-            catch
+            catch (Exception ex)
             {
-                return Task.FromResult(false);
+                System.Diagnostics.Debug.WriteLine($"Print Error: {ex.Message}");
+                // Fallback: if printto fails, try launching the file so the user can manually print
+                try
+                {
+                    var pInfo = new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = pdfPath,
+                        UseShellExecute = true
+                    };
+                    System.Diagnostics.Process.Start(pInfo);
+                    return Task.FromResult(true); // Return true because we successfully launched it
+                }
+                catch
+                {
+                    return Task.FromResult(false);
+                }
             }
         }
 

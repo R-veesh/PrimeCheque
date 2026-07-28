@@ -19,8 +19,8 @@ namespace PrimeCheque.Services
 
         public Task<string> GenerateChequePdfAsync(Cheque cheque, BankTemplate template, PrinterCalibration? calibration = null, string? watermarkText = null)
         {
-            float widthMm = (float)template.ChequeWidthMm;
-            float heightMm = (float)template.ChequeHeightMm;
+            float widthMm = Math.Max(1f, (float)template.ChequeWidthMm);
+            float heightMm = Math.Max(1f, (float)template.ChequeHeightMm);
 
             float hOffset = calibration != null ? (float)calibration.HorizontalOffsetMm : 0f;
             float vOffset = calibration != null ? (float)calibration.VerticalOffsetMm : 0f;
@@ -52,21 +52,24 @@ namespace PrimeCheque.Services
 
                     page.Content().Layers(layers =>
                     {
+                        // A primary layer is strictly required by QuestPDF for the Layers component.
+                        layers.PrimaryLayer();
+
                         void AddField(FieldConfig? cfg, string text, bool bold = false)
                         {
                             if (cfg == null || string.IsNullOrWhiteSpace(text)) return;
 
-                            float posX = cfg.x + hOffset;
-                            float posY = cfg.y + vOffset;
+                            float posX = Math.Max(0, cfg.x + hOffset);
+                            float posY = Math.Max(0, cfg.y + vOffset);
                             float fontSz = cfg.fontSize > 0 ? cfg.fontSize : 11f;
                             float fieldW = cfg.width > 0 ? cfg.width : 150f;
                             float fieldH = cfg.height > 0 ? cfg.height : 10f;
 
                             layers.Layer()
+                                .Unconstrained()
                                 .OffsetX(posX, Unit.Millimetre)
                                 .OffsetY(posY, Unit.Millimetre)
                                 .Width(fieldW, Unit.Millimetre)
-                                .Height(fieldH, Unit.Millimetre)
                                 .Rotate(cfg.angle)
                                 .Text(txt =>
                                 {
