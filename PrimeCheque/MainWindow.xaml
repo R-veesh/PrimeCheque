@@ -14,23 +14,57 @@
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
-    <NavigationView x:Name="NavView" SelectionChanged="NavView_SelectionChanged" Loaded="NavView_Loaded" Header="PrimeCheque">
-        <NavigationView.MenuItems>
-            <NavigationViewItem Content="Dashboard" Tag="Dashboard" Icon="Home" />
-            <NavigationViewItem Content="New Cheque" Tag="NewCheque" Icon="Edit" />
-            <NavigationViewItem Content="Cheques Register" Tag="Cheques" Icon="List" />
-            <NavigationViewItem Content="Cheque Books" Tag="ChequeBooks" Icon="Library" />
-            <NavigationViewItem Content="Payees" Tag="Payees" Icon="Contact" />
-            <NavigationViewItem Content="Batch Import" Tag="BatchImport" Icon="Download" />
-            <NavigationViewItem Content="Reports" Tag="Reports" Icon="ReportHacked" />
-            <NavigationViewItem Content="Audit Log" Tag="AuditLog" Icon="Important" />
-            <NavigationViewItemSeparator />
-            <NavigationViewItem Content="Companies" Tag="Companies" Icon="AllApps" />
-            <NavigationViewItem Content="Banks" Tag="Banks" Icon="Shop" />
-            <NavigationViewItem Content="Template Designer" Tag="TemplateDesigner" Icon="Crop" />
-            <NavigationViewItem Content="User Management" Tag="Users" Icon="People" />
-        </NavigationView.MenuItems>
+    <Grid>
+        <!-- Login overlay (shown initially) -->
+        <Frame x:Name="LoginFrame" />
 
-        <Frame x:Name="ContentFrame" />
-    </NavigationView>
+        <!-- Main app shell (shown after login) -->
+        <NavigationView x:Name="NavView" Visibility="Collapsed" SelectionChanged="NavView_SelectionChanged" Loaded="NavView_Loaded" IsBackButtonVisible="Collapsed" IsSettingsVisible="False">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Dashboard" Tag="Dashboard" Icon="Home" x:Name="NavDashboard" />
+                <NavigationViewItem Content="New Cheque" Tag="NewCheque" Icon="Edit" x:Name="NavNewCheque" />
+                <NavigationViewItem Content="Cheques Register" Tag="Cheques" Icon="List" x:Name="NavCheques" />
+                <NavigationViewItem Content="Cheque Books" Tag="ChequeBooks" Icon="Library" x:Name="NavChequeBooks" />
+                <NavigationViewItem Content="Payees" Tag="Payees" Icon="Contact" x:Name="NavPayees" />
+                <NavigationViewItem Content="Batch Import" Tag="BatchImport" Icon="Download" x:Name="NavBatchImport" />
+                <NavigationViewItem Content="Reports" Tag="Reports" Icon="ReportHacked" x:Name="NavReports" />
+                <NavigationViewItem Content="Audit Log" Tag="AuditLog" Icon="Important" x:Name="NavAuditLog" />
+                <NavigationViewItemSeparator />
+                <NavigationViewItem Content="Companies" Tag="Companies" Icon="AllApps" x:Name="NavCompanies" />
+                <NavigationViewItem Content="Banks" Tag="Banks" Icon="Shop" x:Name="NavBanks" />
+                <NavigationViewItem Content="Template Designer" Tag="TemplateDesigner" Icon="Crop" x:Name="NavTemplateDesigner" />
+                <NavigationViewItem Content="User Management" Tag="Users" Icon="People" x:Name="NavUsers" />
+            </NavigationView.MenuItems>
+
+            <NavigationView.PaneFooter>
+                <Border BorderThickness="0,1,0,0" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" Padding="12,12,12,16">
+                    <StackPanel Spacing="8">
+                        <Grid ColumnSpacing="8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- User Avatar -->
+                            <Border Grid.Column="0" Width="36" Height="36" CornerRadius="18" Background="{ThemeResource AccentFillColorDefaultBrush}">
+                                <TextBlock x:Name="UserAvatarInitial" Text="A" Foreground="White" FontWeight="Bold" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Border>
+
+                            <!-- User Info -->
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="0">
+                                <TextBlock x:Name="UserDisplayNameText" FontWeight="SemiBold" FontSize="14" TextTrimming="CharacterEllipsis" />
+                                <TextBlock x:Name="UserRoleTextBlock" FontSize="11" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+
+                            <!-- Logout Button -->
+                            <Button Grid.Column="2" Content="&#x21AA;" FontSize="16" ToolTipService.ToolTip="Logout" Click="LogoutButton_Click" Background="Transparent" Width="36" Height="36" Padding="0" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </NavigationView.PaneFooter>
+
+            <Frame x:Name="ContentFrame" />
+        </NavigationView>
+    </Grid>
 </Window>

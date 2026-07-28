@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using PrimeCheque.Models;
 using PrimeCheque.Services.Interfaces;
 using PrimeCheque.Views;
 
@@ -9,18 +11,89 @@ namespace PrimeCheque
     public sealed partial class MainWindow : Window
     {
         private readonly INavigationService _navigationService;
+        private readonly ISessionService _session;
+        private readonly Dictionary<UserRole, List<string>> _rolePermissions;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            _session = App.GetService<ISessionService>();
             _navigationService = App.GetService<INavigationService>();
             _navigationService.Frame = ContentFrame;
+
+            _rolePermissions = new Dictionary<UserRole, List<string>>
+            {
+                [UserRole.Administrator] = new() { "Dashboard", "NewCheque", "Cheques", "ChequeBooks", "Payees", "BatchImport", "Reports", "AuditLog", "Companies", "Banks", "TemplateDesigner", "Users", "Settings" },
+                [UserRole.ChequePreparer] = new() { "Dashboard", "NewCheque", "Cheques", "ChequeBooks", "Payees", "BatchImport", "Reports", "Settings" },
+                [UserRole.Approver] = new() { "Dashboard", "Cheques", "Reports", "Settings" },
+                [UserRole.Printer] = new() { "Dashboard", "Cheques", "Reports", "Settings" },
+                [UserRole.Auditor] = new() { "Dashboard", "Cheques", "Reports", "AuditLog", "Settings" },
+            };
+
+            ShowLogin();
+        }
+
+        private void ShowLogin()
+        {
+            var loginPage = new LoginPage();
+            loginPage.ViewModel.OnLoginSucceeded = ShowAppShell;
+            LoginFrame.Content = loginPage;
+            LoginFrame.Visibility = Visibility.Visible;
+            NavView.Visibility = Visibility.Collapsed;
+        }
+
+        private void ShowAppShell()
+        {
+            LoginFrame.Visibility = Visibility.Collapsed;
+            NavView.Visibility = Visibility.Visible;
+
+            var user = _session.CurrentUser;
+            if (user != null)
+            {
+                UserDisplayNameText.Text = user.DisplayName;
+                UserRoleTextBlock.Text = user.Role.ToString();
+                UserAvatarInitial.Text = user.DisplayName.Length > 0
+                    ? user.DisplayName[..1].ToUpper()
+                    : "?";
+            }
+
+            ApplyRoleVisibility();
+            NavigateToDefaultPage();
         }
 
         private void NavView_Loaded(object sender, RoutedEventArgs e)
         {
-            NavView.SelectedItem = NavView.MenuItems[0];
-            _navigationService.Navigate(typeof(DashboardPage));
+            ApplyRoleVisibility();
+            NavigateToDefaultPage();
+        }
+
+        private void NavigateToDefaultPage()
+        {
+            if (NavView.MenuItems.Count > 0)
+            {
+                NavView.SelectedItem = NavDashboard;
+                _navigationService.Navigate(typeof(DashboardPage));
+            }
+        }
+
+        private void ApplyRoleVisibility()
+        {
+            var role = _session.CurrentUser?.Role ?? UserRole.ChequePreparer;
+            var allowed = _rolePermissions.GetValueOrDefault(role, new());
+
+            NavView.IsSettingsVisible = allowed.Contains("Settings");
+
+            foreach (var item in NavView.MenuItems)
+            {
+                if (item is NavigationViewItem navItem)
+                {
+                    var tag = navItem.Tag?.ToString();
+                    navItem.Visibility = tag != null && allowed.Contains(tag)
+                        ? Visibility.Visible
+                        : Visibility.Collapsed;
+                }
+            }
         }
 
         private void NavView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -72,8 +145,17 @@ namespace PrimeCheque
                     case "Users":
                         _navigationService.Navigate(typeof(UserManagementPage));
                         break;
+                    case "Settings":
+                        _navigationService.Navigate(typeof(SettingsPage));
+                        break;
                 }
             }
+        }
+
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            _session.Logout();
+            ShowLogin();
         }
     }
 }

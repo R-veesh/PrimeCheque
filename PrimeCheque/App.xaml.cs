@@ -6,6 +6,7 @@ using PrimeCheque.Database;
 using PrimeCheque.Services;
 using PrimeCheque.Services.Interfaces;
 using PrimeCheque.ViewModels;
+using PrimeCheque.Views;
 
 namespace PrimeCheque
 {
@@ -13,7 +14,7 @@ namespace PrimeCheque
     {
         public static IServiceProvider Services { get; private set; } = null!;
 
-        private Window? _window;
+        public static Window MainWindow { get; private set; } = null!;
 
         public App()
         {
@@ -30,6 +31,8 @@ namespace PrimeCheque
 
             // Services
             services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<IStaticAuthService, StaticAuthService>();
+            services.AddSingleton<ISessionService, SessionService>();
             services.AddTransient<ICompanyService, CompanyService>();
             services.AddTransient<IBankService, BankService>();
             services.AddTransient<IChequeBookService, ChequeBookService>();
@@ -46,6 +49,7 @@ namespace PrimeCheque
             services.AddSingleton<ILicenceService, LicenceService>();
 
             // ViewModels
+            services.AddTransient<LoginViewModel>();
             services.AddTransient<DashboardViewModel>();
             services.AddTransient<CompanyManagementViewModel>();
             services.AddTransient<BankManagementViewModel>();
@@ -71,15 +75,14 @@ namespace PrimeCheque
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
-            // Initialize SQLite Database schema & seed data
             using (var scope = Services.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<PrimeChequeDbContext>();
                 await DatabaseInitializer.InitializeAsync(dbContext);
             }
 
-            _window = new MainWindow();
-            _window.Activate();
+            MainWindow = new MainWindow();
+            MainWindow.Activate();
         }
     }
 }

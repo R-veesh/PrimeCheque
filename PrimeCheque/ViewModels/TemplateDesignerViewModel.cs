@@ -1,11 +1,11 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PrimeCheque.Models;
-using PrimeCheque.Services;
 using PrimeCheque.Services.Interfaces;
 
 namespace PrimeCheque.ViewModels
@@ -51,65 +51,45 @@ namespace PrimeCheque.ViewModels
         public double ScaleFactor => CanvasWidth / (ChequeWidthMm > 0 ? ChequeWidthMm : 200);
         public double CanvasHeight => ChequeHeightMm * ScaleFactor;
 
-        // Field coordinates in mm
-        [ObservableProperty] private double _dateDayX = 152;
-        [ObservableProperty] private double _dateDayY = 12;
-        [ObservableProperty] private double _dateMonthX = 164;
-        [ObservableProperty] private double _dateMonthY = 12;
-        [ObservableProperty] private double _dateYearX = 176;
-        [ObservableProperty] private double _dateYearY = 12;
-
-        [ObservableProperty] private double _payeeLine1X = 35;
-        [ObservableProperty] private double _payeeLine1Y = 25;
-        [ObservableProperty] private double _payeeLine1W = 150;
-
-        [ObservableProperty] private double _amountWordsX = 12;
-        [ObservableProperty] private double _amountWordsY = 42;
-        [ObservableProperty] private double _amountWordsW = 165;
-
-        [ObservableProperty] private double _amountFiguresX = 158;
-        [ObservableProperty] private double _amountFiguresY = 42;
-        [ObservableProperty] private double _amountFiguresW = 35;
-
-        [ObservableProperty] private double _crossingX = 8;
-        [ObservableProperty] private double _crossingY = 5;
-
-        [ObservableProperty] private double _memoX = 12;
-        [ObservableProperty] private double _memoY = 70;
-
-        // Scaled Canvas Pixel Position Helper Properties
-        public double DateDayPxX => DateDayX * ScaleFactor;
-        public double DateDayPxY => DateDayY * ScaleFactor;
-        public double DateMonthPxX => DateMonthX * ScaleFactor;
-        public double DateMonthPxY => DateMonthY * ScaleFactor;
-        public double DateYearPxX => DateYearX * ScaleFactor;
-        public double DateYearPxY => DateYearY * ScaleFactor;
-
-        public double PayeeLine1PxX => PayeeLine1X * ScaleFactor;
-        public double PayeeLine1PxY => PayeeLine1Y * ScaleFactor;
-        public double PayeeLine1PxW => PayeeLine1W * ScaleFactor;
-
-        public double AmountWordsPxX => AmountWordsX * ScaleFactor;
-        public double AmountWordsPxY => AmountWordsY * ScaleFactor;
-        public double AmountWordsPxW => AmountWordsW * ScaleFactor;
-
-        public double AmountFiguresPxX => AmountFiguresX * ScaleFactor;
-        public double AmountFiguresPxY => AmountFiguresY * ScaleFactor;
-        public double AmountFiguresPxW => AmountFiguresW * ScaleFactor;
-
-        public double CrossingPxX => CrossingX * ScaleFactor;
-        public double CrossingPxY => CrossingY * ScaleFactor;
-
-        public double MemoPxX => MemoX * ScaleFactor;
-        public double MemoPxY => MemoY * ScaleFactor;
-
         [ObservableProperty]
         private string _statusMessage = string.Empty;
+
+        [ObservableProperty]
+        private ObservableCollection<ChequeFieldViewModel> _fields = new();
+
+        [ObservableProperty]
+        private ChequeFieldViewModel? _selectedField;
+
+        // Overlay properties (Phase 1)
+        [ObservableProperty]
+        private string? _overlayImagePath;
+
+        [ObservableProperty]
+        private double _overlayOpacity = 0.5;
+
+        [ObservableProperty]
+        private double _backgroundOpacity = 0.85;
 
         public TemplateDesignerViewModel(ITemplateService templateService, IBankService bankService)
         {
             _templateService = templateService;
             _bankService = bankService;
+            InitializeDefaultFields();
+        }
+
+        private void InitializeDefaultFields()
+        {
+            Fields.Clear();
+            Fields.Add(new ChequeFieldViewModel("dateDay", "Date (Day)", "DD", new FieldConfig { x = 152, y = 12, width = 12, height = 6 }));
+            Fields.Add(new ChequeFieldViewModel("dateMonth", "Date (Month)", "MM", new FieldConfig { x = 164, y = 12, width = 12, height = 6 }));
+            Fields.Add(new ChequeFieldViewModel("dateYear", "Date (Year)", "YYYY", new FieldConfig { x = 176, y = 12, width = 18, height = 6 }));
+            Fields.Add(new ChequeFieldViewModel("payeeLine1", "Payee Line 1", "PAYEE NAME LINE", new FieldConfig { x = 35, y = 25, width = 150, height = 7 }));
+            Fields.Add(new ChequeFieldViewModel("amountWordsLine1", "Amount (Words)", "** Sri Lanka Rupees Seventy-Five Thousand Only **", new FieldConfig { x = 12, y = 42, width = 165, height = 7 }));
+            Fields.Add(new ChequeFieldViewModel("amountFigures", "Amount (Figures)", "**75,000.00**", new FieldConfig { x = 158, y = 42, width = 35, height = 8 }));
+            Fields.Add(new ChequeFieldViewModel("crossingZone", "Crossing", "// A/C PAYEE ONLY //", new FieldConfig { x = 8, y = 5, width = 35, height = 18 }));
+            Fields.Add(new ChequeFieldViewModel("memoLine", "Memo", "MEMO / NOTE", new FieldConfig { x = 12, y = 70, width = 100, height = 6 }));
+
+            UpdateFieldScales();
         }
 
         public void UpdateCanvasDimensions(double newWidth)
@@ -117,33 +97,18 @@ namespace PrimeCheque.ViewModels
             if (newWidth > 100)
             {
                 CanvasWidth = newWidth;
-                NotifyScaledProperties();
+                OnPropertyChanged(nameof(ScaleFactor));
+                OnPropertyChanged(nameof(CanvasHeight));
+                UpdateFieldScales();
             }
         }
 
-        public void NotifyScaledProperties()
+        private void UpdateFieldScales()
         {
-            OnPropertyChanged(nameof(ScaleFactor));
-            OnPropertyChanged(nameof(CanvasHeight));
-            OnPropertyChanged(nameof(DateDayPxX));
-            OnPropertyChanged(nameof(DateDayPxY));
-            OnPropertyChanged(nameof(DateMonthPxX));
-            OnPropertyChanged(nameof(DateMonthPxY));
-            OnPropertyChanged(nameof(DateYearPxX));
-            OnPropertyChanged(nameof(DateYearPxY));
-            OnPropertyChanged(nameof(PayeeLine1PxX));
-            OnPropertyChanged(nameof(PayeeLine1PxY));
-            OnPropertyChanged(nameof(PayeeLine1PxW));
-            OnPropertyChanged(nameof(AmountWordsPxX));
-            OnPropertyChanged(nameof(AmountWordsPxY));
-            OnPropertyChanged(nameof(AmountWordsPxW));
-            OnPropertyChanged(nameof(AmountFiguresPxX));
-            OnPropertyChanged(nameof(AmountFiguresPxY));
-            OnPropertyChanged(nameof(AmountFiguresPxW));
-            OnPropertyChanged(nameof(CrossingPxX));
-            OnPropertyChanged(nameof(CrossingPxY));
-            OnPropertyChanged(nameof(MemoPxX));
-            OnPropertyChanged(nameof(MemoPxY));
+            foreach (var field in Fields)
+            {
+                field.ScaleFactor = ScaleFactor;
+            }
         }
 
         public async Task LoadDataAsync()
@@ -190,14 +155,7 @@ namespace PrimeCheque.ViewModels
                         absPath = System.IO.Path.Combine(baseDir, "template_image", System.IO.Path.GetFileName(TemplateImagePath));
                     }
 
-                    if (System.IO.File.Exists(absPath))
-                    {
-                        FullImagePath = new Uri(absPath).AbsoluteUri;
-                    }
-                    else
-                    {
-                        FullImagePath = null;
-                    }
+                    FullImagePath = System.IO.File.Exists(absPath) ? new Uri(absPath).AbsoluteUri : null;
                 }
                 else
                 {
@@ -209,19 +167,20 @@ namespace PrimeCheque.ViewModels
                     var cfg = JsonSerializer.Deserialize<TemplateConfigDto>(value.TemplateConfig);
                     if (cfg != null)
                     {
-                        if (cfg.dateDay != null) { DateDayX = cfg.dateDay.x; DateDayY = cfg.dateDay.y; }
-                        if (cfg.dateMonth != null) { DateMonthX = cfg.dateMonth.x; DateMonthY = cfg.dateMonth.y; }
-                        if (cfg.dateYear != null) { DateYearX = cfg.dateYear.x; DateYearY = cfg.dateYear.y; }
-
-                        if (cfg.payeeLine1 != null) { PayeeLine1X = cfg.payeeLine1.x; PayeeLine1Y = cfg.payeeLine1.y; PayeeLine1W = cfg.payeeLine1.width; }
-                        if (cfg.amountWordsLine1 != null) { AmountWordsX = cfg.amountWordsLine1.x; AmountWordsY = cfg.amountWordsLine1.y; AmountWordsW = cfg.amountWordsLine1.width; }
-                        if (cfg.amountFigures != null) { AmountFiguresX = cfg.amountFigures.x; AmountFiguresY = cfg.amountFigures.y; AmountFiguresW = cfg.amountFigures.width; }
-                        if (cfg.crossingZone != null) { CrossingX = cfg.crossingZone.x; CrossingY = cfg.crossingZone.y; }
-                        if (cfg.memoLine != null) { MemoX = cfg.memoLine.x; MemoY = cfg.memoLine.y; }
+                        UpdateFieldModel("dateDay", cfg.dateDay);
+                        UpdateFieldModel("dateMonth", cfg.dateMonth);
+                        UpdateFieldModel("dateYear", cfg.dateYear);
+                        UpdateFieldModel("payeeLine1", cfg.payeeLine1);
+                        UpdateFieldModel("amountWordsLine1", cfg.amountWordsLine1);
+                        UpdateFieldModel("amountFigures", cfg.amountFigures);
+                        UpdateFieldModel("crossingZone", cfg.crossingZone);
+                        UpdateFieldModel("memoLine", cfg.memoLine);
                     }
                 }
 
-                NotifyScaledProperties();
+                OnPropertyChanged(nameof(ScaleFactor));
+                OnPropertyChanged(nameof(CanvasHeight));
+                UpdateFieldScales();
             }
             catch
             {
@@ -229,25 +188,21 @@ namespace PrimeCheque.ViewModels
             }
         }
 
-        partial void OnDateDayXChanged(double value) => NotifyScaledProperties();
-        partial void OnDateDayYChanged(double value) => NotifyScaledProperties();
-        partial void OnDateMonthXChanged(double value) => NotifyScaledProperties();
-        partial void OnDateMonthYChanged(double value) => NotifyScaledProperties();
-        partial void OnDateYearXChanged(double value) => NotifyScaledProperties();
-        partial void OnDateYearYChanged(double value) => NotifyScaledProperties();
-        partial void OnPayeeLine1XChanged(double value) => NotifyScaledProperties();
-        partial void OnPayeeLine1YChanged(double value) => NotifyScaledProperties();
-        partial void OnPayeeLine1WChanged(double value) => NotifyScaledProperties();
-        partial void OnAmountWordsXChanged(double value) => NotifyScaledProperties();
-        partial void OnAmountWordsYChanged(double value) => NotifyScaledProperties();
-        partial void OnAmountWordsWChanged(double value) => NotifyScaledProperties();
-        partial void OnAmountFiguresXChanged(double value) => NotifyScaledProperties();
-        partial void OnAmountFiguresYChanged(double value) => NotifyScaledProperties();
-        partial void OnAmountFiguresWChanged(double value) => NotifyScaledProperties();
-        partial void OnCrossingXChanged(double value) => NotifyScaledProperties();
-        partial void OnCrossingYChanged(double value) => NotifyScaledProperties();
-        partial void OnMemoXChanged(double value) => NotifyScaledProperties();
-        partial void OnMemoYChanged(double value) => NotifyScaledProperties();
+        private void UpdateFieldModel(string fieldId, FieldConfig? config)
+        {
+            if (config == null) return;
+            var field = Fields.FirstOrDefault(f => f.FieldId == fieldId);
+            if (field != null)
+            {
+                field.X = config.x;
+                field.Y = config.y;
+                field.Width = config.width;
+                field.Height = config.height;
+                field.Angle = config.angle;
+                field.FontSize = config.fontSize > 0 ? config.fontSize : 11;
+                field.FontWeight = string.IsNullOrEmpty(config.fontWeight) ? "Bold" : config.fontWeight;
+            }
+        }
 
         [RelayCommand]
         private async Task SaveTemplateAsync()
@@ -257,14 +212,14 @@ namespace PrimeCheque.ViewModels
 
             var dto = new TemplateConfigDto
             {
-                dateDay = new FieldConfig { x = (float)DateDayX, y = (float)DateDayY, width = 12, height = 6, fontSize = 11 },
-                dateMonth = new FieldConfig { x = (float)DateMonthX, y = (float)DateMonthY, width = 12, height = 6, fontSize = 11 },
-                dateYear = new FieldConfig { x = (float)DateYearX, y = (float)DateYearY, width = 18, height = 6, fontSize = 11 },
-                payeeLine1 = new FieldConfig { x = (float)PayeeLine1X, y = (float)PayeeLine1Y, width = (float)PayeeLine1W, height = 7, fontSize = 12 },
-                amountWordsLine1 = new FieldConfig { x = (float)AmountWordsX, y = (float)AmountWordsY, width = (float)AmountWordsW, height = 7, fontSize = 11 },
-                amountFigures = new FieldConfig { x = (float)AmountFiguresX, y = (float)AmountFiguresY, width = (float)AmountFiguresW, height = 8, fontSize = 12 },
-                crossingZone = new FieldConfig { x = (float)CrossingX, y = (float)CrossingY, width = 35, height = 18 },
-                memoLine = new FieldConfig { x = (float)MemoX, y = (float)MemoY, width = 100, height = 6, fontSize = 9 }
+                dateDay = Fields.FirstOrDefault(f => f.FieldId == "dateDay")?.GetModel(),
+                dateMonth = Fields.FirstOrDefault(f => f.FieldId == "dateMonth")?.GetModel(),
+                dateYear = Fields.FirstOrDefault(f => f.FieldId == "dateYear")?.GetModel(),
+                payeeLine1 = Fields.FirstOrDefault(f => f.FieldId == "payeeLine1")?.GetModel(),
+                amountWordsLine1 = Fields.FirstOrDefault(f => f.FieldId == "amountWordsLine1")?.GetModel(),
+                amountFigures = Fields.FirstOrDefault(f => f.FieldId == "amountFigures")?.GetModel(),
+                crossingZone = Fields.FirstOrDefault(f => f.FieldId == "crossingZone")?.GetModel(),
+                memoLine = Fields.FirstOrDefault(f => f.FieldId == "memoLine")?.GetModel()
             };
 
             var jsonConfig = JsonSerializer.Serialize(dto, new JsonSerializerOptions { WriteIndented = true });
@@ -292,7 +247,19 @@ namespace PrimeCheque.ViewModels
             SeriesName = "New Cheque Series";
             ChequeWidthMm = 200;
             ChequeHeightMm = 88;
+            InitializeDefaultFields();
             StatusMessage = "Creating new template...";
+        }
+
+        [RelayCommand]
+        private void SelectField(ChequeFieldViewModel field)
+        {
+            foreach (var f in Fields) f.IsSelected = false;
+            if (field != null)
+            {
+                field.IsSelected = true;
+                SelectedField = field;
+            }
         }
     }
 }

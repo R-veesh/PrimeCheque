@@ -10,29 +10,6 @@ using PrimeCheque.Services.Interfaces;
 
 namespace PrimeCheque.Services
 {
-    public class FieldConfig
-    {
-        public float x { get; set; }
-        public float y { get; set; }
-        public float width { get; set; }
-        public float height { get; set; }
-        public float fontSize { get; set; } = 11;
-    }
-
-    public class TemplateConfigDto
-    {
-        public FieldConfig? dateDay { get; set; }
-        public FieldConfig? dateMonth { get; set; }
-        public FieldConfig? dateYear { get; set; }
-        public FieldConfig? payeeLine1 { get; set; }
-        public FieldConfig? payeeLine2 { get; set; }
-        public FieldConfig? amountWordsLine1 { get; set; }
-        public FieldConfig? amountWordsLine2 { get; set; }
-        public FieldConfig? amountFigures { get; set; }
-        public FieldConfig? crossingZone { get; set; }
-        public FieldConfig? memoLine { get; set; }
-    }
-
     public class PdfGenerationService : IPdfGenerationService
     {
         static PdfGenerationService()
@@ -90,10 +67,11 @@ namespace PrimeCheque.Services
                                 .OffsetY(posY, Unit.Millimetre)
                                 .Width(fieldW, Unit.Millimetre)
                                 .Height(fieldH, Unit.Millimetre)
+                                .Rotate(cfg.angle)
                                 .Text(txt =>
                                 {
                                     var span = txt.Span(text).FontSize(fontSz).FontColor(Colors.Black);
-                                    if (bold) span.Bold();
+                                    if (bold || cfg.fontWeight?.Equals("Bold", StringComparison.OrdinalIgnoreCase) == true) span.Bold();
                                 });
                         }
 

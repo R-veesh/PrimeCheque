@@ -6,7 +6,16 @@
     xmlns:local="using:PrimeCheque.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:PrimeCheque.ViewModels"
+    xmlns:conv="using:PrimeCheque.Converters"
     mc:Ignorable="d">
+
+    <Page.Resources>
+        <conv:SelectedToColorConverter x:Key="SelectedToColorConverter" />
+        <conv:SelectedToThicknessConverter x:Key="SelectedToThicknessConverter" />
+        <conv:NullToCollapsedConverter x:Key="NullToCollapsedConverter" />
+        <conv:NullToVisibleConverter x:Key="NullToVisibleConverter" />
+    </Page.Resources>
 
     <Grid Padding="24" ColumnSpacing="24">
         <Grid.ColumnDefinitions>
@@ -24,49 +33,98 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <ComboBox Grid.Column="0" Header="Select Template to Edit" ItemsSource="{x:Bind ViewModel.Templates, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedTemplate, Mode=TwoWay}" DisplayMemberPath="BankName" HorizontalAlignment="Stretch" />
-                <Button Grid.Column="1" Content="➕ New Template" Command="{x:Bind ViewModel.CreateNewTemplateCommand}" VerticalAlignment="Bottom" />
+                <Button Grid.Column="1" Content="&#x2795; New Template" Command="{x:Bind ViewModel.CreateNewTemplateCommand}" VerticalAlignment="Bottom" />
             </Grid>
 
             <!-- Visual Cheque Leaf Representation -->
             <Border x:Name="PreviewBorder" SizeChanged="PreviewBorder_SizeChanged" Height="{x:Bind ViewModel.CanvasHeight, Mode=OneWay}" Background="#F8F9FA" CornerRadius="6" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1.5" HorizontalAlignment="Stretch">
                 <Grid>
-                    <!-- Background Cheque Image from template_image/ -->
-                    <Image Source="{x:Bind ViewModel.FullImagePath, Mode=OneWay}" Stretch="Fill" Opacity="0.85" />
+                    <!-- Layer 1: Background Cheque Image from template_image/ -->
+                    <Image Source="{x:Bind ViewModel.FullImagePath, Mode=OneWay}" Stretch="Fill" Opacity="{x:Bind ViewModel.BackgroundOpacity, Mode=OneWay}" />
 
-                    <Canvas x:Name="ChequeCanvas">
-                        <!-- Date Day -->
-                        <Border Canvas.Left="{x:Bind ViewModel.DateDayPxX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.DateDayPxY, Mode=OneWay}" BorderBrush="Blue" Background="#330000FF" BorderThickness="1" Padding="4,2">
-                            <TextBlock Text="DD" FontSize="10" Foreground="Blue" FontWeight="Bold" />
-                        </Border>
-                        <!-- Date Month -->
-                        <Border Canvas.Left="{x:Bind ViewModel.DateMonthPxX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.DateMonthPxY, Mode=OneWay}" BorderBrush="Blue" Background="#330000FF" BorderThickness="1" Padding="4,2">
-                            <TextBlock Text="MM" FontSize="10" Foreground="Blue" FontWeight="Bold" />
-                        </Border>
-                        <!-- Date Year -->
-                        <Border Canvas.Left="{x:Bind ViewModel.DateYearPxX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.DateYearPxY, Mode=OneWay}" BorderBrush="Blue" Background="#330000FF" BorderThickness="1" Padding="4,2">
-                            <TextBlock Text="YYYY" FontSize="10" Foreground="Blue" FontWeight="Bold" />
-                        </Border>
-                        <!-- Payee -->
-                        <Border Canvas.Left="{x:Bind ViewModel.PayeeLine1PxX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.PayeeLine1PxY, Mode=OneWay}" Width="{x:Bind ViewModel.PayeeLine1PxW, Mode=OneWay}" BorderBrush="DarkGreen" Background="#33008000" BorderThickness="1" Padding="4,2">
-                            <TextBlock Text="PAYEE NAME LINE" FontSize="11" Foreground="DarkGreen" FontWeight="Bold" />
-                        </Border>
-                        <!-- Amount Words -->
-                        <Border Canvas.Left="{x:Bind ViewModel.AmountWordsPxX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.AmountWordsPxY, Mode=OneWay}" Width="{x:Bind ViewModel.AmountWordsPxW, Mode=OneWay}" BorderBrush="Purple" Background="#33800080" BorderThickness="1" Padding="4,2">
-                            <TextBlock Text="** Sri Lanka Rupees Seventy-Five Thousand Only **" FontSize="10" Foreground="Purple" FontWeight="Bold" />
-                        </Border>
-                        <!-- Amount Figures -->
-                        <Border Canvas.Left="{x:Bind ViewModel.AmountFiguresPxX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.AmountFiguresPxY, Mode=OneWay}" Width="{x:Bind ViewModel.AmountFiguresPxW, Mode=OneWay}" BorderBrush="Red" Background="#33FF0000" BorderThickness="1" Padding="4,2">
-                            <TextBlock Text="**75,000.00**" FontSize="11" Foreground="Red" FontWeight="Bold" />
-                        </Border>
-                        <!-- Crossing -->
-                        <Border Canvas.Left="{x:Bind ViewModel.CrossingPxX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.CrossingPxY, Mode=OneWay}" BorderBrush="Orange" Background="#33FFA500" BorderThickness="1" Padding="4,2">
-                            <TextBlock Text="// A/C PAYEE ONLY //" FontSize="9" Foreground="Orange" FontWeight="Bold" />
-                        </Border>
-                        <!-- Memo -->
-                        <Border Canvas.Left="{x:Bind ViewModel.MemoPxX, Mode=OneWay}" Canvas.Top="{x:Bind ViewModel.MemoPxY, Mode=OneWay}" BorderBrush="Teal" Background="#33008080" BorderThickness="1" Padding="4,2">
-                            <TextBlock Text="MEMO / NOTE" FontSize="9" Foreground="Teal" FontWeight="Bold" />
-                        </Border>
-                    </Canvas>
+                    <!-- Layer 2: Reference Print Overlay (e.g., Chrysanth PDF/Image) -->
+                    <Image Source="{x:Bind ViewModel.OverlayImagePath, Mode=OneWay}" Stretch="Fill" Opacity="{x:Bind ViewModel.OverlayOpacity, Mode=OneWay}" />
+
+                    <!-- Layer 3: Interactive Designer Fields -->
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.Fields, Mode=OneWay}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas x:Name="ChequeCanvas" Background="Transparent" PointerPressed="ChequeCanvas_PointerPressed" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="vm:ChequeFieldViewModel">
+                                <Canvas>
+                                    <!-- Field Border (draggable + shows selection) -->
+                                    <Border x:Name="FieldBorder"
+                                        Canvas.Left="{x:Bind PxX, Mode=OneWay}" 
+                                        Canvas.Top="{x:Bind PxY, Mode=OneWay}" 
+                                        Width="{x:Bind PxWidth, Mode=OneWay}" 
+                                        Height="{x:Bind PxHeight, Mode=OneWay}"
+                                        BorderBrush="{x:Bind IsSelected, Converter={StaticResource SelectedToColorConverter}}" 
+                                        Background="#330000FF" 
+                                        BorderThickness="{x:Bind IsSelected, Converter={StaticResource SelectedToThicknessConverter}}"
+                                        Padding="2"
+                                        ManipulationMode="TranslateX,TranslateY"
+                                        ManipulationDelta="Field_ManipulationDelta"
+                                        PointerPressed="Field_PointerPressed">
+                                        <Border.RenderTransform>
+                                            <RotateTransform Angle="{x:Bind Angle, Mode=OneWay}" CenterX="0" CenterY="0" />
+                                        </Border.RenderTransform>
+
+                                        <TextBlock Text="{x:Bind SampleText}" 
+                                                   FontSize="{x:Bind FontSize, Mode=OneWay}" 
+                                                   FontWeight="{x:Bind FontWeight, Mode=OneWay}" 
+                                                   Foreground="Black" 
+                                                   TextWrapping="Wrap" />
+                                    </Border>
+
+                                    <!-- Resize Handles (visible only when selected) -->
+                                    <Border x:Name="ResizeHandleNE"
+                                        Canvas.Left="{x:Bind PxX, Mode=OneWay}" 
+                                        Canvas.Top="{x:Bind PxY, Mode=OneWay}" 
+                                        Width="8" Height="8"
+                                        Background="{x:Bind IsSelected, Converter={StaticResource SelectedToColorConverter}}"
+                                        Visibility="{x:Bind IsSelected, Mode=OneWay}"
+                                        CornerRadius="2"
+                                        ManipulationMode="TranslateX,TranslateY"
+                                        ManipulationDelta="ResizeHandle_ManipulationDelta"
+                                        Tag="NW"
+                                        PointerPressed="Handle_PointerPressed" />
+                                    <Border x:Name="ResizeHandleSE"
+                                        Canvas.Left="{x:Bind PxXPlusW, Mode=OneWay}" 
+                                        Canvas.Top="{x:Bind PxYPlusH, Mode=OneWay}" 
+                                        Width="8" Height="8"
+                                        Background="{x:Bind IsSelected, Converter={StaticResource SelectedToColorConverter}}"
+                                        Visibility="{x:Bind IsSelected, Mode=OneWay}"
+                                        CornerRadius="2"
+                                        ManipulationMode="TranslateX,TranslateY"
+                                        ManipulationDelta="ResizeHandle_ManipulationDelta"
+                                        Tag="SE"
+                                        PointerPressed="Handle_PointerPressed" />
+
+                                    <!-- Rotation Handle (visible only when selected) -->
+                                    <Ellipse x:Name="RotateHandle"
+                                        Canvas.Left="{x:Bind RotateHandleX, Mode=OneWay}" 
+                                        Canvas.Top="{x:Bind RotateHandleY, Mode=OneWay}" 
+                                        Width="16" Height="16"
+                                        Fill="Orange"
+                                        Visibility="{x:Bind IsSelected, Mode=OneWay}"
+                                        Stroke="White" StrokeThickness="2"
+                                        ManipulationMode="TranslateX,TranslateY"
+                                        ManipulationDelta="RotateHandle_ManipulationDelta"
+                                        PointerPressed="Handle_PointerPressed" />
+
+                                    <!-- Rotation line from handle to field top center -->
+                                    <Line x:Name="RotateLine"
+                                        X1="{x:Bind RotateHandleX, Mode=OneWay}" Y1="{x:Bind RotateHandleY, Mode=OneWay}"
+                                        X2="{x:Bind PxCenterX, Mode=OneWay}" Y2="{x:Bind PxY, Mode=OneWay}"
+                                        Stroke="Orange" StrokeThickness="2"
+                                        Visibility="{x:Bind IsSelected, Mode=OneWay}" />
+                                </Canvas>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </Grid>
             </Border>
         </StackPanel>
@@ -75,91 +133,82 @@
         <ScrollViewer Grid.Column="1">
             <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                 <StackPanel Spacing="14">
-                    <TextBlock Text="Field Positions (mm)" Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <TextBlock Text="Template Details" Style="{StaticResource SubtitleTextBlockStyle}" />
 
                     <TextBox Header="Bank Name" Text="{x:Bind ViewModel.BankName, Mode=TwoWay}" />
                     <TextBox Header="Series Name" Text="{x:Bind ViewModel.SeriesName, Mode=TwoWay}" />
 
-                    <TextBlock Text="Date Day Coordinates" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
-                    <Grid ColumnSpacing="8">
+                    <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,8"/>
+
+                    <TextBlock Text="Reference Overlay" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <Button Content="Load Overlay (PDF/Image)" Click="LoadOverlay_Click" HorizontalAlignment="Stretch" />
+                    <ComboBox Header="Sample Overlay (outPutSamplePdf)" ItemsSource="{x:Bind ViewModel.SampleOverlays, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedSampleOverlay, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+                    <Slider Header="Reference Overlay Opacity" Minimum="0" Maximum="1" StepFrequency="0.05" Value="{x:Bind ViewModel.OverlayOpacity, Mode=TwoWay}" />
+                    <Slider Header="Background Cheque Opacity" Minimum="0" Maximum="1" StepFrequency="0.05" Value="{x:Bind ViewModel.BackgroundOpacity, Mode=TwoWay}" />
+
+                    <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,8"/>
+
+                    <!-- Printer Calibration -->
+                    <TextBlock Text="Printer Calibration" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                    <ComboBox Header="Printer" ItemsSource="{x:Bind ViewModel.InstalledPrinters, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedPrinter, Mode=TwoWay}" HorizontalAlignment="Stretch" PlaceholderText="Select printer..." />
+                    <ToggleSwitch Header="Show Calibration Offsets" IsOn="{x:Bind ViewModel.ShowCalibrationOffsets, Mode=TwoWay}" />
+                    <Grid ColumnSpacing="8" Visibility="{x:Bind ViewModel.ShowCalibrationOffsets, Mode=OneWay}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <NumberBox Grid.Column="0" Header="Day X (mm)" Value="{x:Bind ViewModel.DateDayX, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                        <NumberBox Grid.Column="1" Header="Day Y (mm)" Value="{x:Bind ViewModel.DateDayY, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Column="0" Header="H Offset (mm)" Value="{x:Bind ViewModel.CalibrationHOffset, Mode=OneWay}" IsEnabled="False" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Column="1" Header="V Offset (mm)" Value="{x:Bind ViewModel.CalibrationVOffset, Mode=OneWay}" IsEnabled="False" SpinButtonPlacementMode="Compact" />
                     </Grid>
 
-                    <TextBlock Text="Date Month &amp; Year Coordinates" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
-                    <Grid ColumnSpacing="8" RowSpacing="8">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <NumberBox Grid.Row="0" Grid.Column="0" Header="Month X (mm)" Value="{x:Bind ViewModel.DateMonthX, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                        <NumberBox Grid.Row="0" Grid.Column="1" Header="Month Y (mm)" Value="{x:Bind ViewModel.DateMonthY, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                        <NumberBox Grid.Row="1" Grid.Column="0" Header="Year X (mm)" Value="{x:Bind ViewModel.DateYearX, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                        <NumberBox Grid.Row="1" Grid.Column="1" Header="Year Y (mm)" Value="{x:Bind ViewModel.DateYearY, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                    </Grid>
+                    <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,8"/>
 
-                    <TextBlock Text="Payee Line Coordinates" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
-                    <Grid ColumnSpacing="8">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <NumberBox Grid.Column="0" Header="Payee X" Value="{x:Bind ViewModel.PayeeLine1X, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                        <NumberBox Grid.Column="1" Header="Payee Y" Value="{x:Bind ViewModel.PayeeLine1Y, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                        <NumberBox Grid.Column="2" Header="Width" Value="{x:Bind ViewModel.PayeeLine1W, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                    <!-- Contextual Field Editor -->
+                    <TextBlock Text="Selected Field Properties" Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <Grid Visibility="{x:Bind ViewModel.SelectedField, Converter={StaticResource NullToCollapsedConverter}, Mode=OneWay}">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="{x:Bind ViewModel.SelectedField.DisplayName, Mode=OneWay}" FontWeight="Bold" Foreground="{ThemeResource SystemAccentColor}" />
+                            
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <NumberBox Grid.Column="0" Header="X (mm)" Value="{x:Bind ViewModel.SelectedField.X, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                                <NumberBox Grid.Column="1" Header="Y (mm)" Value="{x:Bind ViewModel.SelectedField.Y, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                            </Grid>
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <NumberBox Grid.Column="0" Header="Width (mm)" Value="{x:Bind ViewModel.SelectedField.Width, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                                <NumberBox Grid.Column="1" Header="Height (mm)" Value="{x:Bind ViewModel.SelectedField.Height, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                            </Grid>
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <NumberBox Grid.Column="0" Header="Angle (°)" Value="{x:Bind ViewModel.SelectedField.Angle, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                                <NumberBox Grid.Column="1" Header="Font Size" Value="{x:Bind ViewModel.SelectedField.FontSize, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                            </Grid>
+                            <ComboBox Header="Font Weight" SelectedValue="{x:Bind ViewModel.SelectedField.FontWeight, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                                <x:String>Normal</x:String>
+                                <x:String>Bold</x:String>
+                            </ComboBox>
+                        </StackPanel>
                     </Grid>
+                    <TextBlock Text="Select a field on the canvas to edit its properties." 
+                               Visibility="{x:Bind ViewModel.SelectedField, Converter={StaticResource NullToVisibleConverter}, Mode=OneWay}" 
+                               FontStyle="Italic" Foreground="Gray" />
 
-                    <TextBlock Text="Amount Words Coordinates" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
-                    <Grid ColumnSpacing="8">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <NumberBox Grid.Column="0" Header="Words X" Value="{x:Bind ViewModel.AmountWordsX, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                        <NumberBox Grid.Column="1" Header="Words Y" Value="{x:Bind ViewModel.AmountWordsY, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                        <NumberBox Grid.Column="2" Header="Width" Value="{x:Bind ViewModel.AmountWordsW, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                    </Grid>
+                    <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,8"/>
 
-                    <TextBlock Text="Amount Figures Coordinates" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
-                    <Grid ColumnSpacing="8">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <NumberBox Grid.Column="0" Header="Figures X" Value="{x:Bind ViewModel.AmountFiguresX, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                        <NumberBox Grid.Column="1" Header="Figures Y" Value="{x:Bind ViewModel.AmountFiguresY, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                        <NumberBox Grid.Column="2" Header="Width" Value="{x:Bind ViewModel.AmountFiguresW, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                    </Grid>
-
-                    <TextBlock Text="Crossing &amp; Memo Coordinates" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
-                    <Grid ColumnSpacing="8" RowSpacing="8">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <NumberBox Grid.Row="0" Grid.Column="0" Header="Crossing X" Value="{x:Bind ViewModel.CrossingX, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                        <NumberBox Grid.Row="0" Grid.Column="1" Header="Crossing Y" Value="{x:Bind ViewModel.CrossingY, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                        <NumberBox Grid.Row="1" Grid.Column="0" Header="Memo X" Value="{x:Bind ViewModel.MemoX, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                        <NumberBox Grid.Row="1" Grid.Column="1" Header="Memo Y" Value="{x:Bind ViewModel.MemoY, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                    </Grid>
-
-                    <Button Content="💾 Save Template" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.SaveTemplateCommand}" HorizontalAlignment="Stretch" Margin="0,16,0,0" />
-                    <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" Foreground="Green" FontWeight="Bold" HorizontalAlignment="Center" />
+                    <!-- Actions -->
+                    <Button Content="&#x1F5A8; Generate Print Preview" Command="{x:Bind ViewModel.GeneratePrintPreviewCommand}" HorizontalAlignment="Stretch" />
+                    <Button Content="&#x1F4BE; Save Template" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.SaveTemplateCommand}" HorizontalAlignment="Stretch" Margin="0,4,0,0" />
+                    <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" Foreground="Green" FontWeight="Bold" HorizontalAlignment="Center" TextWrapping="Wrap" />
                 </StackPanel>
             </Border>
         </ScrollViewer>

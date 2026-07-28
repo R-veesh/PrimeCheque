@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="PrimeCheque.Views.LoginPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:PrimeCheque.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:converters="using:PrimeCheque.Converters">
+
+    <Page.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource SolidBackgroundFillColorBaseBrush}">
+        <Border
+            Width="380"
+            Padding="32"
+            CornerRadius="12"
+            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+            BorderThickness="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+
+            <StackPanel Spacing="20">
+                <!-- App Logo / Title -->
+                <StackPanel Spacing="8" HorizontalAlignment="Center">
+                    <TextBlock
+                        Text="&#x1F3E6;"
+                        FontSize="48"
+                        HorizontalAlignment="Center" />
+                    <TextBlock
+                        Text="PrimeCheque"
+                        Style="{StaticResource TitleTextBlockStyle}"
+                        HorizontalAlignment="Center"
+                        FontWeight="Bold" />
+                    <TextBlock
+                        Text="Sri Lankan Cheque Writing &amp; Printing System"
+                        Style="{StaticResource CaptionTextBlockStyle}"
+                        HorizontalAlignment="Center"
+                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                        TextWrapping="Wrap"
+                        TextAlignment="Center" />
+                </StackPanel>
+
+                <!-- Divider -->
+                <Rectangle Height="1" Fill="{ThemeResource CardStrokeColorDefaultBrush}" Margin="0,4" />
+
+                <!-- Username -->
+                <TextBox
+                    x:Name="UsernameBox"
+                    Header="Username"
+                    PlaceholderText="Enter your username"
+                    Text="{x:Bind ViewModel.Username, Mode=TwoWay}"
+                    IsTabStop="True"
+                    KeyDown="OnKeyDown" />
+
+                <!-- Password -->
+                <PasswordBox
+                    x:Name="PasswordBox"
+                    Header="Password"
+                    PlaceholderText="Enter your password"
+                    Password="{x:Bind ViewModel.Password, Mode=TwoWay}"
+                    IsTabStop="True"
+                    KeyDown="OnKeyDown" />
+
+                <!-- Error Message -->
+                <TextBlock
+                    Text="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
+                    Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                    FontWeight="SemiBold"
+                    HorizontalAlignment="Center"
+                    TextWrapping="Wrap"
+                    Visibility="{x:Bind ViewModel.IsErrorVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                <!-- Login Button -->
+                <Button
+                    Content="Login"
+                    Command="{x:Bind ViewModel.LoginCommand}"
+                    Style="{StaticResource AccentButtonStyle}"
+                    HorizontalAlignment="Stretch"
+                    Height="40"
+                    FontSize="16"
+                    FontWeight="Bold" />
+
+                <!-- Hint -->
+                <TextBlock
+                    Text="Default credentials: admin / admin123"
+                    Style="{StaticResource BodyTextBlockStyle}"
+                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                    HorizontalAlignment="Center"
+                    FontSize="11" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>
