@@ -36,7 +36,7 @@ namespace PrimeCheque.Services
             return printers;
         }
 
-        public Task<bool> PrintPdfAsync(string pdfPath, string printerName, string? trayName = null)
+        public async Task<bool> PrintPdfAsync(string pdfPath, string printerName, string? trayName = null)
         {
             try
             {
@@ -51,7 +51,7 @@ namespace PrimeCheque.Services
                     UseShellExecute = true
                 };
                 process.Start();
-                return Task.FromResult(true);
+                return true;
             }
             catch (Exception ex)
             {
@@ -59,17 +59,14 @@ namespace PrimeCheque.Services
                 // Fallback: if printto fails, try launching the file so the user can manually print
                 try
                 {
-                    var pInfo = new System.Diagnostics.ProcessStartInfo
-                    {
-                        FileName = pdfPath,
-                        UseShellExecute = true
-                    };
-                    System.Diagnostics.Process.Start(pInfo);
-                    return Task.FromResult(true); // Return true because we successfully launched it
+                    // Use WinRT Launcher so that the external browser/PDF viewer can bypass MSIX file virtualization
+                    var file = await Windows.Storage.StorageFile.GetFileFromPathAsync(pdfPath);
+                    await Windows.System.Launcher.LaunchFileAsync(file);
+                    return true; 
                 }
                 catch
                 {
-                    return Task.FromResult(false);
+                    return false;
                 }
             }
         }

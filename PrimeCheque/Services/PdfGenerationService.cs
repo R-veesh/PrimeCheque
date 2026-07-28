@@ -38,7 +38,8 @@ namespace PrimeCheque.Services
                 // Fallback to empty config if invalid JSON
             }
 
-            var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PrimeCheque", "GeneratedPdfs");
+            // Use WinRT LocalFolder to bypass MSIX virtualization issues for native libraries (QuestPDF/SkiaSharp)
+            var folder = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "GeneratedPdfs");
             Directory.CreateDirectory(folder);
             var filePath = Path.Combine(folder, $"Cheque_{cheque.ChequeNumber}_{Guid.NewGuid():N}.pdf");
 
@@ -149,6 +150,7 @@ namespace PrimeCheque.Services
                         if (!string.IsNullOrEmpty(watermarkText))
                         {
                             layers.Layer()
+                                .Unconstrained()
                                 .OffsetX(widthMm / 4, Unit.Millimetre)
                                 .OffsetY(heightMm / 3, Unit.Millimetre)
                                 .Text(txt =>
