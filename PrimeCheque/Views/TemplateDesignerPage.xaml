@@ -39,11 +39,11 @@
             <!-- Visual Cheque Leaf Representation -->
             <Border x:Name="PreviewBorder" SizeChanged="PreviewBorder_SizeChanged" Height="{x:Bind ViewModel.CanvasHeight, Mode=OneWay}" Background="#F8F9FA" CornerRadius="6" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1.5" HorizontalAlignment="Stretch">
                 <Grid>
-                    <!-- Layer 1: Background Cheque Image from template_image/ -->
-                    <Image Source="{x:Bind ViewModel.FullImagePath, Mode=OneWay}" Stretch="Fill" Opacity="{x:Bind ViewModel.BackgroundOpacity, Mode=OneWay}" />
+                    <!-- Actual cheque background -->
+                    <Image Source="{Binding FullImagePath, Mode=OneWay}" Stretch="Fill" Opacity="{x:Bind ViewModel.BackgroundOpacity, Mode=OneWay}" />
 
-                    <!-- Layer 2: Reference Print Overlay (e.g., Chrysanth PDF/Image) -->
-                    <Image Source="{x:Bind ViewModel.OverlayImagePath, Mode=OneWay}" Stretch="Fill" Opacity="{x:Bind ViewModel.OverlayOpacity, Mode=OneWay}" />
+                    <!-- User selected overlay reference (e.g. from Scanner) -->
+                    <Image Source="{Binding OverlayImagePath, Mode=OneWay}" Stretch="Fill" Opacity="{x:Bind ViewModel.OverlayOpacity, Mode=OneWay}" />
 
                     <!-- Layer 3: Interactive Designer Fields -->
                     <ItemsControl ItemsSource="{x:Bind ViewModel.Fields, Mode=OneWay}">
@@ -165,35 +165,35 @@
 
                     <!-- Contextual Field Editor -->
                     <TextBlock Text="Selected Field Properties" Style="{StaticResource SubtitleTextBlockStyle}" />
-                    <Grid Visibility="{x:Bind ViewModel.SelectedField, Converter={StaticResource NullToCollapsedConverter}, Mode=OneWay}">
-                        <StackPanel Spacing="8">
-                            <TextBlock Text="{x:Bind ViewModel.SelectedField.DisplayName, Mode=OneWay}" FontWeight="Bold" Foreground="{ThemeResource SystemAccentColor}" />
+                    <Grid DataContext="{x:Bind ViewModel, Mode=OneWay}">
+                        <StackPanel Spacing="8" Visibility="{Binding SelectedField, Converter={StaticResource NullToCollapsedConverter}, Mode=OneWay}">
+                            <TextBlock Text="{Binding SelectedField.DisplayName, Mode=OneWay}" FontWeight="Bold" Foreground="{ThemeResource SystemAccentColor}" />
                             
                             <Grid ColumnSpacing="8">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <NumberBox Grid.Column="0" Header="X (mm)" Value="{x:Bind ViewModel.SelectedField.X, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                                <NumberBox Grid.Column="1" Header="Y (mm)" Value="{x:Bind ViewModel.SelectedField.Y, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                                <NumberBox Grid.Column="0" Header="X (mm)" Value="{Binding SelectedField.X, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                                <NumberBox Grid.Column="1" Header="Y (mm)" Value="{Binding SelectedField.Y, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
                             </Grid>
                             <Grid ColumnSpacing="8">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <NumberBox Grid.Column="0" Header="Width (mm)" Value="{x:Bind ViewModel.SelectedField.Width, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                                <NumberBox Grid.Column="1" Header="Height (mm)" Value="{x:Bind ViewModel.SelectedField.Height, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                                <NumberBox Grid.Column="0" Header="Width (mm)" Value="{Binding SelectedField.Width, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                                <NumberBox Grid.Column="1" Header="Height (mm)" Value="{Binding SelectedField.Height, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
                             </Grid>
                             <Grid ColumnSpacing="8">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <NumberBox Grid.Column="0" Header="Angle (°)" Value="{x:Bind ViewModel.SelectedField.Angle, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
-                                <NumberBox Grid.Column="1" Header="Font Size" Value="{x:Bind ViewModel.SelectedField.FontSize, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                                <NumberBox Grid.Column="0" Header="Angle (°)" Value="{Binding SelectedField.Angle, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
+                                <NumberBox Grid.Column="1" Header="Font Size" Value="{Binding SelectedField.FontSize, Mode=TwoWay}" SpinButtonPlacementMode="Compact" />
                             </Grid>
-                            <ComboBox Header="Font Weight" SelectedValue="{x:Bind ViewModel.SelectedField.FontWeight, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                            <ComboBox Header="Font Weight" SelectedValue="{Binding SelectedField.FontWeight, Mode=TwoWay}" HorizontalAlignment="Stretch">
                                 <x:String>Normal</x:String>
                                 <x:String>Bold</x:String>
                             </ComboBox>
