@@ -1,56 +1,39 @@
 using System;
-using QuestPDF.Fluent;
-using QuestPDF.Helpers;
-using QuestPDF.Infrastructure;
-
-QuestPDF.Settings.License = LicenseType.Community;
+using System.Drawing.Printing;
+using System.Drawing;
+using PdfiumViewer;
 
 try 
 {
-    float widthMm = 150f;
-    float heightMm = 75f;
-    string watermarkText = "TEST PRINT";
+    Console.WriteLine("Testing Printer without CreatePrintDocument()");
+    
+    string dummyPdf = "test.pdf";
+    if (!System.IO.File.Exists(dummyPdf)) return;
 
-    var document = Document.Create(container =>
+    using (var document = PdfiumViewer.PdfDocument.Load(dummyPdf))
     {
-        container.Page(page =>
+        using (var printDoc = new PrintDocument())
         {
-            page.Size(new PageSize(widthMm, heightMm, Unit.Millimetre));
-            page.Margin(0, Unit.Millimetre);
-            page.PageColor(Colors.White);
-
-            page.Content().Layers(layers =>
+            printDoc.PrinterSettings.PrinterName = "Microsoft Print to PDF";
+            printDoc.PrintController = new StandardPrintController();
+            
+            int currentPage = 0;
+            printDoc.PrintPage += (s, e) => 
             {
-                layers.PrimaryLayer();
-                
-                layers.Layer()
-                    .Unconstrained()
-                    .OffsetX(10, Unit.Millimetre)
-                    .OffsetY(10, Unit.Millimetre)
-                    .Width(50, Unit.Millimetre)
-                    .Text(txt =>
-                    {
-                        var span = txt.Span("Testing").FontSize(11).FontColor(Colors.Black);
-                    });
-
-                if (!string.IsNullOrEmpty(watermarkText))
+                using (var image = document.Render(currentPage, (int)e.PageBounds.Width, (int)e.PageBounds.Height, e.Graphics.DpiX, e.Graphics.DpiY, PdfRenderFlags.ForPrinting))
                 {
-                    layers.Layer()
-                        .OffsetX(widthMm / 4, Unit.Millimetre)
-                        .OffsetY(heightMm / 3, Unit.Millimetre)
-                        .Text(txt =>
-                        {
-                            txt.Span(watermarkText).FontSize(24).FontColor(Colors.Grey.Lighten2).Bold();
-                        });
+                    e.Graphics.DrawImage(image, e.PageBounds);
                 }
-            });
-        });
-    });
+                currentPage++;
+                e.HasMorePages = currentPage < document.PageCount;
+            };
 
-    document.GeneratePdf("test.pdf");
-    Console.WriteLine("Success");
+            printDoc.Print();
+            Console.WriteLine("Print successful!");
+        }
+    }
 }
 catch (Exception ex)
 {
-    Console.WriteLine("ERROR: " + ex.Message);
+    Console.WriteLine("ERROR: " + ex.GetType().Name + " - " + ex.Message);
 }

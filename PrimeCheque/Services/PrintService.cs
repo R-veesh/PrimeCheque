@@ -36,27 +36,76 @@ namespace PrimeCheque.Services
             return printers;
         }
 
+        [System.Runtime.InteropServices.DllImport("kernel32.dll", SetLastError = true, CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
+        private static extern IntPtr LoadLibrary(string lpFileName);
+
         public async Task<bool> PrintPdfAsync(string pdfPath, string printerName, string? trayName = null)
         {
             try
             {
-                var process = new System.Diagnostics.Process();
-                process.StartInfo = new System.Diagnostics.ProcessStartInfo
+                // Pre-load pdfium.dll from the correct app directory to fix WinUI 3 MSIX DllNotFoundException
+                string arch = Environment.Is64BitProcess ? "x64" : "x86";
+                string pdfiumPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, arch, "pdfium.dll");
+                if (System.IO.File.Exists(pdfiumPath))
                 {
-                    FileName = pdfPath,
-                    Verb = "printto",
-                    Arguments = $"\"{printerName}\"",
-                    CreateNoWindow = true,
-                    WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden,
-                    UseShellExecute = true
-                };
-                process.Start();
+                    LoadLibrary(pdfiumPath);
+                }
+
+                // Attempt direct silent print using PdfiumViewer manually rendering to bypass WinForms dependency
+                using (var document = PdfiumViewer.PdfDocument.Load(pdfPath))
+                {
+                    using (var printDocument = new System.Drawing.Printing.PrintDocument())
+                    {
+                        printDocument.PrinterSettings.PrinterName = printerName;
+                        printDocument.PrintController = new System.Drawing.Printing.StandardPrintController(); // Hide print dialog
+                        
+                        int currentPage = 0;
+                        printDocument.PrintPage += (sender, e) =>
+                        {
+                            if (e.Graphics != null)
+                            {
+                                var pageSize = document.PageSizes[currentPage];
+                                // PdfiumViewer PageSizes are in Points (72 points = 1 inch)
+                                double widthInches = pageSize.Width / 72.0;
+                                double heightInches = pageSize.Height / 72.0;
+                                
+                                // Cap rendering DPI at 300 to prevent OutOfMemory on high-DPI printers
+                                float dpiX = Math.Min(300f, e.Graphics.DpiX);
+                                float dpiY = Math.Min(300f, e.Graphics.DpiY);
+
+                                int renderWidth = (int)(widthInches * dpiX);
+                                int renderHeight = (int)(heightInches * dpiY);
+
+                                // Render the PDF page to a bitmap
+                                using (var image = document.Render(currentPage, renderWidth, renderHeight, dpiX, dpiY, PdfiumViewer.PdfRenderFlags.ForPrinting))
+                                {
+                                    // Calculate print dimensions in hundredths of an inch
+                                    float printWidth = (float)(widthInches * 100.0);
+                                    float printHeight = (float)(heightInches * 100.0);
+                                    
+                                    // When OriginAtMargins is false (default), (0,0) is the printable area top-left.
+                                    // We need to offset by -HardMargin to draw from the absolute physical edge of the paper.
+                                    float offsetX = -e.PageSettings.HardMarginX;
+                                    float offsetY = -e.PageSettings.HardMarginY;
+
+                                    e.Graphics.DrawImage(image, new System.Drawing.RectangleF(offsetX, offsetY, printWidth, printHeight));
+                                }
+                            }
+                            
+                            currentPage++;
+                            e.HasMorePages = currentPage < document.PageCount;
+                        };
+
+                        printDocument.Print();
+                    }
+                }
                 return true;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Print Error: {ex.Message}");
-                // Fallback: if printto fails, try launching the file so the user can manually print
+                System.Diagnostics.Debug.WriteLine($"Pdfium Print Error: {ex.Message}");
+                try { System.IO.File.WriteAllText(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), "PdfiumError.txt"), ex.ToString()); } catch { }
+                // Fallback: if native print fails, try launching the file so the user can manually print
                 try
                 {
                     // Use WinRT Launcher so that the external browser/PDF viewer can bypass MSIX file virtualization
