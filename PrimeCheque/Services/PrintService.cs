@@ -59,11 +59,9 @@ namespace PrimeCheque.Services
                         printDocument.PrinterSettings.PrinterName = printerName;
                         printDocument.PrintController = new System.Drawing.Printing.StandardPrintController(); // Hide print dialog
                         
-                        if (calibration != null)
-                        {
-                            printDocument.DefaultPageSettings.Landscape = calibration.PrintLandscape;
-                        }
-                        
+                        // We do NOT set printDocument.DefaultPageSettings.Landscape = true here,
+                        // because many printer drivers (especially EPSON) ignore it for custom sizes.
+                        // Instead, we will manually rotate the image during rendering.
                         int currentPage = 0;
                         printDocument.PrintPage += (sender, e) =>
                         {
@@ -87,6 +85,18 @@ namespace PrimeCheque.Services
                                     // Calculate print dimensions in hundredths of an inch
                                     float printWidth = (float)(widthInches * 100.0);
                                     float printHeight = (float)(heightInches * 100.0);
+                                    
+                                    if (calibration != null && calibration.PrintLandscape)
+                                    {
+                                        // Manually rotate the image 270 degrees (90 degrees counter-clockwise)
+                                        // This forces it to print sideways regardless of the printer driver's capabilities
+                                        image.RotateFlip(System.Drawing.RotateFlipType.Rotate270FlipNone);
+                                        
+                                        // Swap dimensions to match the rotated image
+                                        float temp = printWidth;
+                                        printWidth = printHeight;
+                                        printHeight = temp;
+                                    }
                                     
                                     // When OriginAtMargins is false (default), (0,0) is the printable area top-left.
                                     // We need to offset by -HardMargin to draw from the absolute physical edge of the paper.

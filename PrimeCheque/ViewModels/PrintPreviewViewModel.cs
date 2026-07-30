@@ -128,21 +128,23 @@ namespace PrimeCheque.ViewModels
             if (Cheque == null || string.IsNullOrEmpty(PdfFilePath) || string.IsNullOrEmpty(SelectedPrinter))
                 return;
 
-            bool printed = await _printService.PrintPdfAsync(PdfFilePath, SelectedPrinter);
+            var calibration = new PrinterCalibration
+            {
+                PrinterName = SelectedPrinter,
+                HorizontalOffsetMm = (decimal)HorizontalOffsetMm,
+                VerticalOffsetMm = (decimal)VerticalOffsetMm,
+                PrintLandscape = PrintLandscape,
+                TemplateId = Template?.Id
+            };
+
+            bool printed = await _printService.PrintPdfAsync(PdfFilePath, SelectedPrinter, calibration);
             if (printed)
             {
                 await _chequeService.MarkAsPrintedAsync(Cheque.Id, "User", PdfFilePath);
                 IsPrinted = true;
 
                 // Save calibration settings
-                await _printService.SaveCalibrationAsync(new PrinterCalibration
-                {
-                    PrinterName = SelectedPrinter,
-                    HorizontalOffsetMm = (decimal)HorizontalOffsetMm,
-                    VerticalOffsetMm = (decimal)VerticalOffsetMm,
-                    PrintLandscape = PrintLandscape,
-                    TemplateId = Template?.Id
-                });
+                await _printService.SaveCalibrationAsync(calibration);
             }
         }
     }

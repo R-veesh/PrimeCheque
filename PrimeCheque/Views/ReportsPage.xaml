@@ -32,8 +32,8 @@
 
                     <ComboBox Grid.Column="0" Header="Company" ItemsSource="{x:Bind ViewModel.Companies, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedCompany, Mode=TwoWay}" DisplayMemberPath="Name" HorizontalAlignment="Stretch" />
                     <ComboBox Grid.Column="1" Header="Report Type" ItemsSource="{x:Bind ViewModel.ReportTypes}" SelectedItem="{x:Bind ViewModel.SelectedReportType, Mode=TwoWay}" HorizontalAlignment="Stretch" />
-                    <DatePicker Grid.Column="2" Header="Start Date" Date="{x:Bind ViewModel.StartDate, Mode=TwoWay}" HorizontalAlignment="Stretch" />
-                    <DatePicker Grid.Column="3" Header="End Date" Date="{x:Bind ViewModel.EndDate, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+                    <DatePicker Grid.Column="2" Header="Start Date" Date="{x:Bind ViewModel.StartDate, Mode=TwoWay}" HorizontalAlignment="Stretch" MinWidth="290" />
+                    <DatePicker Grid.Column="3" Header="End Date" Date="{x:Bind ViewModel.EndDate, Mode=TwoWay}" HorizontalAlignment="Stretch" MinWidth="290" />
                     <Button Grid.Column="4" Content="📊 Generate Report" Command="{x:Bind ViewModel.GenerateReportCommand}" Style="{StaticResource AccentButtonStyle}" VerticalAlignment="Bottom" Padding="16,8" />
                 </Grid>
             </Border>
