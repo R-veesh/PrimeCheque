@@ -17,6 +17,7 @@ namespace PrimeCheque
         public MainWindow()
         {
             InitializeComponent();
+            ConfigureCustomTitleBar();
 
             _session = App.GetService<ISessionService>();
             _navigationService = App.GetService<INavigationService>();
@@ -149,6 +150,41 @@ namespace PrimeCheque
                         _navigationService.Navigate(typeof(SettingsPage));
                         break;
                 }
+            }
+        }
+
+        private void ConfigureCustomTitleBar()
+        {
+            ExtendsContentIntoTitleBar = true;
+            SetTitleBar(AppTitleBar);
+
+            var titleBar = AppWindow.TitleBar;
+            titleBar.ButtonBackgroundColor = Microsoft.UI.Colors.Transparent;
+            titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.Colors.Transparent;
+
+            AppWindow.Changed += AppWindow_Changed;
+        }
+
+        private void AppWindow_Changed(Microsoft.UI.Windowing.AppWindow sender, Microsoft.UI.Windowing.AppWindowChangedEventArgs args)
+        {
+            if (args.DidSizeChange && sender.TitleBar.ExtendsContentIntoTitleBar)
+            {
+                // Update interactive overlay right margin to prevent overlap with caption buttons
+                TitleBarRightControls.Margin = new Thickness(0, 0, sender.TitleBar.RightInset, 0);
+            }
+        }
+
+        private void TitleBarSettings_Click(object sender, RoutedEventArgs e)
+        {
+            _navigationService.Navigate(typeof(SettingsPage));
+        }
+
+        private void TitleBarThemeToggle_Click(object sender, RoutedEventArgs e)
+        {
+            // Simple theme toggle logic placeholder
+            if (Content is FrameworkElement fe)
+            {
+                fe.RequestedTheme = fe.RequestedTheme == ElementTheme.Dark ? ElementTheme.Light : ElementTheme.Dark;
             }
         }
 

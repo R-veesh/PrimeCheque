@@ -15,10 +15,55 @@
     </Window.SystemBackdrop>
 
     <Grid>
-        <!-- Login overlay (shown initially) -->
-        <Frame x:Name="LoginFrame" />
+        <Grid.Resources>
+            <Style x:Key="TitleBarIconButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Width" Value="36" />
+                <Setter Property="Height" Value="36" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="CornerRadius" Value="18" />
+                <Setter Property="FontFamily" Value="{ThemeResource SymbolThemeFontFamily}" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+            </Style>
+        </Grid.Resources>
 
-        <!-- Main app shell (shown after login) -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Custom Title Bar (Draggable Region) -->
+        <Border x:Name="AppTitleBar" Grid.Row="0" Height="44" Background="Transparent" Canvas.ZIndex="1">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0" Spacing="12">
+                <FontIcon Glyph="&#xE8D4;" FontSize="18" Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
+                <TextBlock Text="PrimeCheque" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="{ThemeResource TextFillColorPrimaryBrush}" />
+            </StackPanel>
+        </Border>
+
+        <!-- Custom Title Bar Interactive Elements (Overlayed) -->
+        <Grid Grid.Row="0" Height="44" Canvas.ZIndex="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <!-- Right: Toolbar Icons -->
+            <!-- The margin will be dynamically updated in code-behind to account for system caption buttons -->
+            <StackPanel x:Name="TitleBarRightControls" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Spacing="4" Margin="0,0,160,0">
+                <Button Style="{StaticResource TitleBarIconButtonStyle}" Content="&#xE713;" ToolTipService.ToolTip="Settings" Click="TitleBarSettings_Click" />
+                <Button Style="{StaticResource TitleBarIconButtonStyle}" Content="&#xE706;" ToolTipService.ToolTip="Toggle Theme" Click="TitleBarThemeToggle_Click" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <!-- Login overlay (shown initially) -->
+            <Frame x:Name="LoginFrame" />
+
+            <!-- Main app shell (shown after login) -->
         <NavigationView x:Name="NavView" Visibility="Collapsed" SelectionChanged="NavView_SelectionChanged" Loaded="NavView_Loaded" IsBackButtonVisible="Collapsed" IsSettingsVisible="False">
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="Dashboard" Tag="Dashboard" Icon="Home" x:Name="NavDashboard" />
@@ -66,5 +111,6 @@
 
             <Frame x:Name="ContentFrame" />
         </NavigationView>
+        </Grid>
     </Grid>
 </Window>
