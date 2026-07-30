@@ -23,6 +23,8 @@ namespace PrimeCheque.Models
         public ChequeBookStatus Status { get; set; } = ChequeBookStatus.Active;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+        public string DisplayName => Bank != null ? $"{Bank.Name} - {MaskedAccountNumber}" : MaskedAccountNumber;
+
         // Navigation properties
         public Company Company { get; set; } = null!;
         public Bank Bank { get; set; } = null!;

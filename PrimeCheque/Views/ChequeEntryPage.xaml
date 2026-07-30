@@ -23,7 +23,7 @@
                         </Grid.ColumnDefinitions>
 
                         <ComboBox Grid.Column="0" Header="Paying Company" ItemsSource="{x:Bind ViewModel.Companies, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedCompany, Mode=TwoWay}" DisplayMemberPath="Name" HorizontalAlignment="Stretch" />
-                        <ComboBox Grid.Column="1" Header="Cheque Book / Account" ItemsSource="{x:Bind ViewModel.ChequeBooks, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedChequeBook, Mode=TwoWay}" DisplayMemberPath="MaskedAccountNumber" HorizontalAlignment="Stretch" />
+                        <ComboBox Grid.Column="1" Header="Cheque Book / Account" ItemsSource="{x:Bind ViewModel.ChequeBooks, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedChequeBook, Mode=TwoWay}" DisplayMemberPath="DisplayName" HorizontalAlignment="Stretch" />
                         <TextBox Grid.Column="2" Header="Cheque No" Text="{x:Bind ViewModel.ChequeNumber, Mode=OneWay}" IsReadOnly="True" />
                     </Grid>
 
