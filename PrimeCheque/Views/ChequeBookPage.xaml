@@ -45,7 +45,10 @@
         <!-- Form View -->
         <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
             <StackPanel Spacing="16">
-                <TextBlock Text="Register New Cheque Book" Style="{StaticResource SubtitleTextBlockStyle}" />
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock Text="Register New Cheque Book for" Style="{StaticResource SubtitleTextBlockStyle}" />
+                    <TextBlock Text="{x:Bind ViewModel.SelectedCompany.Name, Mode=OneWay}" Style="{StaticResource SubtitleTextBlockStyle}" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                </StackPanel>
 
                 <ComboBox Header="Bank" ItemsSource="{x:Bind ViewModel.Banks, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedBank, Mode=TwoWay}" DisplayMemberPath="Name" HorizontalAlignment="Stretch" />
                 <TextBox Header="Bank Account Number" Text="{x:Bind ViewModel.AccountNumber, Mode=TwoWay}" />
