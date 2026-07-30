@@ -18,6 +18,7 @@ namespace PrimeCheque.Models
     {
         None,
         AccountPayeeOnly,
+        NotNegotiable, // Restored for backwards compatibility with existing DB records
         AccountPayeeAndNotNegotiable,
         CrossOnly,
         CrossAccountPayeeAndOrBearer,

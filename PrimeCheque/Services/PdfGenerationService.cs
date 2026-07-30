@@ -143,6 +143,7 @@ namespace PrimeCheque.Services
                             string crossingText = cheque.CrossingType switch
                             {
                                 CrossingType.AccountPayeeOnly => "A/C PAYEE ONLY",
+                                CrossingType.NotNegotiable => "NOT NEGOTIABLE",
                                 CrossingType.AccountPayeeAndNotNegotiable => "A/C PAYEE ONLY - NOT NEGOTIABLE",
                                 CrossingType.CrossAccountPayeeAndOrBearer => "A/C PAYEE ONLY",
                                 CrossingType.CrossAccountPayeeAndNotNegotiableAndOrBearer => "A/C PAYEE ONLY - NOT NEGOTIABLE",
