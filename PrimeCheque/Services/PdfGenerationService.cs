@@ -185,14 +185,21 @@ namespace PrimeCheque.Services
                             float fieldW = cfg.width > 0 ? cfg.width : 25f;
                             float fieldH = cfg.height > 0 ? cfg.height : 5f;
 
+                            float fontSz = cfg.fontSize > 0 ? cfg.fontSize : 11f;
+
                             layers.Layer()
                                 .Unconstrained()
                                 .OffsetX(posX, Unit.Millimetre)
-                                .OffsetY(posY + (fieldH / 2), Unit.Millimetre)
+                                .OffsetY(posY, Unit.Millimetre)
                                 .Rotate(cfg.angle)
                                 .Width(fieldW, Unit.Millimetre)
-                                .Height(1, Unit.Millimetre) // Just need height for the border
-                                .BorderTop(1);
+                                .Height(fieldH, Unit.Millimetre)
+                                .AlignLeft()
+                                .AlignMiddle()
+                                .Text(txt =>
+                                {
+                                    txt.Span("XXXX").FontSize(fontSz).FontColor(Colors.Black).Bold();
+                                });
                         }
 
                         // Watermark if requested
