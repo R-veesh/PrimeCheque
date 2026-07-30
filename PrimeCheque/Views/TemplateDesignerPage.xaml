@@ -77,7 +77,7 @@
                                                    FontSize="{x:Bind FontSize, Mode=OneWay}" 
                                                    FontWeight="{x:Bind FontWeight, Mode=OneWay}" 
                                                    Foreground="Black" 
-                                                   TextWrapping="Wrap" />
+                                                   TextWrapping="NoWrap" />
                                     </Border>
 
                                     <!-- Resize Handles (visible only when selected) -->

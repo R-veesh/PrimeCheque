@@ -121,7 +121,7 @@ namespace PrimeCheque.ViewModels
             Fields.Add(new ChequeFieldViewModel("payeeLine1", "Payee Line 1", "PAYEE NAME LINE", new FieldConfig { x = 35, y = 25, width = 150, height = 7 }, this));
             Fields.Add(new ChequeFieldViewModel("amountWordsLine1", "Amount (Words)", "** Sri Lanka Rupees Seventy-Five Thousand Only **", new FieldConfig { x = 12, y = 42, width = 165, height = 7 }, this));
             Fields.Add(new ChequeFieldViewModel("amountFigures", "Amount (Figures)", "**75,000.00**", new FieldConfig { x = 158, y = 42, width = 35, height = 8 }, this));
-            Fields.Add(new ChequeFieldViewModel("crossingZone", "Crossing", "// A/C PAYEE ONLY //", new FieldConfig { x = 8, y = 5, width = 35, height = 18 }, this));
+            Fields.Add(new ChequeFieldViewModel("crossingZone", "Crossing", "A/C PAYEE ONLY", new FieldConfig { x = 8, y = 5, width = 35, height = 18 }, this));
             Fields.Add(new ChequeFieldViewModel("memoLine", "Memo", "MEMO / NOTE", new FieldConfig { x = 12, y = 70, width = 100, height = 6 }, this));
 
             UpdateFieldScales();

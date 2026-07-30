@@ -70,7 +70,6 @@ namespace PrimeCheque.Services
                                 .Unconstrained()
                                 .OffsetX(posX, Unit.Millimetre)
                                 .OffsetY(posY, Unit.Millimetre)
-                                .Width(fieldW, Unit.Millimetre)
                                 .Rotate(cfg.angle)
                                 .Text(txt =>
                                 {
@@ -143,12 +142,34 @@ namespace PrimeCheque.Services
                         {
                             string crossingText = cheque.CrossingType switch
                             {
-                                CrossingType.AccountPayeeOnly => "// A/C PAYEE ONLY //",
-                                CrossingType.NotNegotiable => "// NOT NEGOTIABLE //",
-                                CrossingType.AccountPayeeAndNotNegotiable => "// A/C PAYEE ONLY - NOT NEGOTIABLE //",
+                                CrossingType.AccountPayeeOnly => "A/C PAYEE ONLY",
+                                CrossingType.NotNegotiable => "NOT NEGOTIABLE",
+                                CrossingType.AccountPayeeAndNotNegotiable => "A/C PAYEE ONLY - NOT NEGOTIABLE",
                                 _ => ""
                             };
-                            AddField(config.crossingZone, crossingText, true);
+
+                            var cfg = config.crossingZone;
+                            float posX = Math.Max(0, cfg.x + hOffset);
+                            float posY = Math.Max(0, cfg.y + vOffset);
+                            float fontSz = cfg.fontSize > 0 ? cfg.fontSize : 11f;
+                            float fieldW = cfg.width > 0 ? cfg.width : 35f;
+                            float fieldH = cfg.height > 0 ? cfg.height : 18f;
+
+                            layers.Layer()
+                                .Unconstrained()
+                                .OffsetX(posX, Unit.Millimetre)
+                                .OffsetY(posY, Unit.Millimetre)
+                                .Rotate(cfg.angle)
+                                .Width(fieldW, Unit.Millimetre)
+                                .Height(fieldH, Unit.Millimetre)
+                                .BorderTop(1)
+                                .BorderBottom(1)
+                                .AlignCenter()
+                                .AlignMiddle()
+                                .Text(txt =>
+                                {
+                                    txt.Span(crossingText).FontSize(fontSz).FontColor(Colors.Black).Bold();
+                                });
                         }
 
                         // Watermark if requested
