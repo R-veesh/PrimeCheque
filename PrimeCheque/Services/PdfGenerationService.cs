@@ -144,9 +144,9 @@ namespace PrimeCheque.Services
                             {
                                 CrossingType.AccountPayeeOnly => "A/C PAYEE ONLY",
                                 CrossingType.NotNegotiable => "NOT NEGOTIABLE",
-                                CrossingType.AccountPayeeAndNotNegotiable => "A/C PAYEE ONLY - NOT NEGOTIABLE",
+                                CrossingType.AccountPayeeAndNotNegotiable => "A/C PAYEE ONLY\nNOT NEGOTIABLE",
                                 CrossingType.CrossAccountPayeeAndOrBearer => "A/C PAYEE ONLY",
-                                CrossingType.CrossAccountPayeeAndNotNegotiableAndOrBearer => "A/C PAYEE ONLY - NOT NEGOTIABLE",
+                                CrossingType.CrossAccountPayeeAndNotNegotiableAndOrBearer => "A/C PAYEE ONLY\nNOT NEGOTIABLE",
                                 _ => ""
                             };
 
