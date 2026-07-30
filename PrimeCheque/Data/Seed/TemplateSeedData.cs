@@ -15,9 +15,14 @@ namespace PrimeCheque.Data.Seed
             float crossX = 8, float crossY = 5, float memoX = 12, float memoY = 70)
         {
             return $@"{{
-  ""dateDay"": {{ ""x"": {dayX}, ""y"": {dayY}, ""width"": 12, ""height"": 6, ""fontSize"": 11 }},
-  ""dateMonth"": {{ ""x"": {monthX}, ""y"": {monthY}, ""width"": 12, ""height"": 6, ""fontSize"": 11 }},
-  ""dateYear"": {{ ""x"": {yearX}, ""y"": {yearY}, ""width"": 18, ""height"": 6, ""fontSize"": 11 }},
+  ""dateD1"": {{ ""x"": {dayX}, ""y"": {dayY}, ""width"": 6, ""height"": 6, ""fontSize"": 11 }},
+  ""dateD2"": {{ ""x"": {dayX + 6}, ""y"": {dayY}, ""width"": 6, ""height"": 6, ""fontSize"": 11 }},
+  ""dateM1"": {{ ""x"": {monthX}, ""y"": {monthY}, ""width"": 6, ""height"": 6, ""fontSize"": 11 }},
+  ""dateM2"": {{ ""x"": {monthX + 6}, ""y"": {monthY}, ""width"": 6, ""height"": 6, ""fontSize"": 11 }},
+  ""dateY1"": {{ ""x"": {yearX}, ""y"": {yearY}, ""width"": 6, ""height"": 6, ""fontSize"": 11 }},
+  ""dateY2"": {{ ""x"": {yearX + 6}, ""y"": {yearY}, ""width"": 6, ""height"": 6, ""fontSize"": 11 }},
+  ""dateY3"": {{ ""x"": {yearX + 12}, ""y"": {yearY}, ""width"": 6, ""height"": 6, ""fontSize"": 11 }},
+  ""dateY4"": {{ ""x"": {yearX + 18}, ""y"": {yearY}, ""width"": 6, ""height"": 6, ""fontSize"": 11 }},
   ""payeeLine1"": {{ ""x"": {payeeX}, ""y"": {payeeY}, ""width"": {payeeW}, ""height"": 7, ""fontSize"": 12 }},
   ""payeeLine2"": {{ ""x"": {payeeX - 20}, ""y"": {payeeY + 8}, ""width"": {payeeW + 20}, ""height"": 7, ""fontSize"": 12 }},
   ""amountWordsLine1"": {{ ""x"": {words1X}, ""y"": {words1Y}, ""width"": {words1W}, ""height"": 7, ""fontSize"": 11 }},

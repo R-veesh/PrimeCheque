@@ -31,14 +31,29 @@ namespace PrimeCheque.Models
 
     public class TemplateConfigDto
     {
-        [JsonPropertyName("dateDay")]
-        public FieldConfig? dateDay { get; set; }
+        [JsonPropertyName("dateD1")]
+        public FieldConfig? dateD1 { get; set; }
 
-        [JsonPropertyName("dateMonth")]
-        public FieldConfig? dateMonth { get; set; }
+        [JsonPropertyName("dateD2")]
+        public FieldConfig? dateD2 { get; set; }
 
-        [JsonPropertyName("dateYear")]
-        public FieldConfig? dateYear { get; set; }
+        [JsonPropertyName("dateM1")]
+        public FieldConfig? dateM1 { get; set; }
+
+        [JsonPropertyName("dateM2")]
+        public FieldConfig? dateM2 { get; set; }
+
+        [JsonPropertyName("dateY1")]
+        public FieldConfig? dateY1 { get; set; }
+
+        [JsonPropertyName("dateY2")]
+        public FieldConfig? dateY2 { get; set; }
+
+        [JsonPropertyName("dateY3")]
+        public FieldConfig? dateY3 { get; set; }
+
+        [JsonPropertyName("dateY4")]
+        public FieldConfig? dateY4 { get; set; }
 
         [JsonPropertyName("payeeLine1")]
         public FieldConfig? payeeLine1 { get; set; }

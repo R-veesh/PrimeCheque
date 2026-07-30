@@ -84,9 +84,14 @@ namespace PrimeCheque.Services
                         string monthStr = cheque.ChequeDate.ToString("MM");
                         string yearStr = cheque.ChequeDate.ToString("yyyy");
 
-                        AddField(config.dateDay, dayStr, true);
-                        AddField(config.dateMonth, monthStr, true);
-                        AddField(config.dateYear, yearStr, true);
+                        AddField(config.dateD1, dayStr[0].ToString(), true);
+                        AddField(config.dateD2, dayStr[1].ToString(), true);
+                        AddField(config.dateM1, monthStr[0].ToString(), true);
+                        AddField(config.dateM2, monthStr[1].ToString(), true);
+                        AddField(config.dateY1, yearStr[0].ToString(), true);
+                        AddField(config.dateY2, yearStr[1].ToString(), true);
+                        AddField(config.dateY3, yearStr[2].ToString(), true);
+                        AddField(config.dateY4, yearStr[3].ToString(), true);
 
                         // Payee Name (with line 2 support if long)
                         string payeeStr = $"**{cheque.PayeeName}**";

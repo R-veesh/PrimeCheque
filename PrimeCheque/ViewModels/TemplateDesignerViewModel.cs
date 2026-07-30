@@ -110,9 +110,14 @@ namespace PrimeCheque.ViewModels
         private void InitializeDefaultFields()
         {
             Fields.Clear();
-            Fields.Add(new ChequeFieldViewModel("dateDay", "Date (Day)", "DD", new FieldConfig { x = 152, y = 12, width = 12, height = 6 }, this));
-            Fields.Add(new ChequeFieldViewModel("dateMonth", "Date (Month)", "MM", new FieldConfig { x = 164, y = 12, width = 12, height = 6 }, this));
-            Fields.Add(new ChequeFieldViewModel("dateYear", "Date (Year)", "YYYY", new FieldConfig { x = 176, y = 12, width = 18, height = 6 }, this));
+            Fields.Add(new ChequeFieldViewModel("dateD1", "Date D1", "D", new FieldConfig { x = 152, y = 12, width = 6, height = 6 }, this));
+            Fields.Add(new ChequeFieldViewModel("dateD2", "Date D2", "D", new FieldConfig { x = 158, y = 12, width = 6, height = 6 }, this));
+            Fields.Add(new ChequeFieldViewModel("dateM1", "Date M1", "M", new FieldConfig { x = 164, y = 12, width = 6, height = 6 }, this));
+            Fields.Add(new ChequeFieldViewModel("dateM2", "Date M2", "M", new FieldConfig { x = 170, y = 12, width = 6, height = 6 }, this));
+            Fields.Add(new ChequeFieldViewModel("dateY1", "Date Y1", "Y", new FieldConfig { x = 176, y = 12, width = 6, height = 6 }, this));
+            Fields.Add(new ChequeFieldViewModel("dateY2", "Date Y2", "Y", new FieldConfig { x = 182, y = 12, width = 6, height = 6 }, this));
+            Fields.Add(new ChequeFieldViewModel("dateY3", "Date Y3", "Y", new FieldConfig { x = 188, y = 12, width = 6, height = 6 }, this));
+            Fields.Add(new ChequeFieldViewModel("dateY4", "Date Y4", "Y", new FieldConfig { x = 194, y = 12, width = 6, height = 6 }, this));
             Fields.Add(new ChequeFieldViewModel("payeeLine1", "Payee Line 1", "PAYEE NAME LINE", new FieldConfig { x = 35, y = 25, width = 150, height = 7 }, this));
             Fields.Add(new ChequeFieldViewModel("amountWordsLine1", "Amount (Words)", "** Sri Lanka Rupees Seventy-Five Thousand Only **", new FieldConfig { x = 12, y = 42, width = 165, height = 7 }, this));
             Fields.Add(new ChequeFieldViewModel("amountFigures", "Amount (Figures)", "**75,000.00**", new FieldConfig { x = 158, y = 42, width = 35, height = 8 }, this));
@@ -215,9 +220,14 @@ namespace PrimeCheque.ViewModels
                     var cfg = JsonSerializer.Deserialize<TemplateConfigDto>(value.TemplateConfig);
                     if (cfg != null)
                     {
-                        UpdateFieldModel("dateDay", cfg.dateDay);
-                        UpdateFieldModel("dateMonth", cfg.dateMonth);
-                        UpdateFieldModel("dateYear", cfg.dateYear);
+                        UpdateFieldModel("dateD1", cfg.dateD1);
+                        UpdateFieldModel("dateD2", cfg.dateD2);
+                        UpdateFieldModel("dateM1", cfg.dateM1);
+                        UpdateFieldModel("dateM2", cfg.dateM2);
+                        UpdateFieldModel("dateY1", cfg.dateY1);
+                        UpdateFieldModel("dateY2", cfg.dateY2);
+                        UpdateFieldModel("dateY3", cfg.dateY3);
+                        UpdateFieldModel("dateY4", cfg.dateY4);
                         UpdateFieldModel("payeeLine1", cfg.payeeLine1);
                         UpdateFieldModel("amountWordsLine1", cfg.amountWordsLine1);
                         UpdateFieldModel("amountFigures", cfg.amountFigures);
@@ -260,9 +270,14 @@ namespace PrimeCheque.ViewModels
 
             var dto = new TemplateConfigDto
             {
-                dateDay = Fields.FirstOrDefault(f => f.FieldId == "dateDay")?.GetModel(),
-                dateMonth = Fields.FirstOrDefault(f => f.FieldId == "dateMonth")?.GetModel(),
-                dateYear = Fields.FirstOrDefault(f => f.FieldId == "dateYear")?.GetModel(),
+                dateD1 = Fields.FirstOrDefault(f => f.FieldId == "dateD1")?.GetModel(),
+                dateD2 = Fields.FirstOrDefault(f => f.FieldId == "dateD2")?.GetModel(),
+                dateM1 = Fields.FirstOrDefault(f => f.FieldId == "dateM1")?.GetModel(),
+                dateM2 = Fields.FirstOrDefault(f => f.FieldId == "dateM2")?.GetModel(),
+                dateY1 = Fields.FirstOrDefault(f => f.FieldId == "dateY1")?.GetModel(),
+                dateY2 = Fields.FirstOrDefault(f => f.FieldId == "dateY2")?.GetModel(),
+                dateY3 = Fields.FirstOrDefault(f => f.FieldId == "dateY3")?.GetModel(),
+                dateY4 = Fields.FirstOrDefault(f => f.FieldId == "dateY4")?.GetModel(),
                 payeeLine1 = Fields.FirstOrDefault(f => f.FieldId == "payeeLine1")?.GetModel(),
                 amountWordsLine1 = Fields.FirstOrDefault(f => f.FieldId == "amountWordsLine1")?.GetModel(),
                 amountFigures = Fields.FirstOrDefault(f => f.FieldId == "amountFigures")?.GetModel(),
@@ -344,9 +359,14 @@ namespace PrimeCheque.ViewModels
                 
                 var dto = new TemplateConfigDto
                 {
-                    dateDay = Fields.FirstOrDefault(f => f.FieldId == "dateDay")?.GetModel(),
-                    dateMonth = Fields.FirstOrDefault(f => f.FieldId == "dateMonth")?.GetModel(),
-                    dateYear = Fields.FirstOrDefault(f => f.FieldId == "dateYear")?.GetModel(),
+                    dateD1 = Fields.FirstOrDefault(f => f.FieldId == "dateD1")?.GetModel(),
+                    dateD2 = Fields.FirstOrDefault(f => f.FieldId == "dateD2")?.GetModel(),
+                    dateM1 = Fields.FirstOrDefault(f => f.FieldId == "dateM1")?.GetModel(),
+                    dateM2 = Fields.FirstOrDefault(f => f.FieldId == "dateM2")?.GetModel(),
+                    dateY1 = Fields.FirstOrDefault(f => f.FieldId == "dateY1")?.GetModel(),
+                    dateY2 = Fields.FirstOrDefault(f => f.FieldId == "dateY2")?.GetModel(),
+                    dateY3 = Fields.FirstOrDefault(f => f.FieldId == "dateY3")?.GetModel(),
+                    dateY4 = Fields.FirstOrDefault(f => f.FieldId == "dateY4")?.GetModel(),
                     payeeLine1 = Fields.FirstOrDefault(f => f.FieldId == "payeeLine1")?.GetModel(),
                     amountWordsLine1 = Fields.FirstOrDefault(f => f.FieldId == "amountWordsLine1")?.GetModel(),
                     amountFigures = Fields.FirstOrDefault(f => f.FieldId == "amountFigures")?.GetModel(),
@@ -422,9 +442,14 @@ namespace PrimeCheque.ViewModels
                     
                     var dto = new TemplateConfigDto
                     {
-                        dateDay = Fields.FirstOrDefault(f => f.FieldId == "dateDay")?.GetModel(),
-                        dateMonth = Fields.FirstOrDefault(f => f.FieldId == "dateMonth")?.GetModel(),
-                        dateYear = Fields.FirstOrDefault(f => f.FieldId == "dateYear")?.GetModel(),
+                        dateD1 = Fields.FirstOrDefault(f => f.FieldId == "dateD1")?.GetModel(),
+                        dateD2 = Fields.FirstOrDefault(f => f.FieldId == "dateD2")?.GetModel(),
+                        dateM1 = Fields.FirstOrDefault(f => f.FieldId == "dateM1")?.GetModel(),
+                        dateM2 = Fields.FirstOrDefault(f => f.FieldId == "dateM2")?.GetModel(),
+                        dateY1 = Fields.FirstOrDefault(f => f.FieldId == "dateY1")?.GetModel(),
+                        dateY2 = Fields.FirstOrDefault(f => f.FieldId == "dateY2")?.GetModel(),
+                        dateY3 = Fields.FirstOrDefault(f => f.FieldId == "dateY3")?.GetModel(),
+                        dateY4 = Fields.FirstOrDefault(f => f.FieldId == "dateY4")?.GetModel(),
                         payeeLine1 = Fields.FirstOrDefault(f => f.FieldId == "payeeLine1")?.GetModel(),
                         amountWordsLine1 = Fields.FirstOrDefault(f => f.FieldId == "amountWordsLine1")?.GetModel(),
                         amountFigures = Fields.FirstOrDefault(f => f.FieldId == "amountFigures")?.GetModel(),
