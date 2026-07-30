@@ -18,8 +18,10 @@ namespace PrimeCheque.Models
     {
         None,
         AccountPayeeOnly,
-        NotNegotiable,
-        AccountPayeeAndNotNegotiable
+        AccountPayeeAndNotNegotiable,
+        CrossOnly,
+        CrossAccountPayeeAndOrBearer,
+        CrossAccountPayeeAndNotNegotiableAndOrBearer
     }
 
     public class Cheque

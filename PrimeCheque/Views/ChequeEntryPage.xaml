@@ -46,7 +46,7 @@
                         </Grid.ColumnDefinitions>
 
                         <NumberBox Grid.Column="0" Header="Amount (LKR)" Value="{x:Bind ViewModel.Amount, Mode=TwoWay}" SmallChange="100" LargeChange="5000" SpinButtonPlacementMode="Compact" />
-                        <ComboBox Grid.Column="1" Header="Crossing Type" ItemsSource="{x:Bind ViewModel.CrossingTypes}" SelectedItem="{x:Bind ViewModel.SelectedCrossing, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+                        <ComboBox Grid.Column="1" Header="Crossing Type" ItemsSource="{x:Bind ViewModel.CrossingTypes}" DisplayMemberPath="Value" SelectedValuePath="Key" SelectedValue="{x:Bind ViewModel.SelectedCrossing, Mode=TwoWay}" HorizontalAlignment="Stretch" />
                     </Grid>
 
                     <!-- Amount in Words Preview Card -->

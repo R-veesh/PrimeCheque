@@ -54,7 +54,14 @@ namespace PrimeCheque.ViewModels
         [ObservableProperty]
         private CrossingType _selectedCrossing = CrossingType.AccountPayeeOnly;
 
-        public Array CrossingTypes => Enum.GetValues(typeof(CrossingType));
+        public System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<CrossingType, string>> CrossingTypes => new()
+        {
+            new(CrossingType.CrossAccountPayeeAndOrBearer, "Cross A/C Payee + Or Bearer"),
+            new(CrossingType.CrossAccountPayeeAndNotNegotiableAndOrBearer, "Cross A/C Payee + Not Negotiable + Or Bearer"),
+            new(CrossingType.AccountPayeeOnly, "Cross A/C Payee"),
+            new(CrossingType.CrossOnly, "Cross Only"),
+            new(CrossingType.None, "No Crossing")
+        };
 
         public ChequeEntryViewModel(
             IChequeService chequeService,

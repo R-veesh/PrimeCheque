@@ -123,6 +123,7 @@ namespace PrimeCheque.ViewModels
             Fields.Add(new ChequeFieldViewModel("amountFigures", "Amount (Figures)", "**75,000.00**", new FieldConfig { x = 158, y = 42, width = 35, height = 8 }, this));
             Fields.Add(new ChequeFieldViewModel("crossingZone", "Crossing", "A/C PAYEE ONLY", new FieldConfig { x = 8, y = 5, width = 35, height = 18 }, this));
             Fields.Add(new ChequeFieldViewModel("memoLine", "Memo", "MEMO / NOTE", new FieldConfig { x = 12, y = 70, width = 100, height = 6 }, this));
+            Fields.Add(new ChequeFieldViewModel("orBearerZone", "Or Bearer Strike", "----", new FieldConfig { x = 160, y = 25, width = 25, height = 5 }, this));
 
             UpdateFieldScales();
         }
@@ -233,6 +234,7 @@ namespace PrimeCheque.ViewModels
                         UpdateFieldModel("amountFigures", cfg.amountFigures);
                         UpdateFieldModel("crossingZone", cfg.crossingZone);
                         UpdateFieldModel("memoLine", cfg.memoLine);
+                        UpdateFieldModel("orBearerZone", cfg.orBearerZone);
                     }
                 }
 
@@ -282,7 +284,8 @@ namespace PrimeCheque.ViewModels
                 amountWordsLine1 = Fields.FirstOrDefault(f => f.FieldId == "amountWordsLine1")?.GetModel(),
                 amountFigures = Fields.FirstOrDefault(f => f.FieldId == "amountFigures")?.GetModel(),
                 crossingZone = Fields.FirstOrDefault(f => f.FieldId == "crossingZone")?.GetModel(),
-                memoLine = Fields.FirstOrDefault(f => f.FieldId == "memoLine")?.GetModel()
+                memoLine = Fields.FirstOrDefault(f => f.FieldId == "memoLine")?.GetModel(),
+                orBearerZone = Fields.FirstOrDefault(f => f.FieldId == "orBearerZone")?.GetModel()
             };
 
             var jsonConfig = JsonSerializer.Serialize(dto, new JsonSerializerOptions { WriteIndented = true });
@@ -454,7 +457,8 @@ namespace PrimeCheque.ViewModels
                         amountWordsLine1 = Fields.FirstOrDefault(f => f.FieldId == "amountWordsLine1")?.GetModel(),
                         amountFigures = Fields.FirstOrDefault(f => f.FieldId == "amountFigures")?.GetModel(),
                         crossingZone = Fields.FirstOrDefault(f => f.FieldId == "crossingZone")?.GetModel(),
-                        memoLine = Fields.FirstOrDefault(f => f.FieldId == "memoLine")?.GetModel()
+                        memoLine = Fields.FirstOrDefault(f => f.FieldId == "memoLine")?.GetModel(),
+                        orBearerZone = Fields.FirstOrDefault(f => f.FieldId == "orBearerZone")?.GetModel()
                     };
                     tmpl.TemplateConfig = JsonSerializer.Serialize(dto);
 

@@ -143,8 +143,9 @@ namespace PrimeCheque.Services
                             string crossingText = cheque.CrossingType switch
                             {
                                 CrossingType.AccountPayeeOnly => "A/C PAYEE ONLY",
-                                CrossingType.NotNegotiable => "NOT NEGOTIABLE",
                                 CrossingType.AccountPayeeAndNotNegotiable => "A/C PAYEE ONLY - NOT NEGOTIABLE",
+                                CrossingType.CrossAccountPayeeAndOrBearer => "A/C PAYEE ONLY",
+                                CrossingType.CrossAccountPayeeAndNotNegotiableAndOrBearer => "A/C PAYEE ONLY - NOT NEGOTIABLE",
                                 _ => ""
                             };
 
@@ -170,6 +171,28 @@ namespace PrimeCheque.Services
                                 {
                                     txt.Span(crossingText).FontSize(fontSz).FontColor(Colors.Black).Bold();
                                 });
+                        }
+
+                        // Or Bearer Strikeout
+                        bool hasBearerStrike = cheque.CrossingType == CrossingType.CrossAccountPayeeAndOrBearer || 
+                                               cheque.CrossingType == CrossingType.CrossAccountPayeeAndNotNegotiableAndOrBearer;
+
+                        if (hasBearerStrike && config.orBearerZone != null)
+                        {
+                            var cfg = config.orBearerZone;
+                            float posX = Math.Max(0, cfg.x + hOffset);
+                            float posY = Math.Max(0, cfg.y + vOffset);
+                            float fieldW = cfg.width > 0 ? cfg.width : 25f;
+                            float fieldH = cfg.height > 0 ? cfg.height : 5f;
+
+                            layers.Layer()
+                                .Unconstrained()
+                                .OffsetX(posX, Unit.Millimetre)
+                                .OffsetY(posY + (fieldH / 2), Unit.Millimetre)
+                                .Rotate(cfg.angle)
+                                .Width(fieldW, Unit.Millimetre)
+                                .Height(1, Unit.Millimetre) // Just need height for the border
+                                .BorderTop(1);
                         }
 
                         // Watermark if requested

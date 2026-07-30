@@ -30,7 +30,8 @@ namespace PrimeCheque.Data.Seed
   ""amountFigures"": {{ ""x"": {figX}, ""y"": {figY}, ""width"": {figW}, ""height"": 8, ""fontSize"": 12 }},
   ""crossingZone"": {{ ""x"": {crossX}, ""y"": {crossY}, ""width"": 35, ""height"": 18 }},
   ""signatureZone"": {{ ""x"": 130, ""y"": 65, ""width"": 60, ""height"": 15 }},
-  ""memoLine"": {{ ""x"": {memoX}, ""y"": {memoY}, ""width"": 100, ""height"": 6, ""fontSize"": 9 }}
+  ""memoLine"": {{ ""x"": {memoX}, ""y"": {memoY}, ""width"": 100, ""height"": 6, ""fontSize"": 9 }},
+  ""orBearerZone"": {{ ""x"": 160, ""y"": 25, ""width"": 25, ""height"": 5 }}
 }}";
         }
 

@@ -75,5 +75,8 @@ namespace PrimeCheque.Models
 
         [JsonPropertyName("memoLine")]
         public FieldConfig? memoLine { get; set; }
+
+        [JsonPropertyName("orBearerZone")]
+        public FieldConfig? orBearerZone { get; set; }
     }
 }
