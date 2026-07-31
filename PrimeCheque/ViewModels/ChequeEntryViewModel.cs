@@ -63,6 +63,9 @@ namespace PrimeCheque.ViewModels
         private string _memo = string.Empty;
 
         [ObservableProperty]
+        private ChequeStatus _status = ChequeStatus.Draft;
+
+        [ObservableProperty]
         private CrossingType _selectedCrossing = CrossingType.AccountPayeeOnly;
 
         public System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<CrossingType, string>> CrossingTypes => new()
@@ -146,6 +149,7 @@ namespace PrimeCheque.ViewModels
             ChequeDate = cheque.ChequeDate.ToDateTime(new TimeOnly(0, 0));
             SelectedCrossing = cheque.CrossingType;
             Memo = cheque.Memo ?? string.Empty;
+            Status = cheque.Status;
         }
 
         async partial void OnSelectedCompanyChanged(Company? value)

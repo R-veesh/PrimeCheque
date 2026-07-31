@@ -11,6 +11,7 @@
 
     <Page.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:ChequeStatusToBooleanConverter x:Key="ChequeStatusToBooleanConverter" />
     </Page.Resources>
 
     <ScrollViewer Padding="24">
@@ -70,11 +71,11 @@
 
                     <!-- Action Buttons -->
                     <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right" Margin="0,12,0,0">
-                        <Button Content="Save as Draft" Command="{x:Bind ViewModel.SaveDraftCommand}" Visibility="{x:Bind ViewModel.IsPreparerRole, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" Padding="16,8" />
+                        <Button Content="Save as Draft" Command="{x:Bind ViewModel.SaveDraftCommand}" Visibility="{x:Bind ViewModel.IsPreparerRole, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" IsEnabled="{x:Bind ViewModel.Status, Mode=OneWay, Converter={StaticResource ChequeStatusToBooleanConverter}, ConverterParameter='Draft'}" Padding="16,8" />
                         <Button Content="Preview" Command="{x:Bind ViewModel.PreviewChequeCommand}" Padding="16,8" />
-                        <Button Content="Send for Approval" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.SendForApprovalCommand}" Visibility="{x:Bind ViewModel.IsPreparerRole, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" Padding="20,8" />
+                        <Button Content="Send for Approval" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.SendForApprovalCommand}" Visibility="{x:Bind ViewModel.IsPreparerRole, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" IsEnabled="{x:Bind ViewModel.Status, Mode=OneWay, Converter={StaticResource ChequeStatusToBooleanConverter}, ConverterParameter='Draft'}" Padding="20,8" />
                         
-                        <Button Content="Print" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.PrintChequeCommand}" Visibility="{x:Bind ViewModel.IsPrinterRole, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" Padding="20,8" />
+                        <Button Content="Print" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.PrintChequeCommand}" Visibility="{x:Bind ViewModel.IsPrinterRole, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" IsEnabled="{x:Bind ViewModel.Status, Mode=OneWay, Converter={StaticResource ChequeStatusToBooleanConverter}, ConverterParameter='Approved'}" Padding="20,8" />
                     </StackPanel>
                 </StackPanel>
             </Border>
