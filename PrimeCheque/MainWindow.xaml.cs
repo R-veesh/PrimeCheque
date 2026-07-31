@@ -174,8 +174,9 @@ namespace PrimeCheque
         {
             if (args.DidSizeChange && sender.TitleBar.ExtendsContentIntoTitleBar)
             {
-                // Update interactive overlay right margin to prevent overlap with caption buttons
-                TitleBarRightControls.Margin = new Thickness(0, 0, sender.TitleBar.RightInset, 0);
+                // AppWindow properties are in physical pixels, but XAML requires logical pixels.
+                // It is safer to maintain a fixed safe margin for the system caption buttons.
+                TitleBarRightControls.Margin = new Thickness(0, 0, 160, 0);
             }
         }
 
