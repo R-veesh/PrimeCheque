@@ -52,8 +52,17 @@ namespace PrimeCheque.ViewModels
             if (Companies.Count > 0)
             {
                 SelectedCompany = Companies[0];
-                await LoadPayeesAsync();
             }
+        }
+
+        partial void OnSelectedCompanyChanged(Company? value)
+        {
+            _ = LoadPayeesAsync();
+        }
+
+        partial void OnSearchQueryChanged(string value)
+        {
+            _ = LoadPayeesAsync();
         }
 
         public async Task LoadPayeesAsync()

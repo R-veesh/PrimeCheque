@@ -53,7 +53,10 @@
         <!-- Form View -->
         <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
             <StackPanel Spacing="16">
-                <TextBlock Text="Add Payee" Style="{StaticResource SubtitleTextBlockStyle}" />
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" TextWrapping="Wrap">
+                    <Run Text="Add Payee for " />
+                    <Run Text="{x:Bind ViewModel.SelectedCompany.Name, Mode=OneWay}" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                </TextBlock>
 
                 <TextBox Header="Payee Full Name" Text="{x:Bind ViewModel.PayeeName, Mode=TwoWay}" />
                 <TextBox Header="Nickname / Alias" Text="{x:Bind ViewModel.NickName, Mode=TwoWay}" />
