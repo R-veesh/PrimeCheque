@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using PrimeCheque.Models;
@@ -18,6 +19,7 @@ namespace PrimeCheque
         {
             InitializeComponent();
             ConfigureCustomTitleBar();
+            SetMinimumSize();
 
             // Set default size and center on screen
             AppWindow.Resize(new Windows.Graphics.SizeInt32(1200, 850));
@@ -211,6 +213,73 @@ namespace PrimeCheque
         {
             _session.Logout();
             ShowLogin();
+        }
+
+        private delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+        private WndProcDelegate _wndProcDelegate;
+        private IntPtr _oldWndProc;
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr")]
+        private static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, WndProcDelegate newProc);
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowLong")]
+        private static extern IntPtr SetWindowLong(IntPtr hWnd, int nIndex, WndProcDelegate newProc);
+
+        [DllImport("user32.dll")]
+        private static extern uint GetDpiForWindow(IntPtr hwnd);
+
+        private const int GWLP_WNDPROC = -4;
+        private const uint WM_GETMINMAXINFO = 0x0024;
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct POINT
+        {
+            public int x;
+            public int y;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct MINMAXINFO
+        {
+            public POINT ptReserved;
+            public POINT ptMaxSize;
+            public POINT ptMaxPosition;
+            public POINT ptMinTrackSize;
+            public POINT ptMaxTrackSize;
+        }
+
+        private IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+        {
+            if (msg == WM_GETMINMAXINFO)
+            {
+                MINMAXINFO minMaxInfo = Marshal.PtrToStructure<MINMAXINFO>(lParam);
+
+                uint dpi = GetDpiForWindow(hWnd);
+                float scalingFactor = (float)dpi / 96;
+
+                int minWidth = 1400;
+                int minHeight = 700;
+
+                minMaxInfo.ptMinTrackSize.x = (int)(minWidth * scalingFactor);
+                minMaxInfo.ptMinTrackSize.y = (int)(minHeight * scalingFactor);
+
+                Marshal.StructureToPtr(minMaxInfo, lParam, true);
+            }
+
+            return CallWindowProc(_oldWndProc, hWnd, msg, wParam, lParam);
+        }
+
+        private void SetMinimumSize()
+        {
+            IntPtr hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            _wndProcDelegate = new WndProcDelegate(WndProc);
+            if (IntPtr.Size == 8)
+                _oldWndProc = SetWindowLongPtr(hwnd, GWLP_WNDPROC, _wndProcDelegate);
+            else
+                _oldWndProc = SetWindowLong(hwnd, GWLP_WNDPROC, _wndProcDelegate);
         }
     }
 }
