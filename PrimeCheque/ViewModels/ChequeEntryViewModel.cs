@@ -17,6 +17,10 @@ namespace PrimeCheque.ViewModels
         private readonly IPayeeService _payeeService;
         private readonly IAmountToWordsService _amountToWordsService;
         private readonly INavigationService _navigationService;
+        private readonly ISessionService _sessionService;
+
+        public bool IsPreparerRole => _sessionService.CurrentUser?.Role == UserRole.Administrator || _sessionService.CurrentUser?.Role == UserRole.ChequePreparer;
+        public bool IsPrinterRole => _sessionService.CurrentUser?.Role == UserRole.Administrator || _sessionService.CurrentUser?.Role == UserRole.Printer;
 
         private Guid? _editingChequeId;
 
@@ -76,7 +80,8 @@ namespace PrimeCheque.ViewModels
             ICompanyService companyService,
             IPayeeService payeeService,
             IAmountToWordsService amountToWordsService,
-            INavigationService navigationService)
+            INavigationService navigationService,
+            ISessionService sessionService)
         {
             _chequeService = chequeService;
             _chequeBookService = chequeBookService;
@@ -84,6 +89,7 @@ namespace PrimeCheque.ViewModels
             _payeeService = payeeService;
             _amountToWordsService = amountToWordsService;
             _navigationService = navigationService;
+            _sessionService = sessionService;
         }
 
         public async Task LoadDataAsync()
@@ -210,7 +216,66 @@ namespace PrimeCheque.ViewModels
         }
 
         [RelayCommand]
-        private async Task PreviewAndPrintAsync()
+        private async Task PreviewChequeAsync()
+        {
+            if (SelectedCompany == null || SelectedChequeBook == null || string.IsNullOrWhiteSpace(PayeeName) || Amount <= 0)
+                return;
+
+            var cheque = IsEditMode ? await _chequeService.GetChequeByIdAsync(_editingChequeId!.Value) : new Cheque();
+            if (cheque == null) return;
+
+            cheque.CompanyId = SelectedCompany.Id;
+            cheque.ChequeBookId = SelectedChequeBook.Id;
+            cheque.ChequeNumber = ChequeNumber;
+            cheque.PayeeName = PayeeName;
+            cheque.Amount = (decimal)Amount;
+            cheque.AmountInWords = AmountInWords;
+            cheque.ChequeDate = DateOnly.FromDateTime(ChequeDate.DateTime);
+            cheque.Memo = Memo;
+            cheque.CrossingType = SelectedCrossing;
+            cheque.Status = ChequeStatus.Draft;
+
+            if (IsEditMode)
+                cheque = await _chequeService.UpdateChequeAsync(cheque, "User");
+            else
+                cheque = await _chequeService.CreateChequeAsync(cheque, "User");
+
+            _navigationService.Navigate(typeof(ChequePreviewPage), cheque.Id);
+        }
+
+        [RelayCommand]
+        private async Task SendForApprovalAsync()
+        {
+            if (SelectedCompany == null || SelectedChequeBook == null || string.IsNullOrWhiteSpace(PayeeName) || Amount <= 0)
+                return;
+
+            var cheque = IsEditMode ? await _chequeService.GetChequeByIdAsync(_editingChequeId!.Value) : new Cheque();
+            if (cheque == null) return;
+
+            cheque.CompanyId = SelectedCompany.Id;
+            cheque.ChequeBookId = SelectedChequeBook.Id;
+            cheque.ChequeNumber = ChequeNumber;
+            cheque.PayeeName = PayeeName;
+            cheque.Amount = (decimal)Amount;
+            cheque.AmountInWords = AmountInWords;
+            cheque.ChequeDate = DateOnly.FromDateTime(ChequeDate.DateTime);
+            cheque.Memo = Memo;
+            cheque.CrossingType = SelectedCrossing;
+            cheque.Status = ChequeStatus.PendingApproval;
+
+            if (IsEditMode)
+                cheque = await _chequeService.UpdateChequeAsync(cheque, "User");
+            else
+                cheque = await _chequeService.CreateChequeAsync(cheque, "User");
+
+            var userName = _sessionService.CurrentUser?.Username ?? "System";
+            await _chequeService.SubmitForApprovalAsync(cheque.Id, userName);
+
+            _navigationService.Navigate(typeof(ChequeListPage));
+        }
+
+        [RelayCommand]
+        private async Task PrintChequeAsync()
         {
             if (SelectedCompany == null || SelectedChequeBook == null || string.IsNullOrWhiteSpace(PayeeName) || Amount <= 0)
                 return;
