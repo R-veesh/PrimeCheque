@@ -14,7 +14,7 @@
         <converters:DateFormatConverter x:Key="DateFormatConverter" />
     </Page.Resources>
 
-    <Grid Padding="24" MaxWidth="1000" HorizontalAlignment="Center">
+    <Grid Padding="24">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />

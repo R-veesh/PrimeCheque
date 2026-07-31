@@ -37,15 +37,20 @@
 
             <!-- Table -->
             <ListView ItemsSource="{x:Bind ViewModel.Cheques, Mode=OneWay}">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Padding="12" ColumnSpacing="16">
+                        <Grid Padding="12" ColumnSpacing="12">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="80" />
-                                <ColumnDefinition Width="180" />
-                                <ColumnDefinition Width="140" />
-                                <ColumnDefinition Width="110" />
+                                <ColumnDefinition Width="200" MinWidth="200" />
                                 <ColumnDefinition Width="120" />
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="110" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="{Binding ChequeNumber}" FontWeight="Bold" VerticalAlignment="Center" />

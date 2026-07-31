@@ -15,7 +15,7 @@
         <converters:BoolToIndexConverter x:Key="BoolToIndexConverter" />
     </Page.Resources>
 
-    <Grid Padding="24" ColumnSpacing="24" MaxWidth="1400" HorizontalAlignment="Center">
+    <Grid Padding="24" ColumnSpacing="24">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="1*" />
