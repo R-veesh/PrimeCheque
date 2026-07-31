@@ -15,21 +15,27 @@
         <converters:BoolToIndexConverter x:Key="BoolToIndexConverter" />
     </Page.Resources>
 
-    <Grid Padding="24" ColumnSpacing="24">
+    <Grid Padding="24" ColumnSpacing="24" MaxWidth="1400" HorizontalAlignment="Center">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
 
         <!-- Preview Section -->
-        <StackPanel Grid.Column="0" Spacing="16">
-            <StackPanel Orientation="Horizontal" Spacing="12">
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="12" Margin="0,0,0,16">
                 <Button Content="&#xE72B;" FontFamily="{ThemeResource SymbolThemeFontFamily}" Command="{x:Bind ViewModel.GoBackCommand}" Background="Transparent" BorderThickness="0" FontSize="16" />
                 <TextBlock Text="Cheque Print Preview" Style="{StaticResource TitleTextBlockStyle}" />
             </StackPanel>
 
             <!-- Cheque Summary Card -->
-            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="16" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+            <Border Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="16" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Margin="0,0,0,16">
                 <Grid ColumnSpacing="16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
@@ -55,10 +61,10 @@
             </Border>
 
             <!-- PDF Container / Path display -->
-            <Border Height="350" Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}" CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+            <Border Grid.Row="2" Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}" CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                 <WebView2 x:Name="PdfWebView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
             </Border>
-        </StackPanel>
+        </Grid>
 
         <!-- Printer Settings & Calibration Panel -->
         <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">

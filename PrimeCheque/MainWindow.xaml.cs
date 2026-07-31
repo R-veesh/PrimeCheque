@@ -19,6 +19,19 @@ namespace PrimeCheque
             InitializeComponent();
             ConfigureCustomTitleBar();
 
+            // Set default size and center on screen
+            AppWindow.Resize(new Windows.Graphics.SizeInt32(1200, 850));
+            var displayArea = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(AppWindow.Id, Microsoft.UI.Windowing.DisplayAreaFallback.Primary);
+            if (displayArea != null)
+            {
+                var workArea = displayArea.WorkArea;
+                var position = new Windows.Graphics.PointInt32(
+                    workArea.X + (workArea.Width - 1200) / 2,
+                    workArea.Y + (workArea.Height - 850) / 2
+                );
+                AppWindow.Move(position);
+            }
+
             _session = App.GetService<ISessionService>();
             _navigationService = App.GetService<INavigationService>();
             _navigationService.Frame = ContentFrame;

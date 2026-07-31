@@ -64,7 +64,7 @@
             <Frame x:Name="LoginFrame" />
 
             <!-- Main app shell (shown after login) -->
-        <NavigationView x:Name="NavView" Visibility="Collapsed" SelectionChanged="NavView_SelectionChanged" Loaded="NavView_Loaded" IsBackButtonVisible="Auto" BackRequested="NavView_BackRequested" IsSettingsVisible="False">
+        <NavigationView x:Name="NavView" Visibility="Collapsed" SelectionChanged="NavView_SelectionChanged" Loaded="NavView_Loaded" IsBackButtonVisible="Auto" BackRequested="NavView_BackRequested" IsSettingsVisible="False" OpenPaneLength="240">
             <NavigationView.MenuItems>
                 <NavigationViewItem Content="Dashboard" Tag="Dashboard" Icon="Home" x:Name="NavDashboard" />
                 <NavigationViewItem Content="New Cheque" Tag="NewCheque" Icon="Edit" x:Name="NavNewCheque" />

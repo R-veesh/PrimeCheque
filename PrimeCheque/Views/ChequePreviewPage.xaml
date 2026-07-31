@@ -14,58 +14,61 @@
         <converters:DateFormatConverter x:Key="DateFormatConverter" />
     </Page.Resources>
 
-    <ScrollViewer Padding="24">
-        <StackPanel Spacing="16" MaxWidth="800" HorizontalAlignment="Left">
-            
-            <StackPanel Orientation="Horizontal" Spacing="12">
-                <Button Content="&#xE72B;" FontFamily="{ThemeResource SymbolThemeFontFamily}" Command="{x:Bind ViewModel.GoBackCommand}" Background="Transparent" BorderThickness="0" FontSize="16" />
-                <TextBlock Text="Cheque Preview" Style="{StaticResource TitleTextBlockStyle}" />
-            </StackPanel>
+    <Grid Padding="24" MaxWidth="1000" HorizontalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-            <!-- Cheque Summary Card -->
-            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="16" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
-                <Grid ColumnSpacing="16" RowSpacing="16">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <StackPanel Grid.Row="0" Grid.Column="0">
-                        <TextBlock Text="PAYEE" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                        <TextBlock Text="{x:Bind ViewModel.Cheque.PayeeName, Mode=OneWay}" FontWeight="Bold" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Row="0" Grid.Column="1">
-                        <TextBlock Text="AMOUNT" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                        <TextBlock Text="{x:Bind ViewModel.Cheque.Amount, Mode=OneWay, Converter={StaticResource AmountFormatConverter}}" FontWeight="Bold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Row="0" Grid.Column="2">
-                        <TextBlock Text="CHEQUE DATE" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                        <TextBlock Text="{x:Bind ViewModel.Cheque.ChequeDate, Mode=OneWay, Converter={StaticResource DateFormatConverter}}" FontWeight="Bold" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
-                        <TextBlock Text="MEMO" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                        <TextBlock Text="{x:Bind ViewModel.Cheque.Memo, Mode=OneWay}" FontWeight="SemiBold" TextWrapping="Wrap" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Row="1" Grid.Column="2">
-                        <TextBlock Text="STATUS" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                        <TextBlock Text="{x:Bind ViewModel.Cheque.Status, Mode=OneWay}" FontWeight="Bold" />
-                    </StackPanel>
-                </Grid>
-            </Border>
-
-            <!-- PDF Container / Path display -->
-            <Border Height="350" Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}" CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
-                <WebView2 x:Name="PdfWebView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-            </Border>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="12" Margin="0,0,0,16">
+            <Button Content="&#xE72B;" FontFamily="{ThemeResource SymbolThemeFontFamily}" Command="{x:Bind ViewModel.GoBackCommand}" Background="Transparent" BorderThickness="0" FontSize="16" />
+            <TextBlock Text="Cheque Preview" Style="{StaticResource TitleTextBlockStyle}" />
         </StackPanel>
-    </ScrollViewer>
+
+        <!-- Cheque Summary Card -->
+        <Border Grid.Row="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="16" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" Margin="0,0,0,16">
+            <Grid ColumnSpacing="16" RowSpacing="16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Row="0" Grid.Column="0">
+                    <TextBlock Text="PAYEE" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Text="{x:Bind ViewModel.Cheque.PayeeName, Mode=OneWay}" FontWeight="Bold" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="0" Grid.Column="1">
+                    <TextBlock Text="AMOUNT" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Text="{x:Bind ViewModel.Cheque.Amount, Mode=OneWay, Converter={StaticResource AmountFormatConverter}}" FontWeight="Bold" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="0" Grid.Column="2">
+                    <TextBlock Text="CHEQUE DATE" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Text="{x:Bind ViewModel.Cheque.ChequeDate, Mode=OneWay, Converter={StaticResource DateFormatConverter}}" FontWeight="Bold" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                    <TextBlock Text="MEMO" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Text="{x:Bind ViewModel.Cheque.Memo, Mode=OneWay}" FontWeight="SemiBold" TextWrapping="Wrap" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="2">
+                    <TextBlock Text="STATUS" Style="{StaticResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Text="{x:Bind ViewModel.Cheque.Status, Mode=OneWay}" FontWeight="Bold" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- PDF Container / Path display -->
+        <Border Grid.Row="2" Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}" CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+            <WebView2 x:Name="PdfWebView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+        </Border>
+    </Grid>
 </Page>

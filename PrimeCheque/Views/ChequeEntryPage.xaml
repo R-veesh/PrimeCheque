@@ -15,7 +15,7 @@
     </Page.Resources>
 
     <ScrollViewer Padding="24">
-        <StackPanel Spacing="20" MaxWidth="800" HorizontalAlignment="Left">
+        <StackPanel Spacing="20" MaxWidth="900" HorizontalAlignment="Center">
             <StackPanel Orientation="Horizontal" Spacing="12">
                 <Button Content="&#xE72B;" FontFamily="{ThemeResource SymbolThemeFontFamily}" Command="{x:Bind ViewModel.GoBackCommand}" Visibility="{x:Bind ViewModel.IsEditMode, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" Background="Transparent" BorderThickness="0" FontSize="16" />
                 <TextBlock Text="{x:Bind ViewModel.PageTitle, Mode=OneWay}" Style="{StaticResource TitleTextBlockStyle}" />
