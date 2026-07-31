@@ -1,3 +1,4 @@
+using System;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 using PrimeCheque.ViewModels;
@@ -18,7 +19,14 @@ namespace PrimeCheque.Views
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            await ViewModel.LoadDataAsync();
+            if (e.Parameter is Guid chequeId)
+            {
+                await ViewModel.LoadExistingChequeAsync(chequeId);
+            }
+            else
+            {
+                await ViewModel.LoadDataAsync();
+            }
         }
     }
 }

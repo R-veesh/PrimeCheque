@@ -153,6 +153,11 @@ namespace PrimeCheque
             }
         }
 
+        private void NavView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
+        {
+            _navigationService.GoBack();
+        }
+
         private void ConfigureCustomTitleBar()
         {
             ExtendsContentIntoTitleBar = true;

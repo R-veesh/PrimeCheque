@@ -18,6 +18,13 @@ namespace PrimeCheque.ViewModels
         private readonly IAmountToWordsService _amountToWordsService;
         private readonly INavigationService _navigationService;
 
+        private Guid? _editingChequeId;
+
+        [ObservableProperty]
+        private bool _isEditMode;
+
+        public string PageTitle => IsEditMode ? "Edit Cheque Entry" : "New Cheque Entry";
+
         [ObservableProperty]
         private ObservableCollection<Company> _companies = new();
 
@@ -92,6 +99,49 @@ namespace PrimeCheque.ViewModels
             }
         }
 
+        public async Task LoadExistingChequeAsync(Guid chequeId)
+        {
+            var cheque = await _chequeService.GetChequeByIdAsync(chequeId);
+            if (cheque == null) return;
+
+            // Load dependencies first
+            await LoadDataAsync();
+
+            _editingChequeId = cheque.Id;
+            IsEditMode = true;
+            OnPropertyChanged(nameof(PageTitle));
+
+            // Select matching company
+            foreach (var comp in Companies)
+            {
+                if (comp.Id == cheque.CompanyId)
+                {
+                    SelectedCompany = comp;
+                    break;
+                }
+            }
+
+            // Await company change to load chequebooks and payees
+            await OnCompanyChangedAsync();
+
+            // Select matching chequebook
+            foreach (var book in ChequeBooks)
+            {
+                if (book.Id == cheque.ChequeBookId)
+                {
+                    SelectedChequeBook = book;
+                    break;
+                }
+            }
+
+            ChequeNumber = cheque.ChequeNumber;
+            PayeeName = cheque.PayeeName;
+            Amount = (double)cheque.Amount;
+            ChequeDate = cheque.ChequeDate.ToDateTime(new TimeOnly(0, 0));
+            SelectedCrossing = cheque.CrossingType;
+            Memo = cheque.Memo ?? string.Empty;
+        }
+
         async partial void OnSelectedCompanyChanged(Company? value)
         {
             await OnCompanyChangedAsync();
@@ -137,21 +187,25 @@ namespace PrimeCheque.ViewModels
             if (SelectedCompany == null || SelectedChequeBook == null || string.IsNullOrWhiteSpace(PayeeName) || Amount <= 0)
                 return;
 
-            var cheque = new Cheque
-            {
-                CompanyId = SelectedCompany.Id,
-                ChequeBookId = SelectedChequeBook.Id,
-                ChequeNumber = ChequeNumber,
-                PayeeName = PayeeName,
-                Amount = (decimal)Amount,
-                AmountInWords = AmountInWords,
-                ChequeDate = DateOnly.FromDateTime(ChequeDate.DateTime),
-                Memo = Memo,
-                CrossingType = SelectedCrossing,
-                Status = ChequeStatus.Draft
-            };
+            var cheque = IsEditMode ? await _chequeService.GetChequeByIdAsync(_editingChequeId!.Value) : new Cheque();
+            if (cheque == null) return;
 
-            await _chequeService.CreateChequeAsync(cheque, "User");
+            cheque.CompanyId = SelectedCompany.Id;
+            cheque.ChequeBookId = SelectedChequeBook.Id;
+            cheque.ChequeNumber = ChequeNumber;
+            cheque.PayeeName = PayeeName;
+            cheque.Amount = (decimal)Amount;
+            cheque.AmountInWords = AmountInWords;
+            cheque.ChequeDate = DateOnly.FromDateTime(ChequeDate.DateTime);
+            cheque.Memo = Memo;
+            cheque.CrossingType = SelectedCrossing;
+            cheque.Status = ChequeStatus.Draft;
+
+            if (IsEditMode)
+                await _chequeService.UpdateChequeAsync(cheque, "User");
+            else
+                await _chequeService.CreateChequeAsync(cheque, "User");
+
             _navigationService.Navigate(typeof(ChequeListPage));
         }
 
@@ -161,22 +215,32 @@ namespace PrimeCheque.ViewModels
             if (SelectedCompany == null || SelectedChequeBook == null || string.IsNullOrWhiteSpace(PayeeName) || Amount <= 0)
                 return;
 
-            var cheque = new Cheque
-            {
-                CompanyId = SelectedCompany.Id,
-                ChequeBookId = SelectedChequeBook.Id,
-                ChequeNumber = ChequeNumber,
-                PayeeName = PayeeName,
-                Amount = (decimal)Amount,
-                AmountInWords = AmountInWords,
-                ChequeDate = DateOnly.FromDateTime(ChequeDate.DateTime),
-                Memo = Memo,
-                CrossingType = SelectedCrossing,
-                Status = ChequeStatus.Draft
-            };
+            var cheque = IsEditMode ? await _chequeService.GetChequeByIdAsync(_editingChequeId!.Value) : new Cheque();
+            if (cheque == null) return;
 
-            var created = await _chequeService.CreateChequeAsync(cheque, "User");
-            _navigationService.Navigate(typeof(PrintPreviewPage), created.Id);
+            cheque.CompanyId = SelectedCompany.Id;
+            cheque.ChequeBookId = SelectedChequeBook.Id;
+            cheque.ChequeNumber = ChequeNumber;
+            cheque.PayeeName = PayeeName;
+            cheque.Amount = (decimal)Amount;
+            cheque.AmountInWords = AmountInWords;
+            cheque.ChequeDate = DateOnly.FromDateTime(ChequeDate.DateTime);
+            cheque.Memo = Memo;
+            cheque.CrossingType = SelectedCrossing;
+            cheque.Status = ChequeStatus.Draft;
+
+            if (IsEditMode)
+                cheque = await _chequeService.UpdateChequeAsync(cheque, "User");
+            else
+                cheque = await _chequeService.CreateChequeAsync(cheque, "User");
+
+            _navigationService.Navigate(typeof(PrintPreviewPage), cheque.Id);
+        }
+
+        [RelayCommand]
+        private void GoBack()
+        {
+            _navigationService.GoBack();
         }
     }
 }

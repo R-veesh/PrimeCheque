@@ -57,6 +57,7 @@ namespace PrimeCheque
             services.AddTransient<PayeeManagementViewModel>();
             services.AddTransient<ChequeEntryViewModel>();
             services.AddTransient<PrintPreviewViewModel>();
+            services.AddTransient<ChequePreviewViewModel>();
             services.AddTransient<ChequeListViewModel>();
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<TemplateDesignerViewModel>();

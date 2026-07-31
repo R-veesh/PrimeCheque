@@ -15,6 +15,7 @@ namespace PrimeCheque.ViewModels
         private readonly ITemplateService _templateService;
         private readonly IPdfGenerationService _pdfGenerationService;
         private readonly IPrintService _printService;
+        private readonly INavigationService _navigationService;
 
         [ObservableProperty]
         private Cheque? _cheque;
@@ -47,12 +48,14 @@ namespace PrimeCheque.ViewModels
             IChequeService chequeService,
             ITemplateService templateService,
             IPdfGenerationService pdfGenerationService,
-            IPrintService printService)
+            IPrintService printService,
+            INavigationService navigationService)
         {
             _chequeService = chequeService;
             _templateService = templateService;
             _pdfGenerationService = pdfGenerationService;
             _printService = printService;
+            _navigationService = navigationService;
         }
 
         public async Task LoadChequeAsync(Guid chequeId)
@@ -146,6 +149,12 @@ namespace PrimeCheque.ViewModels
                 // Save calibration settings
                 await _printService.SaveCalibrationAsync(calibration);
             }
+        }
+
+        [RelayCommand]
+        private void GoBack()
+        {
+            _navigationService.GoBack();
         }
     }
 }
