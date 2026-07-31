@@ -86,7 +86,7 @@ namespace PrimeCheque.ViewModels
             if (cheque == null) return;
             var userName = _sessionService.CurrentUser?.Username ?? "Checker";
             await _chequeService.ApproveChequeAsync(cheque.Id, userName);
-            _navigationService.Navigate(typeof(PrintPreviewPage), cheque.Id);
+            _navigationService.Navigate(typeof(ChequePreviewPage), cheque.Id);
         }
 
         [RelayCommand]
