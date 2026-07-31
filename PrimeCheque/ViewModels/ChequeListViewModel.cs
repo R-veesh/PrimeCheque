@@ -13,6 +13,11 @@ namespace PrimeCheque.ViewModels
     {
         private readonly IChequeService _chequeService;
         private readonly INavigationService _navigationService;
+        private readonly ISessionService _sessionService;
+
+        public bool IsPreparerRole => _sessionService.CurrentUser?.Role == UserRole.Administrator || _sessionService.CurrentUser?.Role == UserRole.ChequePreparer;
+        public bool IsApproverRole => _sessionService.CurrentUser?.Role == UserRole.Administrator || _sessionService.CurrentUser?.Role == UserRole.Approver;
+        public bool IsPrinterRole => _sessionService.CurrentUser?.Role == UserRole.Administrator || _sessionService.CurrentUser?.Role == UserRole.Printer;
 
         [ObservableProperty]
         private ObservableCollection<Cheque> _cheques = new();
@@ -25,10 +30,11 @@ namespace PrimeCheque.ViewModels
 
         public Array StatusValues => Enum.GetValues(typeof(ChequeStatus));
 
-        public ChequeListViewModel(IChequeService chequeService, INavigationService navigationService)
+        public ChequeListViewModel(IChequeService chequeService, INavigationService navigationService, ISessionService sessionService)
         {
             _chequeService = chequeService;
             _navigationService = navigationService;
+            _sessionService = sessionService;
         }
 
         public async Task LoadChequesAsync()
@@ -52,18 +58,18 @@ namespace PrimeCheque.ViewModels
         }
 
         [RelayCommand]
-        private async Task VoidChequeAsync(Cheque? cheque)
+        private void EditCheque(Cheque? cheque)
         {
             if (cheque == null) return;
-            await _chequeService.VoidChequeAsync(cheque.Id, "User", "User manual void");
-            await LoadChequesAsync();
+            _navigationService.Navigate(typeof(ChequeEntryPage), cheque.Id);
         }
 
         [RelayCommand]
-        private async Task SubmitForApprovalAsync(Cheque? cheque)
+        private async Task DeleteChequeAsync(Cheque? cheque)
         {
             if (cheque == null) return;
-            await _chequeService.SubmitForApprovalAsync(cheque.Id, "Maker");
+            var userName = _sessionService.CurrentUser?.Username ?? "System";
+            await _chequeService.VoidChequeAsync(cheque.Id, userName, "Deleted by user");
             await LoadChequesAsync();
         }
 
@@ -71,7 +77,8 @@ namespace PrimeCheque.ViewModels
         private async Task ApproveChequeAsync(Cheque? cheque)
         {
             if (cheque == null) return;
-            await _chequeService.ApproveChequeAsync(cheque.Id, "Checker");
+            var userName = _sessionService.CurrentUser?.Username ?? "Checker";
+            await _chequeService.ApproveChequeAsync(cheque.Id, userName);
             _navigationService.Navigate(typeof(PrintPreviewPage), cheque.Id);
         }
 
@@ -79,7 +86,8 @@ namespace PrimeCheque.ViewModels
         private async Task RejectChequeAsync(Cheque? cheque)
         {
             if (cheque == null) return;
-            await _chequeService.RejectChequeAsync(cheque.Id, "Checker", "Amount mismatch or incomplete details");
+            var userName = _sessionService.CurrentUser?.Username ?? "Checker";
+            await _chequeService.RejectChequeAsync(cheque.Id, userName, "Amount mismatch or incomplete details");
             await LoadChequesAsync();
         }
     }

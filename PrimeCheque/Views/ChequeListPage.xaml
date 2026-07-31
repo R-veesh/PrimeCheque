@@ -14,6 +14,7 @@
         <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
         <converters:AmountFormatConverter x:Key="AmountFormatConverter" />
         <converters:DateFormatConverter x:Key="DateFormatConverter" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     </Page.Resources>
 
     <ScrollViewer Padding="24">
@@ -54,10 +55,15 @@
                                 <TextBlock Text="{Binding Status}" Foreground="White" FontSize="11" FontWeight="Bold" />
                             </Border>
                             <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
-                                <Button Content="Submit" Command="{Binding DataContext.SubmitForApprovalCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Padding="8,4" FontSize="11" />
-                                <Button Content="Approve" Command="{Binding DataContext.ApproveChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Style="{StaticResource AccentButtonStyle}" Padding="8,4" FontSize="11" />
-                                <Button Content="Reject" Command="{Binding DataContext.RejectChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Padding="8,4" FontSize="11" />
-                                <Button Content="🖨️ Print / Preview" Command="{Binding DataContext.PrintChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Style="{StaticResource AccentButtonStyle}" Padding="10,4" FontSize="11" FontWeight="Bold" />
+                                <Button Content="Preview" Command="{Binding DataContext.PrintChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Padding="8,4" FontSize="11" />
+                                
+                                <Button Content="Edit" Command="{Binding DataContext.EditChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Padding="8,4" FontSize="11" Visibility="{Binding DataContext.IsPreparerRole, ElementName=PageRoot, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                <Button Content="Delete" Command="{Binding DataContext.DeleteChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Padding="8,4" FontSize="11" Foreground="Red" Visibility="{Binding DataContext.IsPreparerRole, ElementName=PageRoot, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                
+                                <Button Content="Approve" Command="{Binding DataContext.ApproveChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Style="{StaticResource AccentButtonStyle}" Padding="8,4" FontSize="11" Visibility="{Binding DataContext.IsApproverRole, ElementName=PageRoot, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                <Button Content="Reject" Command="{Binding DataContext.RejectChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Padding="8,4" FontSize="11" Visibility="{Binding DataContext.IsApproverRole, ElementName=PageRoot, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                
+                                <Button Content="🖨️ Print" Command="{Binding DataContext.PrintChequeCommand, ElementName=PageRoot}" CommandParameter="{Binding}" Style="{StaticResource AccentButtonStyle}" Padding="10,4" FontSize="11" FontWeight="Bold" Visibility="{Binding DataContext.IsPrinterRole, ElementName=PageRoot, Converter={StaticResource BoolToVisibilityConverter}}" />
                             </StackPanel>
                         </Grid>
                     </DataTemplate>
