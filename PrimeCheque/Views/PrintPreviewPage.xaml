@@ -56,11 +56,7 @@
 
             <!-- PDF Container / Path display -->
             <Border Height="350" Background="{ThemeResource SystemControlBackgroundChromeMediumBrush}" CornerRadius="8" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
-                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="12">
-                    <FontIcon Glyph="&#xE8A5;" FontSize="48" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
-                    <TextBlock Text="Actual-Size Cheque PDF Ready" Style="{StaticResource SubtitleTextBlockStyle}" />
-                    <TextBlock Text="{x:Bind ViewModel.PdfFilePath, Mode=OneWay}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="11" TextWrapping="Wrap" MaxWidth="400" TextAlignment="Center" />
-                </StackPanel>
+                <WebView2 x:Name="PdfWebView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
             </Border>
         </StackPanel>
 
