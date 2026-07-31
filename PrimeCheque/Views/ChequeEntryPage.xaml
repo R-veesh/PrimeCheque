@@ -43,7 +43,13 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <AutoSuggestBox Grid.Column="0" Header="Payee Name" Text="{x:Bind ViewModel.PayeeName, Mode=TwoWay}" ItemsSource="{x:Bind ViewModel.Payees, Mode=OneWay}" DisplayMemberPath="Name" PlaceholderText="Select or type payee name..." />
+                        <AutoSuggestBox Grid.Column="0" Header="Payee Name" Text="{x:Bind ViewModel.PayeeName, Mode=TwoWay}" ItemsSource="{x:Bind ViewModel.Payees, Mode=OneWay}" TextMemberPath="Name" PlaceholderText="Select or type payee name...">
+                            <AutoSuggestBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" />
+                                </DataTemplate>
+                            </AutoSuggestBox.ItemTemplate>
+                        </AutoSuggestBox>
                         <DatePicker Grid.Column="1" Header="Cheque Date" Date="{x:Bind ViewModel.ChequeDate, Mode=TwoWay}" HorizontalAlignment="Stretch" MinWidth="290" />
                     </Grid>
 
