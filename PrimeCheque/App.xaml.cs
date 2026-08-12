@@ -20,6 +20,7 @@ namespace PrimeCheque
         {
             InitializeComponent();
             Services = ConfigureServices();
+            System.IO.File.AppendAllText(@"C:\ProgramData\PrimeOne\PrimeCheque\startup.log", $"[{DateTime.Now:O}] 3. Services initialized\n");
         }
 
         private static IServiceProvider ConfigureServices()
@@ -76,14 +77,34 @@ namespace PrimeCheque
 
         protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
-            using (var scope = Services.CreateScope())
+            System.IO.File.AppendAllText(@"C:\ProgramData\PrimeOne\PrimeCheque\startup.log", $"[{DateTime.Now:O}] 4. Database initialization started\n");
+            try
             {
-                var dbContext = scope.ServiceProvider.GetRequiredService<PrimeChequeDbContext>();
-                await DatabaseInitializer.InitializeAsync(dbContext);
+                using (var scope = Services.CreateScope())
+                {
+                    var dbContext = scope.ServiceProvider.GetRequiredService<PrimeChequeDbContext>();
+                    await DatabaseInitializer.InitializeAsync(dbContext);
+                }
+                System.IO.File.AppendAllText(@"C:\ProgramData\PrimeOne\PrimeCheque\startup.log", $"[{DateTime.Now:O}] Database initialization completed\n");
+            }
+            catch (Exception ex)
+            {
+                System.IO.File.AppendAllText(@"C:\ProgramData\PrimeOne\PrimeCheque\startup.log", $"[{DateTime.Now:O}] 6. FATAL EXCEPTION (Database): {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}\n");
+                throw;
             }
 
-            MainWindow = new MainWindow();
-            MainWindow.Activate();
+            System.IO.File.AppendAllText(@"C:\ProgramData\PrimeOne\PrimeCheque\startup.log", $"[{DateTime.Now:O}] 5. MainWindow initialization started\n");
+            try
+            {
+                MainWindow = new MainWindow();
+                MainWindow.Activate();
+                System.IO.File.AppendAllText(@"C:\ProgramData\PrimeOne\PrimeCheque\startup.log", $"[{DateTime.Now:O}] MainWindow initialization completed\n");
+            }
+            catch (Exception ex)
+            {
+                System.IO.File.AppendAllText(@"C:\ProgramData\PrimeOne\PrimeCheque\startup.log", $"[{DateTime.Now:O}] 6. FATAL EXCEPTION (MainWindow): {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}\n");
+                throw;
+            }
         }
     }
 }
