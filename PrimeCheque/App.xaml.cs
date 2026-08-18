@@ -47,6 +47,11 @@ namespace PrimeCheque
             services.AddTransient<IBackupService, BackupService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IReportService, ReportService>();
+            
+            // API Integration
+            services.AddSingleton<System.Net.Http.HttpClient>();
+            services.AddSingleton<IApiIntegrationService, ApiIntegrationService>();
+            
             services.AddSingleton<ILicenceService, LicenceService>();
 
             // ViewModels

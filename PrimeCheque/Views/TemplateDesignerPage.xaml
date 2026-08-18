@@ -32,9 +32,11 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <ComboBox Grid.Column="0" Header="Select Template to Edit" ItemsSource="{x:Bind ViewModel.Templates, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedTemplate, Mode=TwoWay}" DisplayMemberPath="BankName" HorizontalAlignment="Stretch" />
                 <Button Grid.Column="1" Content="&#x2795; New Template" Command="{x:Bind ViewModel.CreateNewTemplateCommand}" VerticalAlignment="Bottom" />
+                <Button Grid.Column="2" Content="&#x21BA; Sync from Cloud" Command="{x:Bind ViewModel.SyncTemplatesFromCloudCommand}" VerticalAlignment="Bottom" Style="{StaticResource AccentButtonStyle}" />
             </Grid>
 
             <!-- Visual Cheque Leaf Representation -->

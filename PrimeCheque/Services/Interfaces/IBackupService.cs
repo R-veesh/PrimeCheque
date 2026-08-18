@@ -6,5 +6,6 @@ namespace PrimeCheque.Services.Interfaces
     {
         Task<string> CreateBackupAsync(string destinationDirectory);
         Task<bool> RestoreBackupAsync(string backupFilePath);
+        Task<bool> BackupToCloudAsync(string sourceDbPath);
     }
 }

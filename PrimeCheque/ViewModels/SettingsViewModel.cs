@@ -81,5 +81,29 @@ namespace PrimeCheque.ViewModels
                 BackupStatusMessage = $"Backup failed: {ex.Message}";
             }
         }
+
+        [RelayCommand]
+        private async Task BackupToCloudAsync()
+        {
+            try
+            {
+                BackupStatusMessage = "Uploading backup to cloud...";
+                var sourceDbPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PrimeCheque", "primecheque.db");
+                
+                var success = await _backupService.BackupToCloudAsync(sourceDbPath);
+                if (success)
+                {
+                    BackupStatusMessage = "Cloud backup uploaded successfully!";
+                }
+                else
+                {
+                    BackupStatusMessage = "Cloud backup failed. Check your licence and network connection.";
+                }
+            }
+            catch (Exception ex)
+            {
+                BackupStatusMessage = $"Cloud backup failed: {ex.Message}";
+            }
+        }
     }
 }

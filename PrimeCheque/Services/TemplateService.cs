@@ -12,10 +12,12 @@ namespace PrimeCheque.Services
     public class TemplateService : ITemplateService
     {
         private readonly PrimeChequeDbContext _dbContext;
+        private readonly IApiIntegrationService _apiService;
 
-        public TemplateService(PrimeChequeDbContext dbContext)
+        public TemplateService(PrimeChequeDbContext dbContext, IApiIntegrationService apiService)
         {
             _dbContext = dbContext;
+            _apiService = apiService;
         }
 
         public async Task<List<BankTemplate>> GetAllTemplatesAsync()
@@ -67,6 +69,59 @@ namespace PrimeCheque.Services
                 _dbContext.BankTemplates.Remove(template);
                 await _dbContext.SaveChangesAsync();
             }
+        }
+        
+        public async Task<int> SyncTemplatesFromCloudAsync()
+        {
+            var templatesDto = await _apiService.FetchTemplatesAsync();
+            if (templatesDto == null || !templatesDto.Any()) return 0;
+            
+            int addedOrUpdated = 0;
+            
+            foreach (var dto in templatesDto)
+            {
+                // Find existing bank
+                var bank = await _dbContext.Banks.FirstOrDefaultAsync(b => b.Name.ToLower() == dto.BankName.ToLower());
+                Guid? bankId = bank?.Id;
+                
+                var existingTemplate = await _dbContext.BankTemplates
+                    .FirstOrDefaultAsync(t => t.BankName == dto.BankName && t.SeriesName == dto.SeriesName);
+                    
+                if (existingTemplate != null)
+                {
+                    existingTemplate.TemplateConfig = dto.TemplateConfig;
+                    existingTemplate.ChequeWidthMm = dto.Dimensions?.Width ?? existingTemplate.ChequeWidthMm;
+                    existingTemplate.ChequeHeightMm = dto.Dimensions?.Height ?? existingTemplate.ChequeHeightMm;
+                    existingTemplate.TemplateImagePath = dto.TemplateImagePath ?? existingTemplate.TemplateImagePath;
+                    _dbContext.BankTemplates.Update(existingTemplate);
+                    addedOrUpdated++;
+                }
+                else
+                {
+                    var newTemplate = new BankTemplate
+                    {
+                        Id = Guid.NewGuid(),
+                        BankName = dto.BankName,
+                        SeriesName = dto.SeriesName,
+                        TemplateConfig = dto.TemplateConfig,
+                        ChequeWidthMm = dto.Dimensions?.Width ?? 200,
+                        ChequeHeightMm = dto.Dimensions?.Height ?? 90,
+                        TemplateImagePath = dto.TemplateImagePath,
+                        IsDefault = true,
+                        BankId = bankId,
+                        CreatedAt = DateTime.UtcNow
+                    };
+                    _dbContext.BankTemplates.Add(newTemplate);
+                    addedOrUpdated++;
+                }
+            }
+            
+            if (addedOrUpdated > 0)
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            
+            return addedOrUpdated;
         }
     }
 }

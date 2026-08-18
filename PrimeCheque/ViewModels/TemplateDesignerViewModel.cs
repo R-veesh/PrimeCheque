@@ -306,6 +306,22 @@ namespace PrimeCheque.ViewModels
         }
 
         [RelayCommand]
+        private async Task SyncTemplatesFromCloudAsync()
+        {
+            try
+            {
+                StatusMessage = "Syncing templates from cloud...";
+                var addedOrUpdated = await _templateService.SyncTemplatesFromCloudAsync();
+                StatusMessage = $"Sync complete. {addedOrUpdated} templates added or updated.";
+                await LoadDataAsync();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Sync failed: {ex.Message}";
+            }
+        }
+
+        [RelayCommand]
         private void CreateNewTemplate()
         {
             SelectedTemplate = null;

@@ -28,9 +28,12 @@
             <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
                 <StackPanel Spacing="16">
                     <TextBlock Text="Database &amp; Local Backup" Style="{StaticResource SubtitleTextBlockStyle}" />
-                    <TextBlock Text="Create a local offline backup of all cheques, bank books, payees, and audit logs." Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Text="Create a local offline backup of all cheques, bank books, payees, and audit logs, or upload an encrypted backup to your cloud account." Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
 
-                    <Button Content="💾 Backup Database to Desktop" Command="{x:Bind ViewModel.CreateBackupCommand}" Style="{StaticResource AccentButtonStyle}" />
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <Button Content="💾 Backup to Desktop" Command="{x:Bind ViewModel.CreateBackupCommand}" Style="{StaticResource AccentButtonStyle}" />
+                        <Button Content="☁️ Backup to Cloud" Command="{x:Bind ViewModel.BackupToCloudCommand}" />
+                    </StackPanel>
                     <TextBlock Text="{x:Bind ViewModel.BackupStatusMessage, Mode=OneWay}" Foreground="Green" FontWeight="SemiBold" TextWrapping="Wrap" />
                 </StackPanel>
             </Border>

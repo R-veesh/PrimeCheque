@@ -7,6 +7,13 @@ namespace PrimeCheque.Services
 {
     public class BackupService : IBackupService
     {
+        private readonly IApiIntegrationService _apiService;
+
+        public BackupService(IApiIntegrationService apiService)
+        {
+            _apiService = apiService;
+        }
+
         public Task<string> CreateBackupAsync(string destinationDirectory)
         {
             var sourceDbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PrimeCheque", "primecheque.db");
@@ -34,6 +41,14 @@ namespace PrimeCheque.Services
             var destDbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PrimeCheque", "primecheque.db");
             File.Copy(backupFilePath, destDbPath, overwrite: true);
             return Task.FromResult(true);
+        }
+
+        public async Task<bool> BackupToCloudAsync(string sourceDbPath)
+        {
+            if (!File.Exists(sourceDbPath)) return false;
+
+            var result = await _apiService.UploadBackupAsync(sourceDbPath, Environment.MachineName);
+            return result != null;
         }
     }
 }

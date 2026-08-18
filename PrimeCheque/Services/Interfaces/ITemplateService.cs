@@ -12,5 +12,6 @@ namespace PrimeCheque.Services.Interfaces
         Task<BankTemplate?> GetTemplateForBankAsync(Guid bankId);
         Task<BankTemplate> SaveTemplateAsync(BankTemplate template);
         Task DeleteTemplateAsync(Guid id);
+        Task<int> SyncTemplatesFromCloudAsync();
     }
 }
