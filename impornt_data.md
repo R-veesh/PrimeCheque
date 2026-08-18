@@ -25,3 +25,20 @@ Template Designer✅      ❌      ❌         ❌      ❌
 User Management  ✅      ❌      ❌         ❌      ❌
 Settings         ✅      ✅      ✅         ✅      ✅
 
+
+beta 2
+
+Account 1
+Email: admin@ss2.com
+Password: password
+Company Code: SS2
+
+Account 2
+Email: test@example.com
+Password: password
+Company Code: SS2
+
+Account 3
+Email: admin
+Password: admin123
+Company Code: SS2
