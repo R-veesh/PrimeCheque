@@ -53,7 +53,11 @@ namespace PrimeCheque.ViewModels
                     password = Password
                 };
                 
-                var response = await _httpClient.PostAsJsonAsync("http://127.0.0.1:8000/api/v1/auth/login", payload);
+                var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Post, "http://127.0.0.1:8000/api/v1/auth/login");
+                request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                request.Content = System.Net.Http.Json.JsonContent.Create(payload);
+                
+                var response = await _httpClient.SendAsync(request);
                 if (response.IsSuccessStatusCode)
                 {
                     var result = await response.Content.ReadFromJsonAsync<LoginResponse>();

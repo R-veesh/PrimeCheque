@@ -33,7 +33,7 @@ namespace PrimeCheque.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var explicitDbPath = @"D:\PrimeOneWork\C#\PrimeCheque\PrimeCheque\PrimeCheque.db";
+                var explicitDbPath = @"D:\PrimeOneWork\C\PrimeCheque\PrimeCheque\PrimeCheque.db";
                 var localBinDb = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PrimeCheque.db");
 
                 string dbPath;
