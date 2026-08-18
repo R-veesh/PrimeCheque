@@ -48,11 +48,20 @@
                 <!-- Divider -->
                 <Rectangle Height="1" Fill="{ThemeResource CardStrokeColorDefaultBrush}" Margin="0,4" />
 
-                <!-- Username -->
+                <!-- Company Code -->
+                <TextBox
+                    x:Name="CompanyCodeBox"
+                    Header="Company Code"
+                    PlaceholderText="Enter company code"
+                    Text="{x:Bind ViewModel.CompanyCode, Mode=TwoWay}"
+                    IsTabStop="True"
+                    KeyDown="OnKeyDown" />
+
+                <!-- Username / Email -->
                 <TextBox
                     x:Name="UsernameBox"
-                    Header="Username"
-                    PlaceholderText="Enter your username"
+                    Header="Email"
+                    PlaceholderText="Enter your email"
                     Text="{x:Bind ViewModel.Username, Mode=TwoWay}"
                     IsTabStop="True"
                     KeyDown="OnKeyDown" />
@@ -75,7 +84,6 @@
                     TextWrapping="Wrap"
                     Visibility="{x:Bind ViewModel.IsErrorVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
 
-                <!-- Login Button -->
                 <Button
                     Content="Login"
                     Command="{x:Bind ViewModel.LoginCommand}"

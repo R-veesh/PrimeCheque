@@ -47,7 +47,31 @@ namespace PrimeCheque
                 [UserRole.Auditor] = new() { "Dashboard", "Cheques", "Reports", "AuditLog", "Settings" },
             };
 
-            ShowLogin();
+            CheckActivationState();
+        }
+
+        private async void CheckActivationState()
+        {
+            var activationService = App.GetService<IActivationService>();
+            bool isActivated = await activationService.IsCompanyActivatedAsync();
+
+            if (isActivated)
+            {
+                ShowLogin();
+            }
+            else
+            {
+                ShowActivation();
+            }
+        }
+
+        private void ShowActivation()
+        {
+            var activationPage = new ActivationPage();
+            activationPage.ViewModel.OnActivationSucceeded = ShowLogin;
+            LoginFrame.Content = activationPage;
+            LoginFrame.Visibility = Visibility.Visible;
+            NavView.Visibility = Visibility.Collapsed;
         }
 
         private void ShowLogin()
@@ -216,7 +240,7 @@ namespace PrimeCheque
         }
 
         private delegate IntPtr WndProcDelegate(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
-        private WndProcDelegate _wndProcDelegate;
+        private WndProcDelegate? _wndProcDelegate;
         private IntPtr _oldWndProc;
 
         [DllImport("user32.dll")]

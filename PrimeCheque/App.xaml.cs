@@ -51,10 +51,12 @@ namespace PrimeCheque
             // API Integration
             services.AddSingleton<System.Net.Http.HttpClient>();
             services.AddSingleton<IApiIntegrationService, ApiIntegrationService>();
+            services.AddSingleton<IActivationService, ActivationService>();
             
             services.AddSingleton<ILicenceService, LicenceService>();
 
             // ViewModels
+            services.AddTransient<ActivationViewModel>();
             services.AddTransient<LoginViewModel>();
             services.AddTransient<DashboardViewModel>();
             services.AddTransient<CompanyManagementViewModel>();
