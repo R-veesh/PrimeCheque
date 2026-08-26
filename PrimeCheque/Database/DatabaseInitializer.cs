@@ -1,7 +1,11 @@
 using System;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PrimeCheque.Data;
+using PrimeCheque.Models;
 
 namespace PrimeCheque.Database
 {
@@ -69,7 +73,11 @@ namespace PrimeCheque.Database
                 "ALTER TABLE Cheques ADD COLUMN ApprovedBy TEXT;",
                 "ALTER TABLE Cheques ADD COLUMN PrintedAt TEXT;",
                 "ALTER TABLE Cheques ADD COLUMN PdfPath TEXT;",
-                "ALTER TABLE Cheques ADD COLUMN UpdatedAt TEXT;"
+                "ALTER TABLE Cheques ADD COLUMN UpdatedAt TEXT;",
+                // Super Admin password reset columns
+                "ALTER TABLE Users ADD COLUMN SecurityQuestion TEXT;",
+                "ALTER TABLE Users ADD COLUMN SecurityAnswerHash TEXT;",
+                "ALTER TABLE Users ADD COLUMN MustChangePassword INTEGER NOT NULL DEFAULT 1;"
             };
 
             foreach (var sql in columnMigrations)
@@ -83,6 +91,48 @@ namespace PrimeCheque.Database
                     // Column already exists
                 }
             }
+
+            // Seed default Super Admin user if no users exist
+            await SeedSuperAdminAsync(dbContext);
+        }
+
+        private static async Task SeedSuperAdminAsync(PrimeChequeDbContext dbContext)
+        {
+            var hasUsers = await dbContext.Users.AnyAsync();
+            if (!hasUsers)
+            {
+                var superAdmin = new User
+                {
+                    Id = Guid.NewGuid(),
+                    Username = "admin",
+                    PasswordHash = HashPassword("admin123"),
+                    DisplayName = "Super Administrator",
+                    Role = UserRole.SuperAdmin,
+                    IsActive = true,
+                    CreatedAt = DateTime.UtcNow,
+                    MustChangePassword = true
+                };
+
+                dbContext.Users.Add(superAdmin);
+                await dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                // Update existing users to SuperAdmin role if migrating from old schema
+                var users = await dbContext.Users.ToListAsync();
+                foreach (var user in users)
+                {
+                    user.Role = UserRole.SuperAdmin;
+                }
+                await dbContext.SaveChangesAsync();
+            }
+        }
+
+        private static string HashPassword(string password)
+        {
+            using var sha256 = SHA256.Create();
+            var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+            return Convert.ToHexString(bytes);
         }
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +16,22 @@ namespace PrimeCheque.Services
         public UserService(PrimeChequeDbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public async Task<User?> GetAdminAsync()
+        {
+            return await _dbContext.Users.FirstOrDefaultAsync(u => u.IsActive);
+        }
+
+        public async Task<User> UpdateAdminProfileAsync(string displayName)
+        {
+            var admin = await _dbContext.Users.FirstOrDefaultAsync(u => u.IsActive);
+            if (admin == null)
+                throw new InvalidOperationException("No active Super Admin user found.");
+
+            admin.DisplayName = displayName;
+            await _dbContext.SaveChangesAsync();
+            return admin;
         }
 
         public async Task<User?> AuthenticateAsync(string username, string password)
@@ -46,37 +61,6 @@ namespace PrimeCheque.Services
                 }
                 await _dbContext.SaveChangesAsync();
                 return null;
-            }
-        }
-
-        public async Task<List<User>> GetAllUsersAsync()
-        {
-            return await _dbContext.Users.AsNoTracking().ToListAsync();
-        }
-
-        public async Task<User> CreateUserAsync(User user, string password)
-        {
-            user.PasswordHash = HashPassword(password);
-            user.CreatedAt = DateTime.UtcNow;
-            _dbContext.Users.Add(user);
-            await _dbContext.SaveChangesAsync();
-            return user;
-        }
-
-        public async Task<User> UpdateUserAsync(User user)
-        {
-            _dbContext.Users.Update(user);
-            await _dbContext.SaveChangesAsync();
-            return user;
-        }
-
-        public async Task DeleteUserAsync(Guid id)
-        {
-            var user = await _dbContext.Users.FindAsync(id);
-            if (user != null)
-            {
-                _dbContext.Users.Remove(user);
-                await _dbContext.SaveChangesAsync();
             }
         }
 

@@ -78,7 +78,6 @@
                 <NavigationViewItem Content="Companies" Tag="Companies" Icon="AllApps" x:Name="NavCompanies" />
                 <NavigationViewItem Content="Banks" Tag="Banks" Icon="Shop" x:Name="NavBanks" />
                 <NavigationViewItem Content="Template Designer" Tag="TemplateDesigner" Icon="Crop" x:Name="NavTemplateDesigner" />
-                <NavigationViewItem Content="User Management" Tag="Users" Icon="People" x:Name="NavUsers" />
             </NavigationView.MenuItems>
 
             <NavigationView.PaneFooter>

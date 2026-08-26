@@ -14,85 +14,269 @@
     </Page.Resources>
 
     <Grid Background="{ThemeResource SolidBackgroundFillColorBaseBrush}">
-        <Border
-            Width="380"
-            Padding="32"
-            CornerRadius="12"
-            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
-            BorderThickness="1"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel MaxWidth="420" Spacing="0">
 
-            <StackPanel Spacing="20">
-                <!-- App Logo / Title -->
-                <StackPanel Spacing="8" HorizontalAlignment="Center">
-                    <TextBlock
-                        Text="&#x1F3E6;"
-                        FontSize="48"
-                        HorizontalAlignment="Center" />
-                    <TextBlock
-                        Text="PrimeCheque"
-                        Style="{StaticResource TitleTextBlockStyle}"
-                        HorizontalAlignment="Center"
-                        FontWeight="Bold" />
-                    <TextBlock
-                        Text="Sri Lankan Cheque Writing &amp; Printing System"
-                        Style="{StaticResource CaptionTextBlockStyle}"
-                        HorizontalAlignment="Center"
-                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                        TextWrapping="Wrap"
-                        TextAlignment="Center" />
-                </StackPanel>
-
-                <!-- Divider -->
-                <Rectangle Height="1" Fill="{ThemeResource CardStrokeColorDefaultBrush}" Margin="0,4" />
-
-                <!-- Username -->
-                <TextBox
-                    x:Name="UsernameBox"
-                    Header="Username"
-                    PlaceholderText="Enter your username"
-                    Text="{x:Bind ViewModel.Username, Mode=TwoWay}"
-                    IsTabStop="True"
-                    KeyDown="OnKeyDown" />
-
-                <!-- Password -->
-                <PasswordBox
-                    x:Name="PasswordBox"
-                    Header="Password"
-                    PlaceholderText="Enter your password"
-                    Password="{x:Bind ViewModel.Password, Mode=TwoWay}"
-                    IsTabStop="True"
-                    KeyDown="OnKeyDown" />
-
-                <!-- Error Message -->
-                <TextBlock
-                    Text="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
-                    Foreground="{ThemeResource SystemFillColorCriticalBrush}"
-                    FontWeight="SemiBold"
+                <!-- ==================== LOGIN FORM ==================== -->
+                <Border
+                    Width="380"
+                    Padding="32"
+                    CornerRadius="12"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
                     HorizontalAlignment="Center"
-                    TextWrapping="Wrap"
-                    Visibility="{x:Bind ViewModel.IsErrorVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    VerticalAlignment="Center"
+                    Visibility="{x:Bind ViewModel.IsForgotPasswordVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}">
 
-                <!-- Login Button -->
-                <Button
-                    Content="Login"
-                    Command="{x:Bind ViewModel.LoginCommand}"
-                    Style="{StaticResource AccentButtonStyle}"
-                    HorizontalAlignment="Stretch"
-                    Height="40"
-                    FontSize="16"
-                    FontWeight="Bold" />
+                    <StackPanel Spacing="20">
+                        <!-- App Logo / Title -->
+                        <StackPanel Spacing="8" HorizontalAlignment="Center"
+                                    Visibility="{x:Bind ViewModel.IsMustChangePasswordVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}">
+                            <TextBlock
+                                Text="&#x1F3E6;"
+                                FontSize="48"
+                                HorizontalAlignment="Center" />
+                            <TextBlock
+                                Text="PrimeCheque"
+                                Style="{StaticResource TitleTextBlockStyle}"
+                                HorizontalAlignment="Center"
+                                FontWeight="Bold" />
+                            <TextBlock
+                                Text="Super Admin Login"
+                                Style="{StaticResource CaptionTextBlockStyle}"
+                                HorizontalAlignment="Center"
+                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                TextWrapping="Wrap"
+                                TextAlignment="Center" />
+                        </StackPanel>
 
-                <!-- Hint -->
-                <TextBlock
-                    Text="Default credentials: admin / admin123"
-                    Style="{StaticResource BodyTextBlockStyle}"
-                    Foreground="{ThemeResource TextFillColorTertiaryBrush}"
+                        <!-- Divider -->
+                        <Rectangle Height="1" Fill="{ThemeResource CardStrokeColorDefaultBrush}" Margin="0,4"
+                                   Visibility="{x:Bind ViewModel.IsMustChangePasswordVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}" />
+
+                        <!-- Login Fields (hidden when must change password) -->
+                        <StackPanel Spacing="16"
+                                    Visibility="{x:Bind ViewModel.IsMustChangePasswordVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}">
+                            <!-- Username -->
+                            <TextBox
+                                x:Name="UsernameBox"
+                                Header="Username"
+                                PlaceholderText="Enter your username"
+                                Text="{x:Bind ViewModel.Username, Mode=TwoWay}"
+                                IsTabStop="True"
+                                KeyDown="OnKeyDown" />
+
+                            <!-- Password -->
+                            <PasswordBox
+                                x:Name="PasswordBox"
+                                Header="Password"
+                                PlaceholderText="Enter your password"
+                                Password="{x:Bind ViewModel.Password, Mode=TwoWay}"
+                                IsTabStop="True"
+                                KeyDown="OnKeyDown" />
+
+                            <!-- Error Message -->
+                            <TextBlock
+                                Text="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
+                                Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                                FontWeight="SemiBold"
+                                HorizontalAlignment="Center"
+                                TextWrapping="Wrap"
+                                Visibility="{x:Bind ViewModel.IsErrorVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                            <!-- Login Button -->
+                            <Button
+                                Content="Login"
+                                Command="{x:Bind ViewModel.LoginCommand}"
+                                Style="{StaticResource AccentButtonStyle}"
+                                HorizontalAlignment="Stretch"
+                                Height="40"
+                                FontSize="16"
+                                FontWeight="Bold" />
+
+                            <!-- Forgot Password Link -->
+                            <HyperlinkButton
+                                Content="Forgot Password?"
+                                Command="{x:Bind ViewModel.ShowForgotPasswordCommand}"
+                                HorizontalAlignment="Center"
+                                FontSize="12" />
+                        </StackPanel>
+
+                        <!-- ==================== FIRST LOGIN - MUST CHANGE PASSWORD ==================== -->
+                        <StackPanel Spacing="16"
+                                    Visibility="{x:Bind ViewModel.IsMustChangePasswordVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+
+                            <StackPanel Spacing="4" HorizontalAlignment="Center">
+                                <TextBlock
+                                    Text="&#x1F512;"
+                                    FontSize="36"
+                                    HorizontalAlignment="Center" />
+                                <TextBlock
+                                    Text="First Login Setup"
+                                    Style="{StaticResource SubtitleTextBlockStyle}"
+                                    HorizontalAlignment="Center"
+                                    FontWeight="Bold" />
+                                <TextBlock
+                                    Text="Please set a new password and security question for account recovery."
+                                    Style="{StaticResource CaptionTextBlockStyle}"
+                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                    TextWrapping="Wrap"
+                                    TextAlignment="Center" />
+                            </StackPanel>
+
+                            <Rectangle Height="1" Fill="{ThemeResource CardStrokeColorDefaultBrush}" />
+
+                            <PasswordBox
+                                Header="New Password"
+                                PlaceholderText="Enter new password (min 6 characters)"
+                                Password="{x:Bind ViewModel.FirstLoginNewPassword, Mode=TwoWay}" />
+
+                            <PasswordBox
+                                Header="Confirm New Password"
+                                PlaceholderText="Confirm your new password"
+                                Password="{x:Bind ViewModel.FirstLoginConfirmPassword, Mode=TwoWay}" />
+
+                            <Rectangle Height="1" Fill="{ThemeResource CardStrokeColorDefaultBrush}" />
+
+                            <ComboBox
+                                Header="Security Question"
+                                ItemsSource="{x:Bind ViewModel.SecurityQuestions}"
+                                SelectedItem="{x:Bind ViewModel.FirstLoginSecurityQuestion, Mode=TwoWay}"
+                                PlaceholderText="Select a security question"
+                                HorizontalAlignment="Stretch" />
+
+                            <TextBox
+                                Header="Security Answer"
+                                PlaceholderText="Your answer (case-insensitive)"
+                                Text="{x:Bind ViewModel.FirstLoginSecurityAnswer, Mode=TwoWay}" />
+
+                            <!-- Error Message -->
+                            <TextBlock
+                                Text="{x:Bind ViewModel.ChangePasswordMessage, Mode=OneWay}"
+                                Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                                FontWeight="SemiBold"
+                                HorizontalAlignment="Center"
+                                TextWrapping="Wrap"
+                                Visibility="{x:Bind ViewModel.IsChangePasswordMessageVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                            <Button
+                                Content="Complete Setup &amp; Login"
+                                Command="{x:Bind ViewModel.CompleteFirstLoginCommand}"
+                                Style="{StaticResource AccentButtonStyle}"
+                                HorizontalAlignment="Stretch"
+                                Height="40"
+                                FontSize="14"
+                                FontWeight="Bold" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- ==================== FORGOT PASSWORD FORM ==================== -->
+                <Border
+                    Width="380"
+                    Padding="32"
+                    CornerRadius="12"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
                     HorizontalAlignment="Center"
-                    FontSize="11" />
+                    VerticalAlignment="Center"
+                    Visibility="{x:Bind ViewModel.IsForgotPasswordVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+
+                    <StackPanel Spacing="16">
+                        <StackPanel Spacing="4" HorizontalAlignment="Center">
+                            <TextBlock
+                                Text="&#x1F511;"
+                                FontSize="36"
+                                HorizontalAlignment="Center" />
+                            <TextBlock
+                                Text="Password Reset"
+                                Style="{StaticResource SubtitleTextBlockStyle}"
+                                HorizontalAlignment="Center"
+                                FontWeight="Bold" />
+                        </StackPanel>
+
+                        <Rectangle Height="1" Fill="{ThemeResource CardStrokeColorDefaultBrush}" />
+
+                        <!-- Step 1: Enter Username -->
+                        <TextBox
+                            Header="Username"
+                            PlaceholderText="Enter your username"
+                            Text="{x:Bind ViewModel.ResetUsername, Mode=TwoWay}" />
+
+                        <Button
+                            Content="Get Security Question"
+                            Command="{x:Bind ViewModel.GetSecurityQuestionCommand}"
+                            Style="{StaticResource AccentButtonStyle}"
+                            HorizontalAlignment="Stretch"
+                            Visibility="{x:Bind ViewModel.IsSecurityQuestionVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}" />
+
+                        <!-- Step 2: Answer Security Question -->
+                        <StackPanel Spacing="12"
+                                    Visibility="{x:Bind ViewModel.IsSecurityQuestionVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+
+                            <Border Background="{ThemeResource SystemFillColorNeutralBackgroundBrush}" CornerRadius="6" Padding="12">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="Security Question:" FontWeight="Bold" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    <TextBlock Text="{x:Bind ViewModel.SecurityQuestion, Mode=OneWay}" TextWrapping="Wrap" FontWeight="SemiBold" />
+                                </StackPanel>
+                            </Border>
+
+                            <TextBox
+                                Header="Your Answer"
+                                PlaceholderText="Enter your security answer"
+                                Text="{x:Bind ViewModel.SecurityAnswer, Mode=TwoWay}" />
+
+                            <Button
+                                Content="Verify Answer"
+                                Command="{x:Bind ViewModel.ValidateSecurityAnswerCommand}"
+                                Style="{StaticResource AccentButtonStyle}"
+                                HorizontalAlignment="Stretch"
+                                Visibility="{x:Bind ViewModel.IsNewPasswordVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}" />
+                        </StackPanel>
+
+                        <!-- Step 3: Set New Password -->
+                        <StackPanel Spacing="12"
+                                    Visibility="{x:Bind ViewModel.IsNewPasswordVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <PasswordBox
+                                Header="New Password"
+                                PlaceholderText="Enter new password (min 6 characters)"
+                                Password="{x:Bind ViewModel.NewPassword, Mode=TwoWay}" />
+
+                            <PasswordBox
+                                Header="Confirm New Password"
+                                PlaceholderText="Confirm your new password"
+                                Password="{x:Bind ViewModel.ConfirmPassword, Mode=TwoWay}" />
+
+                            <Button
+                                Content="Reset Password"
+                                Command="{x:Bind ViewModel.ResetPasswordCommand}"
+                                Style="{StaticResource AccentButtonStyle}"
+                                HorizontalAlignment="Stretch"
+                                Height="40"
+                                FontWeight="Bold" />
+                        </StackPanel>
+
+                        <!-- Reset Messages -->
+                        <TextBlock
+                            Text="{x:Bind ViewModel.ResetMessage, Mode=OneWay}"
+                            Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                            FontWeight="SemiBold"
+                            HorizontalAlignment="Center"
+                            TextWrapping="Wrap"
+                            Visibility="{x:Bind ViewModel.IsResetMessageVisible, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+                        <!-- Cancel -->
+                        <HyperlinkButton
+                            Content="← Back to Login"
+                            Command="{x:Bind ViewModel.CancelForgotPasswordCommand}"
+                            HorizontalAlignment="Center"
+                            FontSize="12" />
+                    </StackPanel>
+                </Border>
+
             </StackPanel>
-        </Border>
+        </ScrollViewer>
     </Grid>
 </Page>

@@ -1,8 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using PrimeCheque.Data;
 using PrimeCheque.Models;
 using PrimeCheque.Services.Interfaces;
 
@@ -10,31 +11,105 @@ namespace PrimeCheque.Services
 {
     public class StaticAuthService : IStaticAuthService
     {
-        private readonly List<StaticUser> _users = new()
+        private readonly PrimeChequeDbContext _dbContext;
+
+        public StaticAuthService(PrimeChequeDbContext dbContext)
         {
-            new("admin", HashPassword("admin123"), "Administrator", UserRole.Administrator),
-            new("preparer", HashPassword("preparer123"), "Cheque Preparer", UserRole.ChequePreparer),
-            new("approver", HashPassword("approver123"), "Approver", UserRole.Approver),
-            new("printer", HashPassword("printer123"), "Printer", UserRole.Printer),
-            new("auditor", HashPassword("auditor123"), "Auditor", UserRole.Auditor),
-        };
+            _dbContext = dbContext;
+        }
 
-        public User? Authenticate(string username, string password)
+        public async Task<User?> AuthenticateAsync(string username, string password)
         {
-            var hash = HashPassword(password);
-            var match = _users.FirstOrDefault(u =>
-                u.Username == username && u.PasswordHash == hash);
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == username && u.IsActive);
+            if (user == null) return null;
 
-            if (match == null) return null;
-
-            return new User
+            // Check lockout
+            if (user.LockedUntil.HasValue && user.LockedUntil.Value > DateTime.UtcNow)
             {
-                Username = match.Username,
-                PasswordHash = match.PasswordHash,
-                DisplayName = match.DisplayName,
-                Role = match.Role,
-                IsActive = true
-            };
+                return null;
+            }
+
+            var hash = HashPassword(password);
+            if (user.PasswordHash == hash)
+            {
+                user.LastLoginAt = DateTime.UtcNow;
+                user.FailedLoginAttempts = 0;
+                user.LockedUntil = null;
+                await _dbContext.SaveChangesAsync();
+                return user;
+            }
+            else
+            {
+                user.FailedLoginAttempts++;
+                if (user.FailedLoginAttempts >= 5)
+                {
+                    user.LockedUntil = DateTime.UtcNow.AddMinutes(15);
+                }
+                await _dbContext.SaveChangesAsync();
+                return null;
+            }
+        }
+
+        public async Task<string?> GetSecurityQuestionAsync(string username)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == username && u.IsActive);
+            return user?.SecurityQuestion;
+        }
+
+        public async Task<bool> ValidateSecurityAnswerAsync(string username, string answer)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == username && u.IsActive);
+            if (user == null || string.IsNullOrEmpty(user.SecurityAnswerHash)) return false;
+
+            var hash = HashPassword(answer.Trim().ToLowerInvariant());
+            return user.SecurityAnswerHash == hash;
+        }
+
+        public async Task<bool> ResetPasswordAsync(string username, string newPassword)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == username && u.IsActive);
+            if (user == null) return false;
+
+            user.PasswordHash = HashPassword(newPassword);
+            user.FailedLoginAttempts = 0;
+            user.LockedUntil = null;
+            user.MustChangePassword = false;
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword)
+        {
+            var user = await _dbContext.Users.FindAsync(userId);
+            if (user == null) return false;
+
+            var currentHash = HashPassword(currentPassword);
+            if (user.PasswordHash != currentHash) return false;
+
+            user.PasswordHash = HashPassword(newPassword);
+            user.MustChangePassword = false;
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> SetSecurityQuestionAsync(Guid userId, string question, string answer)
+        {
+            var user = await _dbContext.Users.FindAsync(userId);
+            if (user == null) return false;
+
+            user.SecurityQuestion = question;
+            user.SecurityAnswerHash = HashPassword(answer.Trim().ToLowerInvariant());
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task ClearMustChangePasswordAsync(Guid userId)
+        {
+            var user = await _dbContext.Users.FindAsync(userId);
+            if (user == null) return;
+
+            user.MustChangePassword = false;
+            await _dbContext.SaveChangesAsync();
         }
 
         private static string HashPassword(string password)
@@ -43,7 +118,5 @@ namespace PrimeCheque.Services
             var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
             return Convert.ToHexString(bytes);
         }
-
-        private record StaticUser(string Username, string PasswordHash, string DisplayName, UserRole Role);
     }
 }

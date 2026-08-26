@@ -14,6 +14,11 @@ namespace PrimeCheque.Data.Configurations
             builder.Property(u => u.PasswordHash).IsRequired().HasMaxLength(256);
             builder.Property(u => u.Role).HasConversion<string>();
 
+            // Security & Password Reset fields
+            builder.Property(u => u.SecurityQuestion).HasMaxLength(300);
+            builder.Property(u => u.SecurityAnswerHash).HasMaxLength(256);
+            builder.Property(u => u.MustChangePassword).HasDefaultValue(true);
+
             builder.HasIndex(u => u.Username).IsUnique();
         }
     }

@@ -32,7 +32,7 @@ namespace PrimeCheque
 
             // Services
             services.AddSingleton<INavigationService, NavigationService>();
-            services.AddSingleton<IStaticAuthService, StaticAuthService>();
+            services.AddTransient<IStaticAuthService, StaticAuthService>();
             services.AddSingleton<ISessionService, SessionService>();
             services.AddTransient<ICompanyService, CompanyService>();
             services.AddTransient<IBankService, BankService>();

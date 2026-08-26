@@ -20,7 +20,7 @@ namespace PrimeCheque.Views
             base.OnNavigatedTo(e);
             try
             {
-                await ViewModel.LoadUsersAsync();
+                await ViewModel.LoadProfileAsync();
             }
             catch
             {

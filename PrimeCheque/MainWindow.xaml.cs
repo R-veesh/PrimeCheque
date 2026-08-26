@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -13,7 +12,6 @@ namespace PrimeCheque
     {
         private readonly INavigationService _navigationService;
         private readonly ISessionService _session;
-        private readonly Dictionary<UserRole, List<string>> _rolePermissions;
 
         public MainWindow()
         {
@@ -38,15 +36,6 @@ namespace PrimeCheque
             _navigationService = App.GetService<INavigationService>();
             _navigationService.Frame = ContentFrame;
 
-            _rolePermissions = new Dictionary<UserRole, List<string>>
-            {
-                [UserRole.Administrator] = new() { "Dashboard", "NewCheque", "Cheques", "ChequeBooks", "Payees", "BatchImport", "Reports", "AuditLog", "Companies", "Banks", "TemplateDesigner", "Users", "Settings" },
-                [UserRole.ChequePreparer] = new() { "Dashboard", "NewCheque", "Cheques", "ChequeBooks", "Payees", "BatchImport", "Reports", "Settings" },
-                [UserRole.Approver] = new() { "Dashboard", "Cheques", "Reports", "Settings" },
-                [UserRole.Printer] = new() { "Dashboard", "Cheques", "Reports", "Settings" },
-                [UserRole.Auditor] = new() { "Dashboard", "Cheques", "Reports", "AuditLog", "Settings" },
-            };
-
             ShowLogin();
         }
 
@@ -68,19 +57,21 @@ namespace PrimeCheque
             if (user != null)
             {
                 UserDisplayNameText.Text = user.DisplayName;
-                UserRoleTextBlock.Text = user.Role.ToString();
+                UserRoleTextBlock.Text = "Super Admin";
                 UserAvatarInitial.Text = user.DisplayName.Length > 0
                     ? user.DisplayName[..1].ToUpper()
                     : "?";
             }
 
-            ApplyRoleVisibility();
+            // Super Admin: All navigation items always visible
+            NavView.IsSettingsVisible = true;
             NavigateToDefaultPage();
         }
 
         private void NavView_Loaded(object sender, RoutedEventArgs e)
         {
-            ApplyRoleVisibility();
+            // Super Admin: All navigation items always visible — no filtering needed
+            NavView.IsSettingsVisible = true;
             NavigateToDefaultPage();
         }
 
@@ -90,25 +81,6 @@ namespace PrimeCheque
             {
                 NavView.SelectedItem = NavDashboard;
                 _navigationService.Navigate(typeof(DashboardPage));
-            }
-        }
-
-        private void ApplyRoleVisibility()
-        {
-            var role = _session.CurrentUser?.Role ?? UserRole.ChequePreparer;
-            var allowed = _rolePermissions.GetValueOrDefault(role, new());
-
-            NavView.IsSettingsVisible = allowed.Contains("Settings");
-
-            foreach (var item in NavView.MenuItems)
-            {
-                if (item is NavigationViewItem navItem)
-                {
-                    var tag = navItem.Tag?.ToString();
-                    navItem.Visibility = tag != null && allowed.Contains(tag)
-                        ? Visibility.Visible
-                        : Visibility.Collapsed;
-                }
             }
         }
 
@@ -158,7 +130,7 @@ namespace PrimeCheque
                     case "TemplateDesigner":
                         _navigationService.Navigate(typeof(TemplateDesignerPage));
                         break;
-                    case "Users":
+                    case "AdminProfile":
                         _navigationService.Navigate(typeof(UserManagementPage));
                         break;
                     case "Settings":

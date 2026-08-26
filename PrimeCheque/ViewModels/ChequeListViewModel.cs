@@ -15,9 +15,10 @@ namespace PrimeCheque.ViewModels
         private readonly INavigationService _navigationService;
         private readonly ISessionService _sessionService;
 
-        public bool IsPreparerRole => _sessionService.CurrentUser?.Role == UserRole.Administrator || _sessionService.CurrentUser?.Role == UserRole.ChequePreparer;
-        public bool IsApproverRole => _sessionService.CurrentUser?.Role == UserRole.Administrator || _sessionService.CurrentUser?.Role == UserRole.Approver;
-        public bool IsPrinterRole => _sessionService.CurrentUser?.Role == UserRole.Administrator || _sessionService.CurrentUser?.Role == UserRole.Printer;
+        // Super Admin has all permissions — no role restrictions
+        public bool IsPreparerRole => true;
+        public bool IsApproverRole => true;
+        public bool IsPrinterRole => true;
 
         [ObservableProperty]
         private ObservableCollection<Cheque> _cheques = new();

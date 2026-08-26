@@ -1,27 +1,25 @@
-Static Users (Hardcoded)
-Username Password Display Name Role
+Static User (Super Admin — Single User System)
+Username    Password    Display Name        Role
+admin       admin123    Super Administrator  SuperAdmin
 
-admin admin123 Administrator Administrator
-preparer preparer123 Cheque Preparer ChequePreparer
-approver approver123 Approver Approver
-printer printer123 Printer Printer
-auditor auditor123 Auditor Auditor
+Note: Password must be changed on first login.
+Security question must be set for password recovery.
 
 
-Role-Based Navigation Visibility
+Super Admin Navigation (All Items Visible)
 
-NavItem        Admin    Preparer Approver Printer Auditor
-Dashboard        ✅      ✅      ✅         ✅      ✅
-New Cheque       ✅      ✅      ❌         ❌      ❌
-Cheques Register ✅      ✅      ✅         ✅      ✅
-Cheque Books     ✅      ✅      ❌         ❌      ❌
-Payees           ✅      ✅      ❌         ❌      ❌
-Batch Import     ✅      ✅      ❌         ❌      ❌
-Reports          ✅      ✅      ✅         ✅      ✅
-Audit Log        ✅      ❌      ❌         ❌      ✅
-Companies        ✅      ❌      ❌         ❌      ❌
-Banks            ✅      ❌      ❌         ❌      ❌
-Template Designer✅      ❌      ❌         ❌      ❌
-User Management  ✅      ❌      ❌         ❌      ❌
-Settings         ✅      ✅      ✅         ✅      ✅
+NavItem              Access
+Dashboard            ✅
+New Cheque           ✅
+Cheques Register     ✅
+Cheque Books         ✅
+Payees               ✅
+Batch Import         ✅
+Reports              ✅
+Audit Log            ✅
+Companies            ✅
+Banks                ✅
+Template Designer    ✅
+Admin Profile        ✅
+Settings             ✅
 

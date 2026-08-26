@@ -8,52 +8,128 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Padding="24" ColumnSpacing="24">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" />
-            <ColumnDefinition Width="1*" />
-        </Grid.ColumnDefinitions>
+    <ScrollViewer Padding="24">
+        <StackPanel Spacing="24" MaxWidth="800" HorizontalAlignment="Left">
 
-        <!-- User Directory List -->
-        <StackPanel Grid.Column="0" Spacing="20">
-            <TextBlock Text="User &amp; Role Management (RBAC)" Style="{StaticResource TitleTextBlockStyle}" />
-
-            <ListView ItemsSource="{x:Bind ViewModel.Users, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedUser, Mode=TwoWay}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Grid Padding="12" ColumnSpacing="16">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="150" />
-                                <ColumnDefinition Width="180" />
-                                <ColumnDefinition Width="120" />
-                                <ColumnDefinition Width="100" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" Text="{Binding Username}" FontWeight="Bold" VerticalAlignment="Center" />
-                            <TextBlock Grid.Column="1" Text="{Binding DisplayName}" VerticalAlignment="Center" />
-                            <Border Grid.Column="2" Background="{ThemeResource AccentFillColorDefaultBrush}" CornerRadius="4" Padding="8,2" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding Role}" Foreground="White" FontSize="11" FontWeight="Bold" />
-                            </Border>
-                            <TextBlock Grid.Column="3" Text="{Binding IsActive}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" VerticalAlignment="Center" />
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </StackPanel>
-
-        <!-- Add / Edit User Form -->
-        <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1" VerticalAlignment="Top">
-            <StackPanel Spacing="16">
-                <TextBlock Text="Add New System User" Style="{StaticResource SubtitleTextBlockStyle}" />
-
-                <TextBox Header="Username" Text="{x:Bind ViewModel.Username, Mode=TwoWay}" PlaceholderText="johndoe" />
-                <TextBox Header="Display Name" Text="{x:Bind ViewModel.DisplayName, Mode=TwoWay}" PlaceholderText="John Doe" />
-                <ComboBox Header="Role (RBAC)" ItemsSource="{x:Bind ViewModel.AvailableRoles}" SelectedItem="{x:Bind ViewModel.SelectedRole, Mode=TwoWay}" HorizontalAlignment="Stretch" />
-
-                <Button Content="➕ Create User" Style="{StaticResource AccentButtonStyle}" Command="{x:Bind ViewModel.CreateUserCommand}" HorizontalAlignment="Stretch" Margin="0,12,0,0" />
-                <Button Content="🔄 Toggle Active Status" Command="{x:Bind ViewModel.ToggleUserActiveCommand}" HorizontalAlignment="Stretch" />
-
-                <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}" Foreground="Green" FontWeight="SemiBold" HorizontalAlignment="Center" TextWrapping="Wrap" />
+            <!-- Page Header -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="Admin Profile &amp; Security" Style="{StaticResource TitleTextBlockStyle}" />
+                <TextBlock Text="Manage your account settings, password, and recovery options."
+                           Style="{StaticResource CaptionTextBlockStyle}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
             </StackPanel>
-        </Border>
-    </Grid>
+
+            <!-- ==================== PROFILE SECTION ==================== -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="&#x1F464; Profile" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="Bold" />
+
+                    <Grid ColumnSpacing="16" RowSpacing="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBox Grid.Column="0" Grid.Row="0"
+                                 Header="Username"
+                                 Text="{x:Bind ViewModel.Username, Mode=OneWay}"
+                                 IsReadOnly="True" />
+
+                        <TextBox Grid.Column="1" Grid.Row="0"
+                                 Header="Last Login"
+                                 Text="{x:Bind ViewModel.LastLogin, Mode=OneWay}"
+                                 IsReadOnly="True" />
+
+                        <TextBox Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
+                                 Header="Display Name"
+                                 Text="{x:Bind ViewModel.DisplayName, Mode=TwoWay}"
+                                 PlaceholderText="Super Administrator" />
+                    </Grid>
+
+                    <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
+                        <TextBlock Text="{x:Bind ViewModel.StatusMessage, Mode=OneWay}"
+                                   Foreground="Green" FontWeight="SemiBold" VerticalAlignment="Center" />
+                        <Button Content="💾 Save Profile"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Command="{x:Bind ViewModel.SaveProfileCommand}"
+                                Padding="16,8" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- ==================== CHANGE PASSWORD SECTION ==================== -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="&#x1F512; Change Password" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="Bold" />
+
+                    <PasswordBox Header="Current Password"
+                                 PlaceholderText="Enter your current password"
+                                 Password="{x:Bind ViewModel.CurrentPassword, Mode=TwoWay}" />
+
+                    <Grid ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <PasswordBox Grid.Column="0"
+                                     Header="New Password"
+                                     PlaceholderText="Min 6 characters"
+                                     Password="{x:Bind ViewModel.NewPassword, Mode=TwoWay}" />
+
+                        <PasswordBox Grid.Column="1"
+                                     Header="Confirm New Password"
+                                     PlaceholderText="Re-enter new password"
+                                     Password="{x:Bind ViewModel.ConfirmPassword, Mode=TwoWay}" />
+                    </Grid>
+
+                    <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
+                        <TextBlock Text="{x:Bind ViewModel.PasswordStatusMessage, Mode=OneWay}"
+                                   Foreground="Green" FontWeight="SemiBold" VerticalAlignment="Center" />
+                        <Button Content="🔑 Change Password"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Command="{x:Bind ViewModel.ChangePasswordCommand}"
+                                Padding="16,8" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- ==================== SECURITY QUESTION SECTION ==================== -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="&#x1F6E1; Security Question (Password Recovery)" Style="{StaticResource SubtitleTextBlockStyle}" FontWeight="Bold" />
+
+                    <TextBlock Text="Set a security question to enable password recovery if you forget your password."
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" FontSize="13" />
+
+                    <ComboBox Header="Security Question"
+                              ItemsSource="{x:Bind ViewModel.SecurityQuestions}"
+                              SelectedItem="{x:Bind ViewModel.SecurityQuestion, Mode=TwoWay}"
+                              PlaceholderText="Select a security question"
+                              HorizontalAlignment="Stretch" />
+
+                    <TextBox Header="Security Answer"
+                             PlaceholderText="Your answer (case-insensitive)"
+                             Text="{x:Bind ViewModel.SecurityAnswer, Mode=TwoWay}" />
+
+                    <StackPanel Orientation="Horizontal" Spacing="12" HorizontalAlignment="Right">
+                        <TextBlock Text="{x:Bind ViewModel.SecurityStatusMessage, Mode=OneWay}"
+                                   Foreground="Green" FontWeight="SemiBold" VerticalAlignment="Center" />
+                        <Button Content="🛡️ Save Security Question"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Command="{x:Bind ViewModel.SaveSecurityQuestionCommand}"
+                                Padding="16,8" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
 </Page>
