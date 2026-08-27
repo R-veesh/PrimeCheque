@@ -31,8 +31,7 @@ namespace PrimeCheque.ViewModels
         public async Task LoadAuditLogsAsync()
         {
             var logs = await _auditService.GetAllAuditLogsAsync(UserFilter, ActionFilter);
-            AuditLogs.Clear();
-            foreach (var l in logs) AuditLogs.Add(l);
+            AuditLogs = new ObservableCollection<ChequeAuditLog>(logs);
         }
 
         [RelayCommand]

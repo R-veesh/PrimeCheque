@@ -20,10 +20,16 @@
         </Grid.ColumnDefinitions>
 
         <!-- Audit Log List -->
-        <StackPanel Grid.Column="0" Spacing="20">
-            <TextBlock Text="System Audit Trail" Style="{StaticResource TitleTextBlockStyle}" />
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-            <Grid ColumnSpacing="16">
+            <TextBlock Grid.Row="0" Text="System Audit Trail" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,20" />
+
+            <Grid Grid.Row="1" ColumnSpacing="16" Margin="0,0,0,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -35,7 +41,7 @@
                 <Button Grid.Column="2" Content="Search" Command="{x:Bind ViewModel.SearchCommand}" Style="{StaticResource AccentButtonStyle}" VerticalAlignment="Bottom" Padding="16,8" />
             </Grid>
 
-            <ListView ItemsSource="{x:Bind ViewModel.AuditLogs, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedLog, Mode=TwoWay}">
+            <ListView Grid.Row="2" ItemsSource="{x:Bind ViewModel.AuditLogs, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedLog, Mode=TwoWay}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid Padding="12" ColumnSpacing="16">
@@ -55,7 +61,7 @@
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-        </StackPanel>
+        </Grid>
 
         <!-- State Inspector -->
         <Border Grid.Column="1" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="20" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">

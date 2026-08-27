@@ -86,7 +86,7 @@ namespace PrimeCheque.Services
                 query = query.Where(al => al.ActionType.Contains(actionFilter));
             }
 
-            return await query.OrderByDescending(al => al.Timestamp).AsNoTracking().ToListAsync();
+            return await query.OrderByDescending(al => al.Timestamp).Take(100).AsNoTracking().ToListAsync();
         }
     }
 }
