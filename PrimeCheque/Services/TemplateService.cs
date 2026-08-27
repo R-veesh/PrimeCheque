@@ -53,7 +53,11 @@ namespace PrimeCheque.Services
                 existing.ChequeHeightMm = template.ChequeHeightMm;
                 existing.IsDefault = template.IsDefault;
                 existing.BankId = template.BankId;
-                _dbContext.BankTemplates.Update(existing);
+                existing.TemplateImagePath = template.TemplateImagePath;
+
+                // Force EF to detect changes — needed when the tracked entity
+                // is the same reference as the incoming template object
+                _dbContext.Entry(existing).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             }
             await _dbContext.SaveChangesAsync();
             return template;
