@@ -19,6 +19,22 @@ namespace PrimeCheque
         public App()
         {
             InitializeComponent();
+
+            this.UnhandledException += (sender, e) =>
+            {
+                var msg = $"[{DateTime.Now:O}] UNHANDLED XAML EXCEPTION: {e.Exception?.GetType().Name}: {e.Message}\n{e.Exception?.StackTrace}\n";
+                System.IO.File.AppendAllText(@"C:\ProgramData\PrimeOne\PrimeCheque\startup.log", msg);
+            };
+
+            AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
+            {
+                if (e.ExceptionObject is Exception ex)
+                {
+                    var msg = $"[{DateTime.Now:O}] UNHANDLED APPDOMAIN EXCEPTION: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}\n";
+                    System.IO.File.AppendAllText(@"C:\ProgramData\PrimeOne\PrimeCheque\startup.log", msg);
+                }
+            };
+
             Services = ConfigureServices();
             System.IO.File.AppendAllText(@"C:\ProgramData\PrimeOne\PrimeCheque\startup.log", $"[{DateTime.Now:O}] 3. Services initialized\n");
         }
