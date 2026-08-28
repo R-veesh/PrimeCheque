@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using PrimeCheque.Models;
 
@@ -6,131 +6,138 @@ namespace PrimeCheque.Data.Seed
 {
     public static class TemplateSeedData
     {
-        private static string CreateConfigJson(
-            float dayX, float dayY, float monthX, float monthY, float yearX, float yearY,
-            float payeeX, float payeeY, float payeeW,
-            float words1X, float words1Y, float words1W,
-            float words2X, float words2Y, float words2W,
-            float figX, float figY, float figW,
-            float crossX = 8, float crossY = 5, float memoX = 12, float memoY = 70)
-        {
-            return $@"{{
-  ""dateD1"": {{ ""x"": {dayX}, ""y"": {dayY}, ""width"": 6, ""height"": 6, ""fontSize"": 11 }},
-  ""dateD2"": {{ ""x"": {dayX + 6}, ""y"": {dayY}, ""width"": 6, ""height"": 6, ""fontSize"": 11 }},
-  ""dateM1"": {{ ""x"": {monthX}, ""y"": {monthY}, ""width"": 6, ""height"": 6, ""fontSize"": 11 }},
-  ""dateM2"": {{ ""x"": {monthX + 6}, ""y"": {monthY}, ""width"": 6, ""height"": 6, ""fontSize"": 11 }},
-  ""dateY1"": {{ ""x"": {yearX}, ""y"": {yearY}, ""width"": 6, ""height"": 6, ""fontSize"": 11 }},
-  ""dateY2"": {{ ""x"": {yearX + 6}, ""y"": {yearY}, ""width"": 6, ""height"": 6, ""fontSize"": 11 }},
-  ""dateY3"": {{ ""x"": {yearX + 12}, ""y"": {yearY}, ""width"": 6, ""height"": 6, ""fontSize"": 11 }},
-  ""dateY4"": {{ ""x"": {yearX + 18}, ""y"": {yearY}, ""width"": 6, ""height"": 6, ""fontSize"": 11 }},
-  ""payeeLine1"": {{ ""x"": {payeeX}, ""y"": {payeeY}, ""width"": {payeeW}, ""height"": 7, ""fontSize"": 12 }},
-  ""payeeLine2"": {{ ""x"": {payeeX - 20}, ""y"": {payeeY + 8}, ""width"": {payeeW + 20}, ""height"": 7, ""fontSize"": 12 }},
-  ""amountWordsLine1"": {{ ""x"": {words1X}, ""y"": {words1Y}, ""width"": {words1W}, ""height"": 7, ""fontSize"": 11 }},
-  ""amountWordsLine2"": {{ ""x"": {words2X}, ""y"": {words2Y}, ""width"": {words2W}, ""height"": 7, ""fontSize"": 11 }},
-  ""amountFigures"": {{ ""x"": {figX}, ""y"": {figY}, ""width"": {figW}, ""height"": 8, ""fontSize"": 12 }},
-  ""crossingZone"": {{ ""x"": {crossX}, ""y"": {crossY}, ""width"": 35, ""height"": 18 }},
-  ""signatureZone"": {{ ""x"": 130, ""y"": 65, ""width"": 60, ""height"": 15 }},
-  ""memoLine"": {{ ""x"": {memoX}, ""y"": {memoY}, ""width"": 100, ""height"": 6, ""fontSize"": 9 }},
-  ""orBearerZone"": {{ ""x"": 160, ""y"": 25, ""width"": 25, ""height"": 5 }}
-}}";
-        }
-
         public static List<BankTemplate> GetInitialTemplates()
         {
             return new List<BankTemplate>
             {
                 new BankTemplate
                 {
+                    Id = Guid.Parse("60606060-6060-6060-6060-606060606060"),
+                    BankName = "Amana Bank",
+                    SeriesName = "Standard Current Account – Series A",
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":134.69878,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":142.00455,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":149.1267,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":156.24892,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":163.55467,""y"":7.6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":170.6769,""y"":7.6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":177.41795,""y"":7.6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":184.54019,""y"":7.6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":15.698759,""y"":19.021921,""width"":177.82933,""height"":7.374071,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":18.27378,""y"":29.914225,""width"":102.39758,""height"":21.610718,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":143.73062,""y"":36.51819,""width"":38,""height"":8,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-4.139661,""y"":19.560524,""width"":48.064285,""height"":6.3965864,""fontSize"":11,""angle"":328,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":-1.4453773,""y"":64.96062,""width"":100,""height"":6,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":178.4846,""y"":25.755201,""width"":13.034385,""height"":5.196581,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
+                    TemplateImagePath = "template_image/AmanaBank_LK.jpg",
+                    IsDefault = true,
+                    BankId = Guid.Parse("c3333333-3333-3333-3333-333333333333")
+                },
+                new BankTemplate
+                {
                     Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
                     BankName = "Bank of Ceylon",
                     SeriesName = "Standard Current Account – Series A",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(152, 10, 164, 10, 176, 10, 32, 24, 150, 24, 38, 145, 12, 46, 150, 152, 40, 40),
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":133.88939,""y"":7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":141.37857,""y"":7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":148.31734,""y"":7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":155.24191,""y"":7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":162.18056,""y"":7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":169.6769,""y"":7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":176.79204,""y"":7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":183.71399,""y"":7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":14.446898,""y"":18.960629,""width"":150,""height"":7,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":16.72326,""y"":29.226992,""width"":105.75612,""height"":20.820024,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":138.36414,""y"":34.212513,""width"":40,""height"":8,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-3.3915172,""y"":20.125164,""width"":49.274506,""height"":6.1405487,""fontSize"":11,""angle"":328,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":12,""y"":70,""width"":100,""height"":6,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":164.29825,""y"":24.809435,""width"":25,""height"":5,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
                     TemplateImagePath = "template_image/BOC_LK.png",
                     IsDefault = true,
                     BankId = Guid.Parse("11111111-1111-1111-1111-111111111111")
                 },
                 new BankTemplate
                 {
+                    Id = Guid.Parse("70707070-7070-7070-7070-707070707070"),
+                    BankName = "Cargills Bank",
+                    SeriesName = "Standard Current Account – Series A",
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":134.87488,""y"":7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":141.8136,""y"":7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":148.92874,""y"":7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":156.04391,""y"":7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":163.54726,""y"":7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":170.6624,""y"":7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":177.4105,""y"":7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":184.6736,""y"":7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":12.828407,""y"":18.95357,""width"":178.22632,""height"":6.633568,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":16.525639,""y"":27.356642,""width"":105.699104,""height"":23.103176,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":140.05095,""y"":35.51114,""width"":40,""height"":8,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-3.9490952,""y"":19.758152,""width"":46.612076,""height"":8.280644,""fontSize"":11,""angle"":328,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":2.845847,""y"":64.77003,""width"":100,""height"":6,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":176.43791,""y"":25.374071,""width"":15.632354,""height"":5.1911454,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
+                    TemplateImagePath = "template_image/CargillsBank_LK.jpg",
+                    IsDefault = true,
+                    BankId = Guid.Parse("d4444444-4444-4444-4444-444444444444")
+                },
+                new BankTemplate
+                {
+                    Id = Guid.Parse("a0a0a0a0-a0a0-a0a0-a0a0-a0a0a0a0a0a0"),
+                    BankName = "Citibank",
+                    SeriesName = "Standard Current Account – Series A",
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":134.7526,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":141.87488,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":149.18057,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":156.30284,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":163.05098,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":170.35667,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":177.09775,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":184.03644,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":13.5765505,""y"":19.3347,""width"":177.72412,""height"":7.0426483,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":15.9680605,""y"":29.410501,""width"":105.588356,""height"":22.68274,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":140.66983,""y"":36.266342,""width"":40,""height"":8,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-4.296994,""y"":20.710835,""width"":46.6193,""height"":6.524024,""fontSize"":11,""angle"":327,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":3.593992,""y"":67.01446,""width"":100,""height"":6,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":173.9959,""y"":26.863297,""width"":17.098204,""height"":6.220155,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
+                    TemplateImagePath = "template_image/Citibank_LK.jpg",
+                    IsDefault = true,
+                    BankId = Guid.Parse("f7777777-7777-7777-7777-777777777777")
+                },
+                new BankTemplate
+                {
                     Id = Guid.Parse("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb"),
                     BankName = "Commercial Bank of Ceylon",
                     SeriesName = "Standard Current Account – Series A",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(150, 11, 162, 11, 174, 11, 35, 25, 150, 26, 39, 140, 12, 47, 150, 155, 41, 38),
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":134.3173,""y"":7.2663546,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":141.80653,""y"":7.2663536,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":148.93579,""y"":7.2663507,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":155.83853,""y"":7.223224,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":162.98969,""y"":7.259295,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":170.10481,""y"":7.2663507,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":177.227,""y"":7.2592945,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":184.34218,""y"":7.2592964,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":12.965105,""y"":18.280838,""width"":177.64581,""height"":7.374071,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":15.914204,""y"":28.349583,""width"":106.72869,""height"":22.301708,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":141.74525,""y"":34.647877,""width"":38,""height"":8,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-3.38446,""y"":18.628878,""width"":46.982704,""height"":6.586486,""fontSize"":11,""angle"":328,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":5.8313622,""y"":64.39594,""width"":100,""height"":6,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":177.93419,""y"":25.190565,""width"":12.295708,""height"":5.1905646,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
                     TemplateImagePath = "template_image/CommercialBankOfCeylon_LK.png",
                     IsDefault = true,
                     BankId = Guid.Parse("22222222-2222-2222-2222-222222222222")
                 },
                 new BankTemplate
                 {
-                    Id = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
-                    BankName = "Sampath Bank",
-                    SeriesName = "Standard Current Account – Series A",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(154, 11, 166, 11, 178, 11, 33, 26, 150, 25, 40, 145, 12, 48, 150, 156, 42, 38),
-                    TemplateImagePath = "template_image/SampathBank_LK.png",
-                    IsDefault = true,
-                    BankId = Guid.Parse("33333333-3333-3333-3333-333333333333")
-                },
-                new BankTemplate
-                {
-                    Id = Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd"),
-                    BankName = "Hatton National Bank",
-                    SeriesName = "Standard Current Account – Series A",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(151, 11, 163, 11, 175, 11, 34, 25, 150, 27, 40, 140, 12, 48, 150, 154, 41, 38),
-                    TemplateImagePath = "template_image/HattonNationalBank_LK.jpg",
-                    IsDefault = true,
-                    BankId = Guid.Parse("44444444-4444-4444-4444-444444444444")
-                },
-                new BankTemplate
-                {
-                    Id = Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"),
-                    BankName = "Nations Trust Bank",
-                    SeriesName = "Standard Current Account – Series A",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(153, 12, 165, 12, 177, 12, 36, 26, 150, 25, 40, 145, 12, 48, 150, 155, 42, 38),
-                    TemplateImagePath = "template_image/NationsTrustBank_LK.png",
-                    IsDefault = true,
-                    BankId = Guid.Parse("55555555-5555-5555-5555-555555555555")
-                },
-                new BankTemplate
-                {
                     Id = Guid.Parse("ffffffff-ffff-ffff-ffff-ffffffffffff"),
                     BankName = "DFCC Bank",
                     SeriesName = "Standard Current Account – Series A",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(152, 11, 164, 11, 176, 11, 35, 25, 150, 26, 40, 142, 12, 48, 150, 154, 41, 38),
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":135.93611,""y"":7.7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":143.05841,""y"":7.7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":150.18059,""y"":7.7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":157.29576,""y"":7.7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":164.3389,""y"":7.7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":171.54723,""y"":7.7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":178.85297,""y"":7.7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":186.15868,""y"":7.7,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":15.9576645,""y"":19.395992,""width"":176.34012,""height"":6.625929,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":18.158627,""y"":29.166054,""width"":104.27529,""height"":21.758152,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":144.47174,""y"":35.579514,""width"":38,""height"":8,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-4.3231664,""y"":19.751095,""width"":48.391953,""height"":6.136477,""fontSize"":11,""angle"":328,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":5.0973325,""y"":65.89227,""width"":100,""height"":6,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":177.36964,""y"":26.30572,""width"":13.417921,""height"":5,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
                     TemplateImagePath = "template_image/DFCCBank_LK.jpg",
                     IsDefault = true,
                     BankId = Guid.Parse("66666666-6666-6666-6666-666666666666")
                 },
                 new BankTemplate
                 {
-                    Id = Guid.Parse("10101010-1010-1010-1010-101010101010"),
-                    BankName = "Seylan Bank",
-                    SeriesName = "Standard Current Account – Series A",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(150, 10, 162, 10, 174, 10, 33, 24, 150, 24, 39, 145, 12, 47, 150, 152, 40, 40),
-                    TemplateImagePath = "template_image/SeylanBank_LK.png",
+                    Id = Guid.Parse("90909090-9090-9090-9090-909090909090"),
+                    BankName = "HSBC Advance",
+                    SeriesName = "Advance Current Account",
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":136.0729,""y"":6.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":143.18803,""y"":6.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":150.12675,""y"":6.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":157.06541,""y"":6.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":164.55463,""y"":6.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":171.49335,""y"":6.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":178.79904,""y"":6.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":185.8929,""y"":6.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":17.324682,""y"":18.716202,""width"":172.43883,""height"":6.633568,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":22.518211,""y"":30.288305,""width"":100.18789,""height"":19.547276,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":143.49338,""y"":35.273804,""width"":38,""height"":8,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-3.582083,""y"":19.758148,""width"":46.39916,""height"":6.0138593,""fontSize"":11,""angle"":328,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":3.5939898,""y"":65.51821,""width"":100,""height"":6,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":178.48477,""y"":25.938707,""width"":16.403425,""height"":5,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
+                    TemplateImagePath = "template_image/HSBC_Advance_LK.jpg",
                     IsDefault = true,
-                    BankId = Guid.Parse("77777777-7777-7777-7777-777777777777")
+                    BankId = Guid.Parse("f6666666-6666-6666-6666-666666666666")
+                },
+                new BankTemplate
+                {
+                    Id = Guid.Parse("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+                    BankName = "Hatton National Bank",
+                    SeriesName = "Standard Current Account – Series A",
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":134.7527,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":141.50082,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":148.35422,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":155.74525,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":163.23445,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":170.35667,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":177.85294,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":184.97516,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":14.767106,""y"":18.090275,""width"":176.57701,""height"":6.349799,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":18.036413,""y"":27.302769,""width"":103.356895,""height"":21.975216,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":143.17316,""y"":34.64787,""width"":38,""height"":8,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-2.8268836,""y"":20.12516,""width"":46.300644,""height"":5.617127,""fontSize"":11,""angle"":329,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":2.2882745,""y"":64.403015,""width"":100,""height"":6,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":160,""y"":25,""width"":25,""height"":5,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
+                    TemplateImagePath = "template_image/HattonNationalBank_LK.jpg",
+                    IsDefault = true,
+                    BankId = Guid.Parse("44444444-4444-4444-4444-444444444444")
+                },
+                new BankTemplate
+                {
+                    Id = Guid.Parse("50505050-5050-5050-5050-505050505050"),
+                    BankName = "NDB Bank",
+                    SeriesName = "Standard Current Account – Series A",
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":134.82103,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":142.12677,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":148.69847,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":155.8065,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":162.92874,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":169.8604,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":176.79204,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":184.09773,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":14.828405,""y"":18.464344,""width"":175.45407,""height"":5.961561,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":19.64785,""y"":28.730688,""width"":101.54915,""height"":20.731628,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":141.92877,""y"":34.280857,""width"":38,""height"":8,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-3.575022,""y"":19.934603,""width"":46.88028,""height"":6.6451135,""fontSize"":11,""angle"":327,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":0.42497468,""y"":64.0219,""width"":100,""height"":6,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":157.01453,""y"":24.816494,""width"":25,""height"":5,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
+                    TemplateImagePath = "template_image/NDB_LK.jpg",
+                    IsDefault = true,
+                    BankId = Guid.Parse("b2222222-2222-2222-2222-222222222222")
+                },
+                new BankTemplate
+                {
+                    Id = Guid.Parse("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"),
+                    BankName = "Nations Trust Bank",
+                    SeriesName = "Standard Current Account – Series A",
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":134.33179,""y"":8,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":141.07292,""y"":8,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":148.19511,""y"":8,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":155.31024,""y"":8.082848,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":162.24898,""y"":8,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":169.18764,""y"":8,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":176.48633,""y"":8,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":183.42505,""y"":8,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":12.8428955,""y"":20.021923,""width"":179.88321,""height"":6.061293,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":14.547193,""y"":30.28827,""width"":106.00358,""height"":21.495228,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":138.75264,""y"":36.219566,""width"":38,""height"":8,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-5.819451,""y"":21.056816,""width"":54.09201,""height"":7.835963,""fontSize"":11,""angle"":326,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":4.899712,""y"":65.32763,""width"":100,""height"":6,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":177.55304,""y"":26.30572,""width"":13.043849,""height"":5,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
+                    TemplateImagePath = "template_image/NationsTrustBank_LK.png",
+                    IsDefault = true,
+                    BankId = Guid.Parse("55555555-5555-5555-5555-555555555555")
                 },
                 new BankTemplate
                 {
                     Id = Guid.Parse("20202020-2020-2020-2020-202020202020"),
                     BankName = "Pan Asia Bank",
                     SeriesName = "Standard Current Account – Series A",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(153, 11, 165, 11, 177, 11, 35, 25, 150, 26, 40, 140, 12, 48, 150, 155, 41, 38),
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":135.63042,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":142.94322,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":150.05836,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":156.79945,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":164.11932,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":171.79909,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":178.91423,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":185.85294,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":16.317623,""y"":17.34213,""width"":176.52368,""height"":7,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":16.662348,""y"":27.302792,""width"":105.818344,""height"":22.6898,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":143.04388,""y"":33.532726,""width"":38,""height"":8,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-0.3989513,""y"":17.697231,""width"":42.926643,""height"":7.855863,""fontSize"":11,""angle"":328,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":3.5939884,""y"":64.021835,""width"":100,""height"":6,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":158.3202,""y"":24.258917,""width"":25,""height"":5,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
                     TemplateImagePath = "template_image/PanAsiaBank_LK.jpg",
                     IsDefault = true,
                     BankId = Guid.Parse("88888888-8888-8888-8888-888888888888")
@@ -140,9 +147,9 @@ namespace PrimeCheque.Data.Seed
                     Id = Guid.Parse("30303030-3030-3030-3030-303030303030"),
                     BankName = "Pan Asia Bank - First Class",
                     SeriesName = "First Class Current Account",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(153, 11, 165, 11, 177, 11, 35, 25, 150, 26, 40, 140, 12, 48, 150, 155, 41, 38),
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":134.14122,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":141.44695,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":148.1951,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":155.50081,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":162.80653,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":169.74521,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":176.86748,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":183.98259,""y"":7.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":14.828403,""y"":18.65491,""width"":175.26424,""height"":6.5279875,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":13.676834,""y"":29.173143,""width"":109.92606,""height"":23.430891,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":142.67686,""y"":35.58657,""width"":38,""height"":8,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-4.52079,""y"":20.499235,""width"":48.254753,""height"":5.9855094,""fontSize"":11,""angle"":327,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":1.9142017,""y"":65.708725,""width"":100,""height"":6,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":158.32022,""y"":25.748142,""width"":25,""height"":5,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
                     TemplateImagePath = "template_image/PanAsiaBank_FirstClass_LK.jpg",
                     IsDefault = true,
                     BankId = Guid.Parse("99999999-9999-9999-9999-999999999999")
@@ -152,108 +159,72 @@ namespace PrimeCheque.Data.Seed
                     Id = Guid.Parse("40404040-4040-4040-4040-404040404040"),
                     BankName = "People's Bank",
                     SeriesName = "Standard Current Account – Series A",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(151, 10, 163, 10, 175, 10, 32, 24, 150, 25, 38, 145, 12, 46, 150, 153, 40, 40),
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":151,""y"":10,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":157,""y"":10,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":163,""y"":10,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":169,""y"":10,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":175,""y"":10,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":181,""y"":10,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":187,""y"":10,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":193,""y"":10,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":14.030183,""y"":19.038866,""width"":150,""height"":7,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":18.090279,""y"":30.906794,""width"":104.39504,""height"":19.556374,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":139.73816,""y"":34.763023,""width"":40,""height"":8,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-2.833941,""y"":16.582083,""width"":67.558914,""height"":6.426523,""fontSize"":11,""angle"":336,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":1.3566206,""y"":66.082855,""width"":100,""height"":6,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":166.35214,""y"":25.748142,""width"":23.582039,""height"":6.8567924,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
                     TemplateImagePath = "template_image/PeoplesBank_LK.jpg",
                     IsDefault = true,
                     BankId = Guid.Parse("a1111111-1111-1111-1111-111111111111")
                 },
                 new BankTemplate
                 {
-                    Id = Guid.Parse("50505050-5050-5050-5050-505050505050"),
-                    BankName = "NDB Bank",
+                    Id = Guid.Parse("c0c0c0c0-c0c0-c0c0-c0c0-c0c0c0c0c0c0"),
+                    BankName = "Public Bank",
                     SeriesName = "Standard Current Account – Series A",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(152, 11, 164, 11, 176, 11, 35, 25, 150, 26, 39, 140, 12, 47, 150, 155, 41, 38),
-                    TemplateImagePath = "template_image/NDB_LK.jpg",
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":133.82108,""y"":4.1905646,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":141.50084,""y"":4,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":148.24895,""y"":4,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":155.92876,""y"":4,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":162.86041,""y"":4,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":170.16612,""y"":4,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":176.91422,""y"":4,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":183.66237,""y"":4,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":15.508188,""y"":19.586557,""width"":175.20384,""height"":5.8777866,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":20.395992,""y"":28.540144,""width"":100.02802,""height"":21.814266,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":141.61565,""y"":35.32058,""width"":40,""height"":8,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-3.9490955,""y"":20.139284,""width"":49.652824,""height"":7.313978,""fontSize"":11,""angle"":327,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":2.0977104,""y"":64.586525,""width"":100,""height"":6,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":159.8165,""y"":26.30572,""width"":30.682245,""height"":5.226155,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
+                    TemplateImagePath = "template_image/PublicBank_LK.jpg",
                     IsDefault = true,
-                    BankId = Guid.Parse("b2222222-2222-2222-2222-222222222222")
+                    BankId = Guid.Parse("f9999999-9999-9999-9999-999999999999")
                 },
                 new BankTemplate
                 {
-                    Id = Guid.Parse("60606060-6060-6060-6060-606060606060"),
-                    BankName = "Amana Bank",
+                    Id = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"),
+                    BankName = "Sampath Bank",
                     SeriesName = "Standard Current Account – Series A",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(153, 11, 165, 11, 177, 11, 34, 25, 150, 25, 40, 145, 12, 48, 150, 154, 41, 38),
-                    TemplateImagePath = "template_image/AmanaBank_LK.jpg",
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":135.50827,""y"":5.395999,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":142.82103,""y"":5.5865574,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":149.94322,""y"":5.5794992,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":157.05836,""y"":5.403052,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":163.81357,""y"":5.5795,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":170.74524,""y"":5.5865593,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":178.05096,""y"":5.5795,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":184.69409,""y"":5.709643,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":16.378542,""y"":17.219917,""width"":174.46979,""height"":7,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":19.212488,""y"":27.302788,""width"":102.79351,""height"":22.689806,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":143.30281,""y"":33.982216,""width"":38,""height"":8,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-5.6218276,""y"":18.819439,""width"":52.786278,""height"":8.379431,""fontSize"":11,""angle"":328,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":3.4104877,""y"":64.39596,""width"":100,""height"":6,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":157.76265,""y"":24.442423,""width"":23.122587,""height"":4.8164935,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
+                    TemplateImagePath = "template_image/SampathBank_LK.png",
                     IsDefault = true,
-                    BankId = Guid.Parse("c3333333-3333-3333-3333-333333333333")
+                    BankId = Guid.Parse("33333333-3333-3333-3333-333333333333")
                 },
                 new BankTemplate
                 {
-                    Id = Guid.Parse("70707070-7070-7070-7070-707070707070"),
-                    BankName = "Cargills Bank",
+                    Id = Guid.Parse("10101010-1010-1010-1010-101010101010"),
+                    BankName = "Seylan Bank",
                     SeriesName = "Standard Current Account – Series A",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(150, 10, 162, 10, 174, 10, 33, 24, 150, 24, 38, 145, 12, 46, 150, 152, 40, 40),
-                    TemplateImagePath = "template_image/CargillsBank_LK.jpg",
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":134,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":141.86328,""y"":6.082845,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":148.92168,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":155.8604,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":162.60855,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":170.29538,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":177.22702,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":184.34215,""y"":6,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":15.44689,""y"":19.518206,""width"":150,""height"":7,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":16.906767,""y"":29.288298,""width"":103.95245,""height"":20.376581,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":133.3248,""y"":32.165672,""width"":56.82685,""height"":12.386909,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-3.2080204,""y"":19.941654,""width"":47.73169,""height"":5.800903,""fontSize"":11,""angle"":327,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":0.42497182,""y"":67.01445,""width"":49.683304,""height"":3.3740711,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":157.198,""y"":24.435364,""width"":25,""height"":5,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
+                    TemplateImagePath = "template_image/SeylanBank_LK.png",
                     IsDefault = true,
-                    BankId = Guid.Parse("d4444444-4444-4444-4444-444444444444")
-                },
-                new BankTemplate
-                {
-                    Id = Guid.Parse("80808080-8080-8080-8080-808080808080"),
-                    BankName = "Union Bank",
-                    SeriesName = "Standard Current Account – Series A",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(152, 11, 164, 11, 176, 11, 35, 25, 150, 26, 39, 140, 12, 47, 150, 154, 41, 38),
-                    TemplateImagePath = "template_image/UnionBank_LK.jpg",
-                    IsDefault = true,
-                    BankId = Guid.Parse("e5555555-5555-5555-5555-555555555555")
-                },
-                new BankTemplate
-                {
-                    Id = Guid.Parse("90909090-9090-9090-9090-909090909090"),
-                    BankName = "HSBC Advance",
-                    SeriesName = "Advance Current Account",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(154, 11, 166, 11, 178, 11, 36, 26, 150, 27, 40, 140, 12, 48, 150, 156, 42, 38),
-                    TemplateImagePath = "template_image/HSBC_Advance_LK.jpg",
-                    IsDefault = true,
-                    BankId = Guid.Parse("f6666666-6666-6666-6666-666666666666")
-                },
-                new BankTemplate
-                {
-                    Id = Guid.Parse("a0a0a0a0-a0a0-a0a0-a0a0-a0a0a0a0a0a0"),
-                    BankName = "Citibank",
-                    SeriesName = "Standard Current Account – Series A",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(151, 10, 163, 10, 175, 10, 33, 24, 150, 24, 38, 145, 12, 46, 150, 153, 40, 40),
-                    TemplateImagePath = "template_image/Citibank_LK.jpg",
-                    IsDefault = true,
-                    BankId = Guid.Parse("f7777777-7777-7777-7777-777777777777")
+                    BankId = Guid.Parse("77777777-7777-7777-7777-777777777777")
                 },
                 new BankTemplate
                 {
                     Id = Guid.Parse("b0b0b0b0-b0b0-b0b0-b0b0-b0b0b0b0b0b0"),
                     BankName = "Standard Chartered",
                     SeriesName = "Standard Current Account – Series A",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(152, 11, 164, 11, 176, 11, 35, 25, 150, 25, 40, 145, 12, 48, 150, 155, 41, 38),
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":134.44699,""y"":6.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":141.38567,""y"":6.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":148.50076,""y"":6.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":155.24188,""y"":6.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":162.73817,""y"":6.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":170.23444,""y"":6.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":176.9826,""y"":6.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":184.28833,""y"":6.5,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":15.767116,""y"":18.090273,""width"":174.67435,""height"":7.040287,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":19.770063,""y"":28.982578,""width"":100.92312,""height"":21.193516,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":143.2415,""y"":34.640827,""width"":38,""height"":8,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-4.1255445,""y"":20.31573,""width"":47.139614,""height"":6.9755,""fontSize"":11,""angle"":327,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":4.1586266,""y"":64.96058,""width"":100,""height"":6,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":174.18648,""y"":24.632988,""width"":16.860752,""height"":5.7381077,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
                     TemplateImagePath = "template_image/StandardChartered_LK.jpg",
                     IsDefault = true,
                     BankId = Guid.Parse("f8888888-8888-8888-8888-888888888888")
                 },
                 new BankTemplate
                 {
-                    Id = Guid.Parse("c0c0c0c0-c0c0-c0c0-c0c0-c0c0c0c0c0c0"),
-                    BankName = "Public Bank",
+                    Id = Guid.Parse("80808080-8080-8080-8080-808080808080"),
+                    BankName = "Union Bank",
                     SeriesName = "Standard Current Account – Series A",
-                    ChequeWidthMm = 200m,
-                    ChequeHeightMm = 88m,
-                    TemplateConfig = CreateConfigJson(151, 10, 163, 10, 175, 10, 34, 25, 150, 26, 39, 140, 12, 47, 150, 153, 40, 40),
-                    TemplateImagePath = "template_image/PublicBank_LK.jpg",
+                    ChequeWidthMm = 200.0m,
+                    ChequeHeightMm = 88.0m,
+                    TemplateConfig = @"{""dateD1"":{""x"":136.12674,""y"":11,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateD2"":{""x"":143.43246,""y"":11,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM1"":{""x"":150.18768,""y"":11,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateM2"":{""x"":156.7382,""y"":11,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY1"":{""x"":163.86743,""y"":11,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY2"":{""x"":170.60852,""y"":11,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY3"":{""x"":177.54019,""y"":11,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""dateY4"":{""x"":184.28833,""y"":11,""width"":6,""height"":6,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine1"":{""x"":19.317257,""y"":23.32021,""width"":150,""height"":7,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""payeeLine2"":null,""amountWordsLine1"":{""x"":21.708769,""y"":34.715843,""width"":102.8898,""height"":24.609715,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""amountWordsLine2"":null,""amountFigures"":{""x"":142.42554,""y"":41.220562,""width"":38,""height"":8,""fontSize"":12,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""crossingZone"":{""x"":-3.1938965,""y"":19.017063,""width"":54.205944,""height"":6.6808453,""fontSize"":11,""angle"":328,""fontWeight"":""Bold"",""letterSpacing"":0},""memoLine"":{""x"":5.4643507,""y"":70.3741,""width"":100,""height"":6,""fontSize"":9,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0},""orBearerZone"":{""x"":168.22246,""y"":29.855865,""width"":25,""height"":5,""fontSize"":11,""angle"":0,""fontWeight"":""Bold"",""letterSpacing"":0}}",
+                    TemplateImagePath = "template_image/UnionBank_LK.jpg",
                     IsDefault = true,
-                    BankId = Guid.Parse("f9999999-9999-9999-9999-999999999999")
+                    BankId = Guid.Parse("e5555555-5555-5555-5555-555555555555")
                 }
             };
         }
