@@ -21,6 +21,20 @@
                     <TextBox Header="Currency Suffix" Text="{x:Bind ViewModel.AmountSuffix, Mode=TwoWay}" />
                     <TextBox Header="Cents Word" Text="{x:Bind ViewModel.CentsWord, Mode=TwoWay}" />
                     <CheckBox Content="Include 'and' before cents (e.g. and Cents Fifty Only)" IsChecked="{x:Bind ViewModel.UseAnd, Mode=TwoWay}" />
+
+                    <!-- Live Preview -->
+                    <Border Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="6" Padding="12" Margin="0,4,0,0">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Live Preview (for 75,250.50):" FontWeight="SemiBold" Foreground="{ThemeResource TextFillColorSecondaryBrush}" FontSize="12" />
+                            <TextBlock Text="{x:Bind ViewModel.AmountPreview, Mode=OneWay}" FontWeight="Medium" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" TextWrapping="Wrap" />
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Save Button & Status -->
+                    <StackPanel Orientation="Horizontal" Spacing="16" Margin="0,8,0,0">
+                        <Button Content="💾 Save Settings" Command="{x:Bind ViewModel.SaveSettingsCommand}" Style="{StaticResource AccentButtonStyle}" />
+                        <TextBlock Text="{x:Bind ViewModel.SaveStatusMessage, Mode=OneWay}" VerticalAlignment="Center" FontWeight="SemiBold" Foreground="{ThemeResource SystemFillColorSuccessBrush}" TextWrapping="Wrap" />
+                    </StackPanel>
                 </StackPanel>
             </Border>
 

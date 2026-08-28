@@ -9,8 +9,9 @@ namespace PrimeCheque.ViewModels
     public partial class SettingsViewModel : ObservableObject
     {
         private readonly IBackupService _backupService;
-
         private readonly ILicenceService _licenceService;
+        private readonly ISettingsService _settingsService;
+        private readonly IAmountToWordsService _amountToWordsService;
 
         [ObservableProperty]
         private string _amountPrefix = "Sri Lanka Rupees";
@@ -25,6 +26,12 @@ namespace PrimeCheque.ViewModels
         private bool _useAnd = true;
 
         [ObservableProperty]
+        private string _saveStatusMessage = string.Empty;
+
+        [ObservableProperty]
+        private bool _isSaveSuccess;
+
+        [ObservableProperty]
         private string _backupStatusMessage = string.Empty;
 
         [ObservableProperty]
@@ -36,18 +43,90 @@ namespace PrimeCheque.ViewModels
         [ObservableProperty]
         private int _remainingGraceDays = 30;
 
-        public SettingsViewModel(IBackupService backupService, ILicenceService licenceService)
+        public string AmountPreview
+        {
+            get
+            {
+                try
+                {
+                    var options = new AmountToWordsOptions
+                    {
+                        Prefix = AmountPrefix?.Trim() ?? string.Empty,
+                        Suffix = AmountSuffix?.Trim() ?? string.Empty,
+                        CentsWord = CentsWord?.Trim() ?? string.Empty,
+                        UseAnd = UseAnd
+                    };
+                    return _amountToWordsService.Convert(75250.50m, options);
+                }
+                catch
+                {
+                    return string.Empty;
+                }
+            }
+        }
+
+        partial void OnAmountPrefixChanged(string value) => OnPropertyChanged(nameof(AmountPreview));
+        partial void OnAmountSuffixChanged(string value) => OnPropertyChanged(nameof(AmountPreview));
+        partial void OnCentsWordChanged(string value) => OnPropertyChanged(nameof(AmountPreview));
+        partial void OnUseAndChanged(bool value) => OnPropertyChanged(nameof(AmountPreview));
+
+        public SettingsViewModel(
+            IBackupService backupService,
+            ILicenceService licenceService,
+            ISettingsService settingsService,
+            IAmountToWordsService amountToWordsService)
         {
             _backupService = backupService;
             _licenceService = licenceService;
+            _settingsService = settingsService;
+            _amountToWordsService = amountToWordsService;
         }
 
         public async Task LoadSettingsAsync()
         {
+            try
+            {
+                var options = await _settingsService.GetAmountToWordsOptionsAsync();
+                AmountPrefix = options.Prefix;
+                AmountSuffix = options.Suffix;
+                CentsWord = options.CentsWord;
+                UseAnd = options.UseAnd;
+                OnPropertyChanged(nameof(AmountPreview));
+            }
+            catch
+            {
+                // Fallback to defaults
+            }
+
             var info = await _licenceService.GetLicenceInfoAsync();
             LicenceKey = info.LicenceKey;
             LicenceStatus = info.Status;
             RemainingGraceDays = info.RemainingGraceDays;
+        }
+
+        [RelayCommand]
+        private async Task SaveSettingsAsync()
+        {
+            try
+            {
+                var options = new AmountToWordsOptions
+                {
+                    Prefix = AmountPrefix?.Trim() ?? string.Empty,
+                    Suffix = AmountSuffix?.Trim() ?? string.Empty,
+                    CentsWord = CentsWord?.Trim() ?? string.Empty,
+                    UseAnd = UseAnd
+                };
+
+                await _settingsService.SaveAmountToWordsOptionsAsync(options);
+                IsSaveSuccess = true;
+                SaveStatusMessage = "Settings saved successfully!";
+                OnPropertyChanged(nameof(AmountPreview));
+            }
+            catch (Exception ex)
+            {
+                IsSaveSuccess = false;
+                SaveStatusMessage = $"Failed to save settings: {ex.Message}";
+            }
         }
 
         [RelayCommand]

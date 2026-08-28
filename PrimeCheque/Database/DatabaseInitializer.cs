@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PrimeCheque.Data;
 using PrimeCheque.Models;
+using PrimeCheque.Services;
+using PrimeCheque.Services.Interfaces;
 
 namespace PrimeCheque.Database
 {
@@ -50,6 +52,12 @@ namespace PrimeCheque.Database
                     ""LastLoginAt"" TEXT NULL,
                     ""FailedLoginAttempts"" INTEGER NOT NULL,
                     ""LockedUntil"" TEXT NULL
+                );",
+                @"CREATE TABLE IF NOT EXISTS ""AppSettings"" (
+                    ""Id"" TEXT NOT NULL PRIMARY KEY,
+                    ""Key"" TEXT NOT NULL,
+                    ""Value"" TEXT NOT NULL,
+                    ""UpdatedAt"" TEXT NOT NULL
                 );"
             };
 
@@ -94,6 +102,34 @@ namespace PrimeCheque.Database
 
             // Seed default Super Admin user if no users exist
             await SeedSuperAdminAsync(dbContext);
+
+            // Initialize app settings into memory
+            await InitializeDefaultSettingsAsync(dbContext);
+        }
+
+        private static async Task InitializeDefaultSettingsAsync(PrimeChequeDbContext dbContext)
+        {
+            try
+            {
+                var settings = await dbContext.AppSettings.ToListAsync();
+                var prefix = settings.FirstOrDefault(s => s.Key == "AmountPrefix")?.Value ?? "Sri Lanka Rupees";
+                var suffix = settings.FirstOrDefault(s => s.Key == "AmountSuffix")?.Value ?? "Only";
+                var centsWord = settings.FirstOrDefault(s => s.Key == "CentsWord")?.Value ?? "Cents";
+                var useAndStr = settings.FirstOrDefault(s => s.Key == "UseAnd")?.Value ?? "True";
+                bool.TryParse(useAndStr, out var useAnd);
+
+                AmountToWordsService.DefaultOptions = new AmountToWordsOptions
+                {
+                    Prefix = prefix,
+                    Suffix = suffix,
+                    CentsWord = centsWord,
+                    UseAnd = useAnd
+                };
+            }
+            catch
+            {
+                // Fallback to default
+            }
         }
 
         private static async Task SeedSuperAdminAsync(PrimeChequeDbContext dbContext)

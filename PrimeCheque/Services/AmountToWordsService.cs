@@ -6,12 +6,14 @@ namespace PrimeCheque.Services
 {
     public class AmountToWordsService : IAmountToWordsService
     {
+        public static AmountToWordsOptions DefaultOptions { get; set; } = new();
+
         private static readonly string[] Units = { "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen" };
         private static readonly string[] Tens = { "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety" };
 
         public string Convert(decimal amount, AmountToWordsOptions? options = null)
         {
-            options ??= new AmountToWordsOptions();
+            options ??= DefaultOptions;
 
             if (amount < 0)
                 throw new ArgumentException("Amount cannot be negative.", nameof(amount));

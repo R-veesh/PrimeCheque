@@ -45,6 +45,7 @@ namespace PrimeCheque
             services.AddTransient<IPdfGenerationService, PdfGenerationService>();
             services.AddTransient<IPrintService, PrintService>();
             services.AddTransient<IBackupService, BackupService>();
+            services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IReportService, ReportService>();
             services.AddSingleton<ILicenceService, LicenceService>();
