@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -22,6 +23,12 @@ namespace PrimeCheque.ViewModels
 
         [ObservableProperty]
         private BankTemplate? _template;
+
+        [ObservableProperty]
+        private ObservableCollection<BankTemplate> _templates = new();
+
+        [ObservableProperty]
+        private BankTemplate? _selectedTemplate;
 
         [ObservableProperty]
         private ObservableCollection<string> _printers = new();
@@ -63,14 +70,21 @@ namespace PrimeCheque.ViewModels
             Cheque = await _chequeService.GetChequeByIdAsync(chequeId);
             if (Cheque == null) return;
 
-            var bankId = Cheque.ChequeBook?.BankId ?? Guid.Empty;
-            Template = await _templateService.GetTemplateForBankAsync(bankId);
-
-            if (Template == null)
+            var allTemplates = await _templateService.GetAllTemplatesAsync();
+            Templates.Clear();
+            foreach (var t in allTemplates)
             {
-                var templates = await _templateService.GetAllTemplatesAsync();
-                Template = templates.Count > 0 ? templates[0] : new BankTemplate();
+                Templates.Add(t);
             }
+
+            var bankId = Cheque.ChequeBook?.BankId ?? Guid.Empty;
+            var matchedTemplate = await _templateService.GetTemplateForBankAsync(bankId);
+
+            SelectedTemplate = Templates.FirstOrDefault(t => t.Id == matchedTemplate?.Id)
+                ?? Templates.FirstOrDefault(t => t.BankId == bankId)
+                ?? Templates.FirstOrDefault();
+
+            Template = SelectedTemplate ?? matchedTemplate ?? new BankTemplate();
 
             Printers.Clear();
             var printerList = _printService.GetInstalledPrinters();
@@ -82,6 +96,19 @@ namespace PrimeCheque.ViewModels
             }
 
             await GeneratePdfPreviewAsync();
+        }
+
+        partial void OnSelectedTemplateChanged(BankTemplate? value)
+        {
+            if (value != null)
+            {
+                Template = value;
+                if (!string.IsNullOrEmpty(SelectedPrinter))
+                {
+                    _ = LoadCalibrationAsync(SelectedPrinter);
+                }
+                _ = GeneratePdfPreviewAsync();
+            }
         }
 
         partial void OnSelectedPrinterChanged(string? value)

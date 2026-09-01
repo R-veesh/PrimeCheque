@@ -238,6 +238,15 @@ namespace PrimeCheque.ViewModels
                     }
                 }
 
+                if (value.BankId.HasValue)
+                {
+                    SelectedBank = Banks.FirstOrDefault(b => b.Id == value.BankId.Value);
+                }
+                else
+                {
+                    SelectedBank = Banks.FirstOrDefault(b => b.Name.Equals(value.BankName, StringComparison.OrdinalIgnoreCase));
+                }
+
                 OnPropertyChanged(nameof(ScaleFactor));
                 OnPropertyChanged(nameof(CanvasHeight));
                 UpdateFieldScales();
@@ -291,13 +300,20 @@ namespace PrimeCheque.ViewModels
             var jsonConfig = JsonSerializer.Serialize(dto, new JsonSerializerOptions { WriteIndented = true });
 
             var tmpl = SelectedTemplate ?? new BankTemplate();
-            tmpl.BankName = BankName;
-            tmpl.SeriesName = SeriesName;
+            tmpl.BankName = BankName.Trim();
+            tmpl.SeriesName = SeriesName.Trim();
             tmpl.ChequeWidthMm = (decimal)ChequeWidthMm;
             tmpl.ChequeHeightMm = (decimal)ChequeHeightMm;
             tmpl.TemplateConfig = jsonConfig;
             tmpl.TemplateImagePath = TemplateImagePath;
-            tmpl.BankId = SelectedBank?.Id;
+
+            var matchedBank = SelectedBank 
+                ?? Banks.FirstOrDefault(b => b.Name.Equals(tmpl.BankName, StringComparison.OrdinalIgnoreCase))
+                ?? Banks.FirstOrDefault(b => b.ShortName.Equals(tmpl.BankName, StringComparison.OrdinalIgnoreCase))
+                ?? (SelectedTemplate?.BankId.HasValue == true ? Banks.FirstOrDefault(b => b.Id == SelectedTemplate.BankId.Value) : null);
+
+            tmpl.BankId = matchedBank?.Id ?? SelectedTemplate?.BankId ?? tmpl.BankId;
+            tmpl.IsDefault = SelectedTemplate?.IsDefault ?? true;
 
             await _templateService.SaveTemplateAsync(tmpl);
             StatusMessage = "Template saved successfully!";
@@ -374,7 +390,8 @@ namespace PrimeCheque.ViewModels
                     amountWordsLine1 = Fields.FirstOrDefault(f => f.FieldId == "amountWordsLine1")?.GetModel(),
                     amountFigures = Fields.FirstOrDefault(f => f.FieldId == "amountFigures")?.GetModel(),
                     crossingZone = Fields.FirstOrDefault(f => f.FieldId == "crossingZone")?.GetModel(),
-                    memoLine = Fields.FirstOrDefault(f => f.FieldId == "memoLine")?.GetModel()
+                    memoLine = Fields.FirstOrDefault(f => f.FieldId == "memoLine")?.GetModel(),
+                    orBearerZone = Fields.FirstOrDefault(f => f.FieldId == "orBearerZone")?.GetModel()
                 };
                 tmpl.TemplateConfig = JsonSerializer.Serialize(dto);
 

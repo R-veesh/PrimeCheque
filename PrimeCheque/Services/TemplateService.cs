@@ -30,10 +30,41 @@ namespace PrimeCheque.Services
 
         public async Task<BankTemplate?> GetTemplateForBankAsync(Guid bankId)
         {
-            return await _dbContext.BankTemplates
+            if (bankId == Guid.Empty)
+                return await _dbContext.BankTemplates.OrderByDescending(t => t.IsDefault).FirstOrDefaultAsync();
+
+            // 1. Direct BankId match
+            var template = await _dbContext.BankTemplates
                 .Where(t => t.BankId == bankId)
                 .OrderByDescending(t => t.IsDefault)
                 .FirstOrDefaultAsync();
+
+            if (template != null) return template;
+
+            // 2. Fallback: Lookup bank name and match
+            var bank = await _dbContext.Banks.FindAsync(bankId);
+            if (bank != null)
+            {
+                var bankNameTrimmed = bank.Name.Trim().ToLower();
+                var shortNameTrimmed = bank.ShortName?.Trim().ToLower() ?? string.Empty;
+
+                var allTemplates = await _dbContext.BankTemplates.ToListAsync();
+                template = allTemplates.FirstOrDefault(t =>
+                    t.BankName.Trim().ToLower() == bankNameTrimmed ||
+                    (!string.IsNullOrEmpty(shortNameTrimmed) && t.BankName.Trim().ToLower().Contains(shortNameTrimmed)) ||
+                    bankNameTrimmed.Contains(t.BankName.Trim().ToLower()));
+
+                // Self-heal BankId if it was missing in database
+                if (template != null && template.BankId == null)
+                {
+                    template.BankId = bankId;
+                    await _dbContext.SaveChangesAsync();
+                }
+            }
+
+            // 3. Fallback to default template if no match found
+            template ??= await _dbContext.BankTemplates.OrderByDescending(t => t.IsDefault).FirstOrDefaultAsync();
+            return template;
         }
 
         public async Task<BankTemplate> SaveTemplateAsync(BankTemplate template)

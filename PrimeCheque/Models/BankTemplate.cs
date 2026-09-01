@@ -16,6 +16,8 @@ namespace PrimeCheque.Models
         public Guid? BankId { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+        public string DisplayName => !string.IsNullOrWhiteSpace(SeriesName) ? $"{BankName} – {SeriesName}" : BankName;
+
         // Navigation properties
         public Bank? Bank { get; set; }
         public Company? Company { get; set; }

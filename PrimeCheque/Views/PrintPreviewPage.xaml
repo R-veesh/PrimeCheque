@@ -71,6 +71,8 @@
             <StackPanel Spacing="16">
                 <TextBlock Text="Printer Controls" Style="{StaticResource SubtitleTextBlockStyle}" />
 
+                <ComboBox Header="Cheque Template" ItemsSource="{x:Bind ViewModel.Templates, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedTemplate, Mode=TwoWay}" DisplayMemberPath="DisplayName" HorizontalAlignment="Stretch" />
+
                 <ComboBox Header="Select Printer" ItemsSource="{x:Bind ViewModel.Printers, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedPrinter, Mode=TwoWay}" HorizontalAlignment="Stretch" />
 
                 <ComboBox Header="Orientation" SelectedIndex="{x:Bind ViewModel.PrintLandscape, Mode=TwoWay, Converter={StaticResource BoolToIndexConverter}}" HorizontalAlignment="Stretch">

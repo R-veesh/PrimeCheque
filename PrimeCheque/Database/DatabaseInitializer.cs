@@ -100,6 +100,24 @@ namespace PrimeCheque.Database
                 }
             }
 
+            // Repair any unlinked BankTemplates by matching BankName
+            try
+            {
+                await dbContext.Database.ExecuteSqlRawAsync(@"
+                    UPDATE ""BankTemplates"" 
+                    SET ""BankId"" = (
+                        SELECT b.""Id"" FROM ""Banks"" b 
+                        WHERE LOWER(TRIM(b.""Name"")) = LOWER(TRIM(""BankTemplates"".""BankName"")) 
+                        LIMIT 1
+                    ) 
+                    WHERE ""BankId"" IS NULL OR ""BankId"" = '';
+                ");
+            }
+            catch
+            {
+                // Table might not exist or already updated
+            }
+
             // Seed default Super Admin user if no users exist
             await SeedSuperAdminAsync(dbContext);
 

@@ -33,7 +33,7 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <ComboBox Grid.Column="0" Header="Select Template to Edit" ItemsSource="{x:Bind ViewModel.Templates, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedTemplate, Mode=TwoWay}" DisplayMemberPath="BankName" HorizontalAlignment="Stretch" />
+                <ComboBox Grid.Column="0" Header="Select Template to Edit" ItemsSource="{x:Bind ViewModel.Templates, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedTemplate, Mode=TwoWay}" DisplayMemberPath="DisplayName" HorizontalAlignment="Stretch" />
                 <Button Grid.Column="1" Content="&#x2795; New Template" Command="{x:Bind ViewModel.CreateNewTemplateCommand}" VerticalAlignment="Bottom" />
             </Grid>
 
