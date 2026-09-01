@@ -13,9 +13,9 @@
     <Nullable>enable</Nullable>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
-    <DISABLE_XAML_GENERATED_MAIN>true</DISABLE_XAML_GENERATED_MAIN>
-    <StartupObject>PrimeCheque.Program2</StartupObject>
-  </PropertyGroup>
+         <DISABLE_XAML_GENERATED_MAIN>true</DISABLE_XAML_GENERATED_MAIN> 
+         <StartupObject>PrimeCheque.Program2</StartupObject> 
+</PropertyGroup>
 
 
   <ItemGroup>
