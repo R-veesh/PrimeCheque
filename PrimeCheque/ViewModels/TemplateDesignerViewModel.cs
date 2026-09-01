@@ -36,22 +36,8 @@ namespace PrimeCheque.ViewModels
         [ObservableProperty]
         private double _chequeWidthMm = 200;
 
-        partial void OnChequeWidthMmChanged(double value)
-        {
-            OnPropertyChanged(nameof(ScaleFactor));
-            OnPropertyChanged(nameof(CanvasHeight));
-            UpdateFieldScales();
-        }
-
         [ObservableProperty]
         private double _chequeHeightMm = 88;
-
-        partial void OnChequeHeightMmChanged(double value)
-        {
-            OnPropertyChanged(nameof(ScaleFactor));
-            OnPropertyChanged(nameof(CanvasHeight));
-            UpdateFieldScales();
-        }
 
         [ObservableProperty]
         private string? _templateImagePath;
