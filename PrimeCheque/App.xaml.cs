@@ -18,6 +18,17 @@ namespace PrimeCheque
 
         public App()
         {
+            try
+            {
+                var webView2UserData = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PrimeCheque", "WebView2");
+                System.IO.Directory.CreateDirectory(webView2UserData);
+                Environment.SetEnvironmentVariable("WEBVIEW2_USER_DATA_FOLDER", webView2UserData);
+            }
+            catch
+            {
+                // Fallback gracefully
+            }
+
             InitializeComponent();
 
             this.UnhandledException += (sender, e) =>

@@ -21,18 +21,27 @@ namespace PrimeCheque.Views
         {
             if (e.PropertyName == nameof(ViewModel.PdfFilePath) && !string.IsNullOrEmpty(ViewModel.PdfFilePath))
             {
-                try
-                {
-                    await PdfWebView.EnsureCoreWebView2Async();
-                    if (System.IO.File.Exists(ViewModel.PdfFilePath))
-                    {
-                        PdfWebView.CoreWebView2.Navigate(new Uri(ViewModel.PdfFilePath).AbsoluteUri);
-                    }
-                }
-                catch
-                {
-                    // Ignore navigation errors
-                }
+                await LoadPdfInWebViewAsync(ViewModel.PdfFilePath);
+            }
+        }
+
+        private async System.Threading.Tasks.Task LoadPdfInWebViewAsync(string pdfPath)
+        {
+            try
+            {
+                if (!System.IO.File.Exists(pdfPath)) return;
+
+                var userDataFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PrimeCheque", "WebView2");
+                System.IO.Directory.CreateDirectory(userDataFolder);
+
+                var environment = await Microsoft.Web.WebView2.Core.CoreWebView2Environment.CreateWithOptionsAsync(null, userDataFolder, null);
+                await PdfWebView.EnsureCoreWebView2Async(environment);
+
+                PdfWebView.CoreWebView2.Navigate(new Uri(pdfPath).AbsoluteUri);
+            }
+            catch (Exception ex)
+            {
+                System.IO.File.AppendAllText(@"C:\ProgramData\PrimeOne\PrimeCheque\startup.log", $"[{DateTime.Now:O}] WebView2 Cheque Preview Error: {ex.Message}\n");
             }
         }
 

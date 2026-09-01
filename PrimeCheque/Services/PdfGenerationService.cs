@@ -38,8 +38,8 @@ namespace PrimeCheque.Services
                 // Fallback to empty config if invalid JSON
             }
 
-            // Use WinRT LocalFolder to bypass MSIX virtualization issues for native libraries (QuestPDF/SkiaSharp)
-            var folder = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, "GeneratedPdfs");
+            var localAppData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PrimeCheque");
+            var folder = Path.Combine(localAppData, "GeneratedPdfs");
             Directory.CreateDirectory(folder);
             var filePath = Path.Combine(folder, $"Cheque_{cheque.ChequeNumber}_{Guid.NewGuid():N}.pdf");
 
