@@ -139,6 +139,15 @@
                     <TextBox Header="Bank Name" Text="{x:Bind ViewModel.BankName, Mode=TwoWay}" />
                     <TextBox Header="Series Name" Text="{x:Bind ViewModel.SeriesName, Mode=TwoWay}" />
 
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <NumberBox Grid.Column="0" Header="Cheque Width (mm)" Value="{x:Bind ViewModel.ChequeWidthMm, Mode=TwoWay}" Minimum="50" Maximum="400" SmallChange="1" LargeChange="5" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Column="1" Header="Cheque Height (mm)" Value="{x:Bind ViewModel.ChequeHeightMm, Mode=TwoWay}" Minimum="30" Maximum="250" SmallChange="1" LargeChange="5" SpinButtonPlacementMode="Compact" />
+                    </Grid>
+
                     <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,8"/>
 
                     <TextBlock Text="Reference Overlay" Style="{StaticResource BodyStrongTextBlockStyle}" />
