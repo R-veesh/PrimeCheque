@@ -43,12 +43,22 @@ namespace PrimeCheque.Services
         {
             try
             {
-                // Pre-load pdfium.dll from the correct app directory to fix WinUI 3 MSIX DllNotFoundException
+                // Pre-load pdfium.dll from known unpackaged / self-contained output directories
                 string arch = Environment.Is64BitProcess ? "x64" : "x86";
-                string pdfiumPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, arch, "pdfium.dll");
-                if (System.IO.File.Exists(pdfiumPath))
+                string[] possiblePaths = new[]
                 {
-                    LoadLibrary(pdfiumPath);
+                    System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, arch, "pdfium.dll"),
+                    System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "pdfium.dll"),
+                    System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "runtimes", $"win-{arch}", "native", "pdfium.dll")
+                };
+
+                foreach (var path in possiblePaths)
+                {
+                    if (System.IO.File.Exists(path))
+                    {
+                        LoadLibrary(path);
+                        break;
+                    }
                 }
 
                 // Attempt direct silent print using PdfiumViewer manually rendering to bypass WinForms dependency
@@ -56,7 +66,12 @@ namespace PrimeCheque.Services
                 {
                     using (var printDocument = new System.Drawing.Printing.PrintDocument())
                     {
-                        printDocument.PrinterSettings.PrinterName = printerName;
+                        var targetPrinter = !string.IsNullOrWhiteSpace(printerName) ? printerName : new PrinterSettings().PrinterName;
+                        printDocument.PrinterSettings.PrinterName = targetPrinter;
+                        if (!printDocument.PrinterSettings.IsValid)
+                        {
+                            printDocument.PrinterSettings.PrinterName = new PrinterSettings().PrinterName;
+                        }
                         printDocument.PrintController = new System.Drawing.Printing.StandardPrintController(); // Hide print dialog
                         
                         // We do NOT set printDocument.DefaultPageSettings.Landscape = true here,

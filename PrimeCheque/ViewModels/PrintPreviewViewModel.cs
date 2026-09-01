@@ -92,7 +92,8 @@ namespace PrimeCheque.ViewModels
 
             if (Printers.Count > 0)
             {
-                SelectedPrinter = Printers[0];
+                var defaultPrinter = new System.Drawing.Printing.PrinterSettings().PrinterName;
+                SelectedPrinter = Printers.FirstOrDefault(p => p.Equals(defaultPrinter, StringComparison.OrdinalIgnoreCase)) ?? Printers[0];
             }
 
             await GeneratePdfPreviewAsync();
