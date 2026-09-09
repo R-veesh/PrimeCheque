@@ -75,25 +75,33 @@ namespace PrimeCheque.Services
 
             if (number < 100)
             {
-                return Tens[number / 10] + (number % 10 > 0 ? "-" + Units[number % 10] : "");
+                return Tens[number / 10] + (number % 10 > 0 ? " " + Units[number % 10] : "");
             }
 
             if (number < 1000)
             {
-                return Units[number / 100] + " Hundred" + (number % 100 > 0 ? " " + ConvertNumberToWords(number % 100) : "");
+                return Units[number / 100] + " Hundred" + (number % 100 > 0 ? " and " + ConvertNumberToWords(number % 100) : "");
             }
 
             if (number < 1000000)
             {
-                return ConvertNumberToWords(number / 1000) + " Thousand" + (number % 1000 > 0 ? " " + ConvertNumberToWords(number % 1000) : "");
+                long remainder = number % 1000;
+                string connector = remainder > 0 && remainder < 100 ? " and " : " ";
+                return ConvertNumberToWords(number / 1000) + " Thousand" + (remainder > 0 ? connector + ConvertNumberToWords(remainder) : "");
             }
 
             if (number < 1000000000)
             {
-                return ConvertNumberToWords(number / 1000000) + " Million" + (number % 1000000 > 0 ? " " + ConvertNumberToWords(number % 1000000) : "");
+                long remainder = number % 1000000;
+                string connector = remainder > 0 && remainder < 100 ? " and " : " ";
+                return ConvertNumberToWords(number / 1000000) + " Million" + (remainder > 0 ? connector + ConvertNumberToWords(remainder) : "");
             }
 
-            return ConvertNumberToWords(number / 1000000000) + " Billion" + (number % 1000000000 > 0 ? " " + ConvertNumberToWords(number % 1000000000) : "");
+            {
+                long remainder = number % 1000000000;
+                string connector = remainder > 0 && remainder < 100 ? " and " : " ";
+                return ConvertNumberToWords(number / 1000000000) + " Billion" + (remainder > 0 ? connector + ConvertNumberToWords(remainder) : "");
+            }
         }
     }
 }
