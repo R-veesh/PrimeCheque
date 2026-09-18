@@ -92,18 +92,46 @@ namespace PrimeCheque.Services
                         AddField(config.dateY3, yearStr[2].ToString(), true);
                         AddField(config.dateY4, yearStr[3].ToString(), true);
 
-                        // Payee Name (with line 2 support if long)
-                        string payeeStr = $"**{cheque.PayeeName}**";
-                        if (payeeStr.Length > 45 && config.payeeLine2 != null)
+                        // Helper for splitting text
+                        string[] SplitTextIntoLines(string text, int[] lineMaxChars)
                         {
-                            int splitIdx = cheque.PayeeName.LastIndexOf(' ', 40);
-                            if (splitIdx <= 0) splitIdx = 40;
+                            var lines = new System.Collections.Generic.List<string>();
+                            string remaining = text;
 
-                            string line1 = $"**{cheque.PayeeName.Substring(0, splitIdx)}";
-                            string line2 = $"{cheque.PayeeName.Substring(splitIdx).Trim()}**";
+                            for (int i = 0; i < lineMaxChars.Length; i++)
+                            {
+                                if (string.IsNullOrWhiteSpace(remaining)) break;
 
-                            AddField(config.payeeLine1, line1, true);
-                            AddField(config.payeeLine2, line2, true);
+                                int maxChars = lineMaxChars[i];
+                                if (remaining.Length <= maxChars)
+                                {
+                                    lines.Add(remaining.Trim());
+                                    remaining = "";
+                                    break;
+                                }
+
+                                int splitIdx = remaining.LastIndexOf(' ', maxChars);
+                                if (splitIdx <= 0) splitIdx = maxChars;
+
+                                lines.Add(remaining.Substring(0, splitIdx).Trim());
+                                remaining = remaining.Substring(splitIdx).Trim();
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(remaining) && lines.Count > 0)
+                            {
+                                lines[lines.Count - 1] += " " + remaining;
+                            }
+                            return lines.ToArray();
+                        }
+
+                        // Payee Name
+                        string payeeStr = $"**{cheque.PayeeName}**";
+                        if (config.payeeLine2 != null)
+                        {
+                            // Payee line length 155mm -> ~70 chars
+                            var payeeLines = SplitTextIntoLines(payeeStr, new[] { 70, 70 });
+                            if (payeeLines.Length > 0) AddField(config.payeeLine1, payeeLines[0], true);
+                            if (payeeLines.Length > 1) AddField(config.payeeLine2, payeeLines[1], true);
                         }
                         else
                         {
@@ -112,16 +140,21 @@ namespace PrimeCheque.Services
 
                         // Amount Words
                         string words = cheque.AmountInWords;
-                        if (words.Length > 50 && config.amountWordsLine2 != null)
+                        if (config.amountWordsLine2 != null || config.amountWordsLine3 != null)
                         {
-                            int splitIdx = words.LastIndexOf(' ', 50);
-                            if (splitIdx <= 0) splitIdx = 50;
-
-                            string line1 = words.Substring(0, splitIdx);
-                            string line2 = words.Substring(splitIdx).Trim();
-
-                            AddField(config.amountWordsLine1, line1);
-                            AddField(config.amountWordsLine2, line2);
+                            // Rupees 1 line length 90mm -> ~40 chars
+                            // 2 line length 100mm -> ~45 chars
+                            // 3 line length 100mm -> ~45 chars
+                            var wordLines = SplitTextIntoLines(words, new[] { 40, 45, 45 });
+                            if (wordLines.Length > 0) AddField(config.amountWordsLine1, wordLines[0]);
+                            if (wordLines.Length > 1 && config.amountWordsLine2 != null) AddField(config.amountWordsLine2, wordLines[1]);
+                            if (wordLines.Length > 2 && config.amountWordsLine3 != null) AddField(config.amountWordsLine3, wordLines[2]);
+                            
+                            // Fallback if line2 is null but line3 exists (unlikely, but safe)
+                            if (wordLines.Length > 1 && config.amountWordsLine2 == null && config.amountWordsLine3 != null)
+                            {
+                                AddField(config.amountWordsLine3, wordLines[1] + " " + (wordLines.Length > 2 ? wordLines[2] : ""));
+                            }
                         }
                         else
                         {

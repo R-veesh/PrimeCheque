@@ -67,6 +67,9 @@ namespace PrimeCheque.Models
         [JsonPropertyName("amountWordsLine2")]
         public FieldConfig? amountWordsLine2 { get; set; }
 
+        [JsonPropertyName("amountWordsLine3")]
+        public FieldConfig? amountWordsLine3 { get; set; }
+
         [JsonPropertyName("amountFigures")]
         public FieldConfig? amountFigures { get; set; }
 
