@@ -72,13 +72,9 @@ namespace PrimeCheque.Services
                         {
                             printDocument.PrinterSettings.PrinterName = new PrinterSettings().PrinterName;
                         }
-                        
 
                         printDocument.PrintController = new System.Drawing.Printing.StandardPrintController(); // Hide print dialog
 
-                        // We do NOT set printDocument.DefaultPageSettings.Landscape = true here,
-                        // because many printer drivers ignore it for custom sizes, and we need A4 coordinates.
-                        // Instead, we will manually rotate the image during rendering.
                         if (calibration != null)
                         {
                             printDocument.DefaultPageSettings.Landscape = calibration.PrintLandscape;
@@ -106,18 +102,6 @@ namespace PrimeCheque.Services
                                     // Calculate print dimensions in hundredths of an inch
                                     float printWidth = (float)(widthInches * 100.0);
                                     float printHeight = (float)(heightInches * 100.0);
-                                    
-                                    if (calibration != null && calibration.PrintLandscape)
-                                    {
-                                        // Manually rotate the image 90 degrees clockwise
-                                        // This forces it to print sideways such that the start of the cheque is on the leading edge
-                                        image.RotateFlip(System.Drawing.RotateFlipType.Rotate90FlipNone);
-                                        
-                                        // Swap dimensions to match the rotated image
-                                        float temp = printWidth;
-                                        printWidth = printHeight;
-                                        printHeight = temp;
-                                    }
                                     
                                     // When OriginAtMargins is false (default), (0,0) is the printable area top-left.
                                     // We need to offset by -HardMargin to draw from the absolute physical edge of the paper.
