@@ -173,8 +173,17 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <NumberBox Grid.Column="0" Header="H Offset (mm)" Value="{x:Bind ViewModel.CalibrationHOffset, Mode=OneWay}" IsEnabled="False" SpinButtonPlacementMode="Compact" />
-                        <NumberBox Grid.Column="1" Header="V Offset (mm)" Value="{x:Bind ViewModel.CalibrationVOffset, Mode=OneWay}" IsEnabled="False" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Column="0" Header="H Offset (mm)" Value="{x:Bind ViewModel.CalibrationHOffset, Mode=TwoWay}" SmallChange="0.5" LargeChange="2" SpinButtonPlacementMode="Compact" />
+                        <NumberBox Grid.Column="1" Header="V Offset (mm)" Value="{x:Bind ViewModel.CalibrationVOffset, Mode=TwoWay}" SmallChange="0.5" LargeChange="2" SpinButtonPlacementMode="Compact" />
+                    </Grid>
+
+                    <Grid ColumnSpacing="8" Visibility="{x:Bind ViewModel.ShowCalibrationOffsets, Mode=OneWay}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="💾 Save Calibration" Command="{x:Bind ViewModel.SaveCalibrationCommand}" HorizontalAlignment="Stretch" />
+                        <Button Grid.Column="1" Content="🖨️ Print Test Page" Command="{x:Bind ViewModel.PrintTestPageCommand}" HorizontalAlignment="Stretch" />
                     </Grid>
 
                     <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,8"/>

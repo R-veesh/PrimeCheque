@@ -14,6 +14,7 @@ namespace PrimeCheque.ViewModels
     {
         private readonly ITemplateService _templateService;
         private readonly IBankService _bankService;
+        private readonly IPrintService _printService;
 
         [ObservableProperty]
         private ObservableCollection<BankTemplate> _templates = new();
@@ -114,10 +115,11 @@ namespace PrimeCheque.ViewModels
         
         partial void OnShowCalibrationOffsetsChanged(bool value) => UpdateFieldScales();
 
-        public TemplateDesignerViewModel(ITemplateService templateService, IBankService bankService)
+        public TemplateDesignerViewModel(ITemplateService templateService, IBankService bankService, IPrintService printService)
         {
             _templateService = templateService;
             _bankService = bankService;
+            _printService = printService;
             InitializeDefaultFields();
         }
 
@@ -199,6 +201,116 @@ namespace PrimeCheque.ViewModels
             catch (Exception ex)
             {
                 StatusMessage = "Error loading template data: " + ex.Message;
+            }
+
+            // Load installed printers
+            try
+            {
+                InstalledPrinters.Clear();
+                var printers = _printService.GetInstalledPrinters();
+                foreach (var p in printers) InstalledPrinters.Add(p);
+                if (InstalledPrinters.Count > 0)
+                {
+                    var defaultPrinter = new System.Drawing.Printing.PrinterSettings().PrinterName;
+                    SelectedPrinter = InstalledPrinters.FirstOrDefault(p => p.Equals(defaultPrinter, StringComparison.OrdinalIgnoreCase))
+                        ?? InstalledPrinters[0];
+                }
+            }
+            catch
+            {
+                // Printer enumeration may fail on some systems
+            }
+        }
+
+        partial void OnSelectedPrinterChanged(string? value)
+        {
+            if (value != null)
+            {
+                _ = LoadCalibrationForPrinterAsync(value);
+            }
+        }
+
+        private async Task LoadCalibrationForPrinterAsync(string printerName)
+        {
+            var cal = await _printService.GetCalibrationAsync(printerName, SelectedTemplate?.Id);
+            if (cal != null)
+            {
+                CalibrationHOffset = (double)cal.HorizontalOffsetMm;
+                CalibrationVOffset = (double)cal.VerticalOffsetMm;
+                PrintLandscape = cal.PrintLandscape;
+            }
+            else
+            {
+                CalibrationHOffset = 0;
+                CalibrationVOffset = 0;
+                PrintLandscape = false;
+            }
+        }
+
+        [RelayCommand]
+        private async Task SaveCalibrationAsync()
+        {
+            if (string.IsNullOrEmpty(SelectedPrinter))
+            {
+                StatusMessage = "Please select a printer first.";
+                return;
+            }
+
+            var cal = new PrinterCalibration
+            {
+                PrinterName = SelectedPrinter,
+                HorizontalOffsetMm = (decimal)CalibrationHOffset,
+                VerticalOffsetMm = (decimal)CalibrationVOffset,
+                PrintLandscape = PrintLandscape,
+                TemplateId = SelectedTemplate?.Id
+            };
+            await _printService.SaveCalibrationAsync(cal);
+            StatusMessage = "✅ Calibration saved for " + SelectedPrinter;
+        }
+
+        [RelayCommand]
+        private async Task PrintTestPageAsync()
+        {
+            if (string.IsNullOrEmpty(SelectedPrinter) || SelectedTemplate == null)
+            {
+                StatusMessage = "Select a printer and template first.";
+                return;
+            }
+
+            try
+            {
+                StatusMessage = "Generating test page...";
+
+                // Create a sample cheque for the test print
+                var testCheque = new Cheque
+                {
+                    ChequeNumber = 999999,
+                    PayeeName = "TEST PRINT - Calibration Check",
+                    Amount = 12345.67m,
+                    AmountInWords = "** Test Twelve Thousand Three Hundred and Forty Five and Cents Sixty Seven Only **",
+                    ChequeDate = DateOnly.FromDateTime(DateTime.Now),
+                    Memo = "Calibration Test",
+                    CrossingType = CrossingType.AccountPayeeOnly
+                };
+
+                var calibration = new PrinterCalibration
+                {
+                    PrinterName = SelectedPrinter,
+                    HorizontalOffsetMm = (decimal)CalibrationHOffset,
+                    VerticalOffsetMm = (decimal)CalibrationVOffset,
+                    PrintLandscape = PrintLandscape,
+                    TemplateId = SelectedTemplate.Id
+                };
+
+                var pdfService = App.GetService<IPdfGenerationService>();
+                var pdfPath = await pdfService.GenerateChequePdfAsync(testCheque, SelectedTemplate, calibration, "TEST PRINT");
+                var printed = await _printService.PrintPdfAsync(pdfPath, SelectedPrinter, calibration);
+
+                StatusMessage = printed ? "✅ Test page sent to " + SelectedPrinter : "❌ Print failed.";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = "❌ Test print error: " + ex.Message;
             }
         }
 

@@ -85,7 +85,9 @@ namespace PrimeCheque.Database
                 // Super Admin password reset columns
                 "ALTER TABLE Users ADD COLUMN SecurityQuestion TEXT;",
                 "ALTER TABLE Users ADD COLUMN SecurityAnswerHash TEXT;",
-                "ALTER TABLE Users ADD COLUMN MustChangePassword INTEGER NOT NULL DEFAULT 1;"
+                "ALTER TABLE Users ADD COLUMN MustChangePassword INTEGER NOT NULL DEFAULT 1;",
+                // Printer calibration landscape support
+                "ALTER TABLE PrinterCalibrations ADD COLUMN PrintLandscape INTEGER NOT NULL DEFAULT 0;"
             };
 
             foreach (var sql in columnMigrations)

@@ -47,7 +47,11 @@ namespace PrimeCheque.Services
             {
                 container.Page(page =>
                 {
-                    page.Size(new PageSize(widthMm, heightMm, Unit.Millimetre));
+                    // Swap page dimensions for landscape orientation
+                    if (calibration?.PrintLandscape == true)
+                        page.Size(new PageSize(heightMm, widthMm, Unit.Millimetre));
+                    else
+                        page.Size(new PageSize(widthMm, heightMm, Unit.Millimetre));
                     page.Margin(0, Unit.Millimetre);
                     page.PageColor(Colors.White);
 

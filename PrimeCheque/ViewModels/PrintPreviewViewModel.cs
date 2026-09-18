@@ -120,6 +120,21 @@ namespace PrimeCheque.ViewModels
             }
         }
 
+        partial void OnPrintLandscapeChanged(bool value)
+        {
+            _ = GeneratePdfPreviewAsync();
+        }
+
+        partial void OnHorizontalOffsetMmChanged(double value)
+        {
+            _ = GeneratePdfPreviewAsync();
+        }
+
+        partial void OnVerticalOffsetMmChanged(double value)
+        {
+            _ = GeneratePdfPreviewAsync();
+        }
+
         private async Task LoadCalibrationAsync(string printerName)
         {
             var cal = await _printService.GetCalibrationAsync(printerName, Template?.Id);
