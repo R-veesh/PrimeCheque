@@ -74,9 +74,11 @@ namespace PrimeCheque.Services
                         }
                         printDocument.PrintController = new System.Drawing.Printing.StandardPrintController(); // Hide print dialog
                         
-                        // We do NOT set printDocument.DefaultPageSettings.Landscape = true here,
-                        // because many printer drivers (especially EPSON) ignore it for custom sizes.
-                        // Instead, we will manually rotate the image during rendering.
+                        if (calibration != null)
+                        {
+                            printDocument.DefaultPageSettings.Landscape = calibration.PrintLandscape;
+                        }
+
                         int currentPage = 0;
                         printDocument.PrintPage += (sender, e) =>
                         {
@@ -86,11 +88,10 @@ namespace PrimeCheque.Services
                                 // PdfiumViewer PageSizes are in Points (72 points = 1 inch)
                                 double widthInches = pageSize.Width / 72.0;
                                 double heightInches = pageSize.Height / 72.0;
-                                
-                                // Cap rendering DPI at 300 to prevent OutOfMemory on high-DPI printers
-                                float dpiX = Math.Min(300f, e.Graphics.DpiX);
-                                float dpiY = Math.Min(300f, e.Graphics.DpiY);
 
+                                // Hardcode 300 DPI for rendering to ensure quality
+                                int dpiX = 300;
+                                int dpiY = 300;
                                 int renderWidth = (int)(widthInches * dpiX);
                                 int renderHeight = (int)(heightInches * dpiY);
 
@@ -100,18 +101,6 @@ namespace PrimeCheque.Services
                                     // Calculate print dimensions in hundredths of an inch
                                     float printWidth = (float)(widthInches * 100.0);
                                     float printHeight = (float)(heightInches * 100.0);
-                                    
-                                    if (calibration != null && calibration.PrintLandscape)
-                                    {
-                                        // Manually rotate the image 90 degrees clockwise
-                                        // This forces it to print sideways such that the start of the cheque is on the leading edge
-                                        image.RotateFlip(System.Drawing.RotateFlipType.Rotate90FlipNone);
-                                        
-                                        // Swap dimensions to match the rotated image
-                                        float temp = printWidth;
-                                        printWidth = printHeight;
-                                        printHeight = temp;
-                                    }
                                     
                                     // When OriginAtMargins is false (default), (0,0) is the printable area top-left.
                                     // We need to offset by -HardMargin to draw from the absolute physical edge of the paper.
