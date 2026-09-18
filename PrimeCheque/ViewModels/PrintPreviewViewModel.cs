@@ -49,7 +49,12 @@ namespace PrimeCheque.ViewModels
         private string? _pdfFilePath;
 
         [ObservableProperty]
+        private string _printPosition = "Top";
+
+        [ObservableProperty]
         private bool _isPrinted;
+
+        public ObservableCollection<string> PrintPositions { get; } = new() { "Top", "Middle", "Bottom" };
 
         public PrintPreviewViewModel(
             IChequeService chequeService,
@@ -162,7 +167,8 @@ namespace PrimeCheque.ViewModels
                 PrinterName = SelectedPrinter ?? "Default",
                 HorizontalOffsetMm = (decimal)HorizontalOffsetMm,
                 VerticalOffsetMm = (decimal)VerticalOffsetMm,
-                PrintLandscape = PrintLandscape
+                PrintLandscape = PrintLandscape,
+                PrintPosition = PrintPosition
             };
 
             PdfFilePath = await _pdfGenerationService.GenerateChequePdfAsync(Cheque, Template, calibration);
@@ -180,6 +186,7 @@ namespace PrimeCheque.ViewModels
                 HorizontalOffsetMm = (decimal)HorizontalOffsetMm,
                 VerticalOffsetMm = (decimal)VerticalOffsetMm,
                 PrintLandscape = PrintLandscape,
+                PrintPosition = PrintPosition,
                 TemplateId = Template?.Id
             };
 

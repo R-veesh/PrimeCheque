@@ -11,6 +11,7 @@ namespace PrimeCheque.Models
         public decimal VerticalOffsetMm { get; set; }
         public Guid? TemplateId { get; set; }
         public bool PrintLandscape { get; set; } = false;
+        public string PrintPosition { get; set; } = "Top";
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
     }

@@ -78,6 +78,8 @@
                     <x:String>Landscape</x:String>
                 </ComboBox>
 
+                <ComboBox Header="Print Position (Vertical)" ItemsSource="{x:Bind ViewModel.PrintPositions}" SelectedItem="{x:Bind ViewModel.PrintPosition, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+
                 <TextBlock Text="Millimetre Calibration Offsets" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="0,8,0,0" />
 
                 <NumberBox Header="Horizontal Offset (mm)" Value="{x:Bind ViewModel.HorizontalOffsetMm, Mode=TwoWay}" SmallChange="1" LargeChange="5" SpinButtonPlacementMode="Compact" />

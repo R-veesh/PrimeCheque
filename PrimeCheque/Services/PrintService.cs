@@ -118,6 +118,19 @@ namespace PrimeCheque.Services
                                     float offsetX = -e.PageSettings.HardMarginX;
                                     float offsetY = -e.PageSettings.HardMarginY;
 
+                                    if (calibration != null)
+                                    {
+                                        float pageHeight = e.PageSettings.Bounds.Height;
+                                        if (calibration.PrintPosition == "Middle")
+                                        {
+                                            offsetY += (pageHeight - printHeight) / 2f;
+                                        }
+                                        else if (calibration.PrintPosition == "Bottom")
+                                        {
+                                            offsetY += (pageHeight - printHeight);
+                                        }
+                                    }
+
                                     e.Graphics.DrawImage(image, new System.Drawing.RectangleF(offsetX, offsetY, printWidth, printHeight));
                                 }
                             }
@@ -181,6 +194,7 @@ namespace PrimeCheque.Services
                     existing.VerticalOffsetMm = calibration.VerticalOffsetMm;
                     existing.TrayName = calibration.TrayName;
                     existing.PrintLandscape = calibration.PrintLandscape;
+                    existing.PrintPosition = calibration.PrintPosition;
                     existing.UpdatedAt = DateTime.UtcNow;
                     _dbContext.PrinterCalibrations.Update(existing);
                 }

@@ -87,7 +87,8 @@ namespace PrimeCheque.Database
                 "ALTER TABLE Users ADD COLUMN SecurityAnswerHash TEXT;",
                 "ALTER TABLE Users ADD COLUMN MustChangePassword INTEGER NOT NULL DEFAULT 1;",
                 // Printer calibration landscape support
-                "ALTER TABLE PrinterCalibrations ADD COLUMN PrintLandscape INTEGER NOT NULL DEFAULT 0;"
+                "ALTER TABLE PrinterCalibrations ADD COLUMN PrintLandscape INTEGER NOT NULL DEFAULT 0;",
+                "ALTER TABLE PrinterCalibrations ADD COLUMN PrintPosition TEXT NOT NULL DEFAULT 'Top';"
             };
 
             foreach (var sql in columnMigrations)
