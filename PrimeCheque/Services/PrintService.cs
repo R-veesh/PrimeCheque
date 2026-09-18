@@ -103,9 +103,9 @@ namespace PrimeCheque.Services
                                     
                                     if (calibration != null && calibration.PrintLandscape)
                                     {
-                                        // Manually rotate the image 270 degrees (90 degrees counter-clockwise)
-                                        // This forces it to print sideways regardless of the printer driver's capabilities
-                                        image.RotateFlip(System.Drawing.RotateFlipType.Rotate270FlipNone);
+                                        // Manually rotate the image 90 degrees clockwise
+                                        // This forces it to print sideways such that the start of the cheque is on the leading edge
+                                        image.RotateFlip(System.Drawing.RotateFlipType.Rotate90FlipNone);
                                         
                                         // Swap dimensions to match the rotated image
                                         float temp = printWidth;
