@@ -111,6 +111,11 @@ namespace PrimeCheque.ViewModels
         public ObservableCollection<string> PrintPositions { get; } = new() { "Top", "Middle", "Bottom" };
 
         [ObservableProperty]
+        private string _printPositionHorizontal = "Left";
+
+        public ObservableCollection<string> PrintPositionHorizontals { get; } = new() { "Left", "Center", "Right" };
+
+        [ObservableProperty]
         private double _calibrationHOffset = 0;
         partial void OnCalibrationHOffsetChanged(double value) => UpdateFieldScales();
 
@@ -244,6 +249,7 @@ namespace PrimeCheque.ViewModels
                 CalibrationVOffset = (double)cal.VerticalOffsetMm;
                 PrintLandscape = cal.PrintLandscape;
                 PrintPosition = string.IsNullOrEmpty(cal.PrintPosition) ? "Top" : cal.PrintPosition;
+                PrintPositionHorizontal = string.IsNullOrEmpty(cal.PrintPositionHorizontal) ? "Left" : cal.PrintPositionHorizontal;
             }
             else
             {
@@ -251,6 +257,7 @@ namespace PrimeCheque.ViewModels
                 CalibrationVOffset = 0;
                 PrintLandscape = false;
                 PrintPosition = "Top";
+                PrintPositionHorizontal = "Left";
             }
         }
 
@@ -270,6 +277,7 @@ namespace PrimeCheque.ViewModels
                 VerticalOffsetMm = (decimal)CalibrationVOffset,
                 PrintLandscape = PrintLandscape,
                 PrintPosition = PrintPosition,
+                PrintPositionHorizontal = PrintPositionHorizontal,
                 TemplateId = SelectedTemplate?.Id
             };
             await _printService.SaveCalibrationAsync(cal);
@@ -308,6 +316,7 @@ namespace PrimeCheque.ViewModels
                     VerticalOffsetMm = (decimal)CalibrationVOffset,
                     PrintLandscape = PrintLandscape,
                     PrintPosition = PrintPosition,
+                    PrintPositionHorizontal = PrintPositionHorizontal,
                     TemplateId = SelectedTemplate.Id
                 };
 

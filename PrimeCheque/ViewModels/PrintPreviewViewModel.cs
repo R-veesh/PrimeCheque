@@ -52,9 +52,13 @@ namespace PrimeCheque.ViewModels
         private string _printPosition = "Top";
 
         [ObservableProperty]
+        private string _printPositionHorizontal = "Left";
+
+        [ObservableProperty]
         private bool _isPrinted;
 
         public ObservableCollection<string> PrintPositions { get; } = new() { "Top", "Middle", "Bottom" };
+        public ObservableCollection<string> PrintPositionHorizontals { get; } = new() { "Left", "Center", "Right" };
 
         public PrintPreviewViewModel(
             IChequeService chequeService,
@@ -148,12 +152,16 @@ namespace PrimeCheque.ViewModels
                 HorizontalOffsetMm = (double)cal.HorizontalOffsetMm;
                 VerticalOffsetMm = (double)cal.VerticalOffsetMm;
                 PrintLandscape = cal.PrintLandscape;
+                PrintPosition = string.IsNullOrEmpty(cal.PrintPosition) ? "Top" : cal.PrintPosition;
+                PrintPositionHorizontal = string.IsNullOrEmpty(cal.PrintPositionHorizontal) ? "Left" : cal.PrintPositionHorizontal;
             }
             else
             {
                 HorizontalOffsetMm = 0;
                 VerticalOffsetMm = 0;
                 PrintLandscape = false;
+                PrintPosition = "Top";
+                PrintPositionHorizontal = "Left";
             }
         }
 
@@ -168,7 +176,8 @@ namespace PrimeCheque.ViewModels
                 HorizontalOffsetMm = (decimal)HorizontalOffsetMm,
                 VerticalOffsetMm = (decimal)VerticalOffsetMm,
                 PrintLandscape = PrintLandscape,
-                PrintPosition = PrintPosition
+                PrintPosition = PrintPosition,
+                PrintPositionHorizontal = PrintPositionHorizontal
             };
 
             PdfFilePath = await _pdfGenerationService.GenerateChequePdfAsync(Cheque, Template, calibration);
@@ -187,6 +196,7 @@ namespace PrimeCheque.ViewModels
                 VerticalOffsetMm = (decimal)VerticalOffsetMm,
                 PrintLandscape = PrintLandscape,
                 PrintPosition = PrintPosition,
+                PrintPositionHorizontal = PrintPositionHorizontal,
                 TemplateId = Template?.Id
             };
 

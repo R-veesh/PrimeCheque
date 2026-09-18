@@ -168,8 +168,7 @@
                     </ComboBox>
 
                     <ComboBox Header="Print Position (Vertical)" ItemsSource="{x:Bind ViewModel.PrintPositions}" SelectedItem="{x:Bind ViewModel.PrintPosition, Mode=TwoWay}" HorizontalAlignment="Stretch" />
-
-
+                    <ComboBox Header="Print Position (Horizontal)" ItemsSource="{x:Bind ViewModel.PrintPositionHorizontals}" SelectedItem="{x:Bind ViewModel.PrintPositionHorizontal, Mode=TwoWay}" HorizontalAlignment="Stretch" />
                     <ToggleSwitch Header="Show Calibration Offsets" IsOn="{x:Bind ViewModel.ShowCalibrationOffsets, Mode=TwoWay}" />
                     <Grid ColumnSpacing="8" Visibility="{x:Bind ViewModel.ShowCalibrationOffsets, Mode=OneWay}">
                         <Grid.ColumnDefinitions>

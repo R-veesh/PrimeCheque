@@ -110,6 +110,9 @@ namespace PrimeCheque.Services
                                     if (calibration != null)
                                     {
                                         float pageHeight = e.PageSettings.Bounds.Height;
+                                        float pageWidth = e.PageSettings.Bounds.Width;
+
+                                        // Vertical Alignment
                                         if (calibration.PrintPosition == "Middle")
                                         {
                                             offsetY += (pageHeight - printHeight) / 2f;
@@ -117,6 +120,16 @@ namespace PrimeCheque.Services
                                         else if (calibration.PrintPosition == "Bottom")
                                         {
                                             offsetY += (pageHeight - printHeight);
+                                        }
+
+                                        // Horizontal Alignment
+                                        if (calibration.PrintPositionHorizontal == "Center")
+                                        {
+                                            offsetX += (pageWidth - printWidth) / 2f;
+                                        }
+                                        else if (calibration.PrintPositionHorizontal == "Right")
+                                        {
+                                            offsetX += (pageWidth - printWidth);
                                         }
                                     }
 
@@ -184,6 +197,7 @@ namespace PrimeCheque.Services
                     existing.TrayName = calibration.TrayName;
                     existing.PrintLandscape = calibration.PrintLandscape;
                     existing.PrintPosition = calibration.PrintPosition;
+                    existing.PrintPositionHorizontal = calibration.PrintPositionHorizontal;
                     existing.UpdatedAt = DateTime.UtcNow;
                     _dbContext.PrinterCalibrations.Update(existing);
                 }
