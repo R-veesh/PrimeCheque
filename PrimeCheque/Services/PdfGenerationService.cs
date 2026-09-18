@@ -93,6 +93,16 @@ namespace PrimeCheque.Services
                         AddField(config.dateY4, yearStr[3].ToString(), true);
 
                         // Helper for splitting text
+                        int GetMaxChars(FieldConfig? cfg, int defaultLimit)
+                        {
+                            if (cfg == null || cfg.width <= 0) return defaultLimit;
+                            float fontSz = cfg.fontSize > 0 ? cfg.fontSize : 11f;
+                            // A conservative estimate: Arial bold 11pt char is ~1.7mm wide
+                            // We divide the field width (mm) by the estimated char width
+                            float charWidthMm = fontSz * 0.155f; 
+                            return (int)(cfg.width / charWidthMm);
+                        }
+
                         string[] SplitTextIntoLines(string text, int[] lineMaxChars)
                         {
                             var lines = new System.Collections.Generic.List<string>();
@@ -128,8 +138,9 @@ namespace PrimeCheque.Services
                         string payeeStr = $"**{cheque.PayeeName}**";
                         if (config.payeeLine2 != null)
                         {
-                            // Payee line length 155mm -> ~70 chars
-                            var payeeLines = SplitTextIntoLines(payeeStr, new[] { 70, 70 });
+                            int maxL1 = GetMaxChars(config.payeeLine1, 80);
+                            int maxL2 = GetMaxChars(config.payeeLine2, 80);
+                            var payeeLines = SplitTextIntoLines(payeeStr, new[] { maxL1, maxL2 });
                             if (payeeLines.Length > 0) AddField(config.payeeLine1, payeeLines[0], true);
                             if (payeeLines.Length > 1) AddField(config.payeeLine2, payeeLines[1], true);
                         }
@@ -142,10 +153,11 @@ namespace PrimeCheque.Services
                         string words = cheque.AmountInWords;
                         if (config.amountWordsLine2 != null || config.amountWordsLine3 != null)
                         {
-                            // Rupees 1 line length 90mm -> ~40 chars
-                            // 2 line length 100mm -> ~45 chars
-                            // 3 line length 100mm -> ~45 chars
-                            var wordLines = SplitTextIntoLines(words, new[] { 40, 45, 45 });
+                            int maxW1 = GetMaxChars(config.amountWordsLine1, 52);
+                            int maxW2 = GetMaxChars(config.amountWordsLine2, 58);
+                            int maxW3 = GetMaxChars(config.amountWordsLine3, 58);
+                            var wordLines = SplitTextIntoLines(words, new[] { maxW1, maxW2, maxW3 });
+                            
                             if (wordLines.Length > 0) AddField(config.amountWordsLine1, wordLines[0]);
                             if (wordLines.Length > 1 && config.amountWordsLine2 != null) AddField(config.amountWordsLine2, wordLines[1]);
                             if (wordLines.Length > 2 && config.amountWordsLine3 != null) AddField(config.amountWordsLine3, wordLines[2]);
