@@ -73,11 +73,16 @@ namespace PrimeCheque.Services
                             printDocument.PrinterSettings.PrinterName = new PrinterSettings().PrinterName;
                         }
                         
+
                         printDocument.PrintController = new System.Drawing.Printing.StandardPrintController(); // Hide print dialog
 
                         // We do NOT set printDocument.DefaultPageSettings.Landscape = true here,
                         // because many printer drivers ignore it for custom sizes, and we need A4 coordinates.
                         // Instead, we will manually rotate the image during rendering.
+                        if (calibration != null)
+                        {
+                            printDocument.DefaultPageSettings.Landscape = calibration.PrintLandscape;
+                        }
 
                         int currentPage = 0;
                         printDocument.PrintPage += (sender, e) =>
