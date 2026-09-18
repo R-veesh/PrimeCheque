@@ -162,9 +162,9 @@
                     <TextBlock Text="Printer Calibration" Style="{StaticResource BodyStrongTextBlockStyle}" />
                     <ComboBox Header="Printer" ItemsSource="{x:Bind ViewModel.InstalledPrinters, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectedPrinter, Mode=TwoWay}" HorizontalAlignment="Stretch" PlaceholderText="Select printer..." />
                     
-                    <ComboBox Header="Orientation" SelectedIndex="{x:Bind ViewModel.PrintLandscape, Mode=TwoWay, Converter={StaticResource BoolToIndexConverter}}" HorizontalAlignment="Stretch">
-                        <x:String>Portrait</x:String>
-                        <x:String>Landscape</x:String>
+                    <ComboBox Header="Printer Feed Direction" SelectedIndex="{x:Bind ViewModel.PrintLandscape, Mode=TwoWay, Converter={StaticResource BoolToIndexConverter}}" HorizontalAlignment="Stretch">
+                        <x:String>Long-Edge Feed (Standard)</x:String>
+                        <x:String>Short-Edge Feed (Rotated)</x:String>
                     </ComboBox>
 
                     <ComboBox Header="Print Position (Vertical)" ItemsSource="{x:Bind ViewModel.PrintPositions}" SelectedItem="{x:Bind ViewModel.PrintPosition, Mode=TwoWay}" HorizontalAlignment="Stretch" />
